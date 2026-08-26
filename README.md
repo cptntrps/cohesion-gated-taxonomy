@@ -4,6 +4,8 @@ Cluster a corpus, let an LLM name only the clusters, and use a **label-free geom
 confidence score to decide where to spend per-item LLM calls**. Measured on legal
 clauses, news posts and e-commerce products.
 
+📄 [PRD](PRD.md) · 🏗 [Architecture](docs/ARCHITECTURE.md) · 📊 [Results](docs/RESULTS.md) · 🔬 [Methods / reproduce](docs/METHODS.md) · 🗺 [Next steps](NEXT_STEPS.md)
+
 **Prior art, named up front.** Embed → cluster → LLM-names-each-cluster is
 [BERTopic](https://arxiv.org/abs/2203.05794) (2022),
 [TopicGPT](https://aclanthology.org/2024.naacl-long.164.pdf) (2024),

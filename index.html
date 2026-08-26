@@ -82,6 +82,20 @@ button.btn.ghost { background:transparent; }
 .hint { font-size:.76rem; color:#565b66; padding:.4rem 1rem; }
 .gtip { font-size:.8rem; line-height:1.4; } .gtip b { color:#fff; } .gtip .muted { color:#9aa0aa; }
 .err { color:#f87171; }
+.lpanel { position:absolute; top:0; left:0; height:100%; width:400px; z-index:22;
+  background:rgba(17,20,26,.97); border-right:1px solid #2a2e37; backdrop-filter:blur(12px);
+  transform:translateX(-100%); transition:transform .22s ease; overflow-y:auto; padding:1.1rem; }
+.lpanel.open { transform:translateX(0); }
+.lpanel h2 { font-size:1rem; margin-bottom:.2rem; }
+.lpanel .sub { font-size:.76rem; color:#8a8f98; margin-bottom:.8rem; line-height:1.4; }
+.anomrow { background:#14171d; border:1px solid #23262e; border-radius:9px; padding:.6rem .65rem; margin:.55rem 0; }
+.anomrow .meta { display:flex; gap:.5rem; font-size:.7rem; color:#8a8f98; margin-bottom:.35rem; flex-wrap:wrap; }
+.anomrow .pill { background:#2a1a3a; color:#c9a6ff; border:1px solid #4a2f6a; border-radius:5px; padding:.03rem .3rem; }
+.anomrow .pill.r { background:#3a2a10; color:#f6c46a; border-color:#6a4f1f; }
+.anomrow .ctext { font-size:.78rem; color:#c3c8d0; line-height:1.4; margin-bottom:.45rem; }
+.anomrow .seed { display:flex; gap:.35rem; }
+.anomrow .seed input { flex:1; }
+.tabbtn.on { border-color:#a855f7; color:#e9d5ff; background:#2a1a3a; }
 </style>
 </head>
 <body>
@@ -151,9 +165,37 @@ function Panel({node, onClose, onRename, busy}){
       ${node.samples.slice(0,4).map((s,i)=> html`<div class="sample" key=${i}>${s}…</div>`)}</div>`}
   </div>`;
 }
+function AnomRow({a, onAnchor, busy}){
+  const [name,setName]=useState('');
+  return html`<div class="anomrow">
+    <div class="meta">
+      <span class="pill">misfit ${a.misfit}</span>
+      <span class="pill r">radius ${a.radius}</span>
+      <span>now in: ${a.leaf_name||'—'}</span>
+      <span style=${{marginLeft:'auto'}}>gold ${a.gold}</span>
+    </div>
+    <div class="ctext">${a.text}…</div>
+    <div class="seed">
+      <input class="tin" placeholder="name this as a new concept…" value=${name}
+             onInput=${e=>setName(e.target.value)}
+             onKeyDown=${e=>{ if(e.key==='Enter'&&name.trim()) onAnchor(name.trim()); }}/>
+      <button class="btn primary" disabled=${busy||!name.trim()} onClick=${()=>onAnchor(name.trim())}>+ anchor</button>
+    </div></div>`;
+}
+function AnomalyPanel({open, anomalies, onClose, onAnchor, busy, geometry}){
+  return html`<div class=${'lpanel'+(open?' open':'')}>
+    <button class="close" onClick=${onClose} style=${{right:'auto',left:'.9rem'}}>×</button>
+    <h2 style=${{marginLeft:'1.4rem'}}>Novel / unfitted clauses</h2>
+    <div class="sub">Ranked by hyperbolic misfit — geodesic distance from their leaf centroid, pushed toward the Poincare boundary (high radius). These fit no established cluster: name one to seed a new anchor and re-run. ${geometry!=='hyperbolic'?'(only computed in hyperbolic mode)':''}</div>
+    ${(!anomalies||!anomalies.length) && html`<div class="hint" style=${{padding:0}}>none — switch to hyperbolic and re-run.</div>`}
+    ${(anomalies||[]).map((a,i)=> html`<${AnomRow} key=${a.idx} a=${a} busy=${busy}
+        onAnchor=${name=>onAnchor(name)} />`)}
+  </div>`;
+}
 function App(){
   const [data,setData]=useState(null), [err,setErr]=useState(null), [sel,setSel]=useState(null);
   const [q,setQ]=useState(''), [busy,setBusy]=useState(false), [newA,setNewA]=useState('');
+  const [showAnom,setShowAnom]=useState(false);
   const mount=useRef(null), fg=useRef(null), dataRef=useRef(null);
 
   const applyTree = d => {
@@ -219,6 +261,7 @@ function App(){
              onInput=${e=>setNewA(e.target.value)} onKeyDown=${e=>{ if(e.key==='Enter'&&newA.trim()){ action('/anchor',{name:newA.trim()}); setNewA(''); } }}/>
       <button class="btn" disabled=${busy||!newA.trim()} onClick=${()=>{ action('/anchor',{name:newA.trim()}); setNewA(''); }}>+ anchor & re-run</button>
       <button class="btn primary" disabled=${busy} onClick=${()=>action('/rerun',{})}>Re-run</button>
+      <button class=${'btn tabbtn'+(showAnom?' on':'')} onClick=${()=>setShowAnom(s=>!s)}>⚠ Novel${data&&data.anomalies?` (${data.anomalies.length})`:''}</button>
       <button class="btn ghost" disabled=${busy} onClick=${()=>action('/reset',{})}>Reset (discovery)</button>
       ${anchors.length>0 && html`<div class="anchors">
         ${anchors.map((a,i)=> html`<span class="anchor" key=${i}>${a}
@@ -232,6 +275,9 @@ function App(){
         <div>re-clustering (hyperbolic) + re-naming via DeepSeek…</div>
         <div class="hint">whole corpus rebuilds around your anchors — ~30-60s</div></div>`}
       <${Panel} node=${sel} onClose=${()=>setSel(null)} onRename=${onRename} busy=${busy}/>
+      <${AnomalyPanel} open=${showAnom} anomalies=${data&&data.anomalies} geometry=${rep&&rep.geometry}
+        onClose=${()=>setShowAnom(false)} busy=${busy}
+        onAnchor=${name=>{ action('/anchor',{name}); setShowAnom(false); }}/>
     </div>
     ${err && data && html`<div class="hint err">error: ${err}</div>`}
     <div class="hint">hyperbolic KMeans (Poincare ball) finds clusters from clause language · DeepSeek names discovered clusters · gold labels score purity post-hoc, never shown to the model · edit a name or add a cluster to anchor the geometry and re-run</div>

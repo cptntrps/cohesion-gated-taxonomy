@@ -29,17 +29,19 @@ def main():
 
     # honest side-by-side: flat structure purity (no naming, cheap)
     print("\n-- flat comparison (structure only, no LLM) --", flush=True)
-    _, _, _, flat = build_taxonomy(V, texts, labels, gold_names, anchors=None,
-                                   geometry="flat", do_naming=False,
-                                   log=lambda m: print("  "+m, flush=True))
+    *_, flat, _ = build_taxonomy(V, texts, labels, gold_names, anchors=None,
+                                 geometry="flat", do_naming=False,
+                                 log=lambda m: print("  "+m, flush=True))
     print(f"  flat leaf purity: {flat['leaf_weighted_purity_pct']}%", flush=True)
 
     print("\n-- hyperbolic build (named) --", flush=True)
-    nodes, links, members, report = build_taxonomy(
+    nodes, links, members, report, anomalies = build_taxonomy(
         V, texts, labels, gold_names, anchors=None, geometry="hyperbolic",
         log=lambda m: print("  "+m, flush=True))
     report["flat_leaf_purity_pct"] = flat["leaf_weighted_purity_pct"]
-    tree = {"nodes": nodes, "links": links, "report": report, "anchors": []}
+    print(f"  {len(anomalies)} novel/unfitted candidates (hyperbolic boundary)", flush=True)
+    tree = {"nodes": nodes, "links": links, "report": report,
+            "anchors": [], "anomalies": anomalies}
     json.dump(tree, open(HERE / "tree.json", "w"), indent=1)
     json.dump(members, open(HERE / "members.json", "w"))
     print("\n==== REPORT ====\n" + json.dumps(report, indent=1))

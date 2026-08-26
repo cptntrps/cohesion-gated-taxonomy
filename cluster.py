@@ -155,6 +155,40 @@ def build_taxonomy(V, texts, labels, gold_names, anchors=None,
     lp = [nd["purity"] for nd in leaves]; ls = [nd["count"] for nd in leaves]
     baseline = round(100 * collections.Counter(labels.tolist()).most_common(1)[0][1] / N, 1)
     w_purity = round(float(np.average(lp, weights=ls)), 1) if leaves else 0.0
+
+    # ---- hyperbolic anomaly / novelty: Poincare misfit to own leaf centroid ----
+    # This is where curvature earns its place. A clause pushed far from every leaf
+    # centroid (large geodesic misfit + large ball radius) fits no known cluster ->
+    # a NEW-concept candidate that feeds the human anchor loop. Flat has no such axis.
+    anomalies = []
+    if geometry == "hyperbolic":
+        from hyperbolic import _ball_mean, poincare_dist_matrix
+        radius = np.linalg.norm(P, axis=1)
+        misfit = np.full(N, -1.0, dtype=np.float32)
+        owner = {}
+        for leaf in leaves:
+            idx = np.array(members[leaf["id"]], dtype=int)
+            if len(idx) == 0:
+                continue
+            cen = _ball_mean(P[idx])
+            d = poincare_dist_matrix(P[idx], cen[None, :])[:, 0]
+            misfit[idx] = d
+            for i in idx:
+                owner[int(i)] = leaf
+        # rank by geodesic misfit, break ties toward the boundary (high radius)
+        score = misfit + 0.15 * radius
+        for i in np.argsort(-score)[:40]:
+            i = int(i)
+            if misfit[i] < 0:
+                continue
+            lf = owner.get(i)
+            anomalies.append({
+                "idx": i, "text": texts[i].strip()[:400],
+                "misfit": round(float(misfit[i]), 3), "radius": round(float(radius[i]), 3),
+                "leaf_id": lf["id"] if lf else None, "leaf_name": lf["name"] if lf else None,
+                "gold": gold_names[labels[i]],
+            })
+
     report = {
         "n_provisions": N, "n_gold_types": len(gold_names),
         "baseline_majority_pct": baseline, "leaf_weighted_purity_pct": w_purity,
@@ -162,7 +196,7 @@ def build_taxonomy(V, texts, labels, gold_names, anchors=None,
         "verdict": "PASS" if w_purity >= 2 * baseline else "FAIL",
         "n_leaves": len(leaves), "n_nodes": len(nodes) - 1,
         "distinct_dominant_gold_types": len({nd["gold_dominant"] for nd in leaves}),
-        "naming_failures": fails, "n_anchors": len(anchors),
+        "naming_failures": fails, "n_anchors": len(anchors), "n_anomalies": len(anomalies),
         "max_depth": MAX_DEPTH, "name_model": MODEL, "geometry": geometry,
     }
-    return nodes, links, members, report
+    return nodes, links, members, report, anomalies

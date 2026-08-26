@@ -38,10 +38,11 @@ def load_corpus():
 def rebuild():
     from cluster import build_taxonomy
     anchors = STATE["anchors"]
-    nodes, links, members, report = build_taxonomy(
+    nodes, links, members, report, anomalies = build_taxonomy(
         STATE["V"], STATE["texts"], STATE["labels"], STATE["gold_names"],
         anchors=anchors, log=lambda m: print(m, flush=True))
-    tree = {"nodes": nodes, "links": links, "report": report, "anchors": anchors}
+    tree = {"nodes": nodes, "links": links, "report": report,
+            "anchors": anchors, "anomalies": anomalies}
     json.dump(tree, open(HERE / "tree.json", "w"), indent=1)
     json.dump(members, open(HERE / "members.json", "w"))
     return tree

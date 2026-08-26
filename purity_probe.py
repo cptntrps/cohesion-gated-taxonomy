@@ -18,14 +18,14 @@ Signals per leaf (no gold used to compute them):
 Goal: some signal |Spearman| >= 0.5 vs purity, AND a multivariate fit R^2 that beats
 the best single signal, or we report no reliable gold-free gate.
 """
-import json, pathlib
+import os, json, pathlib
 import numpy as np
 from sklearn.cluster import KMeans
 from sklearn.linear_model import LinearRegression
 from scipy.stats import spearmanr
 
 HERE = pathlib.Path(__file__).parent
-EMB = pathlib.Path("/home/gui/projects/hyperbolic-experiments/crossover/ledgar_emb.npz")
+EMB = pathlib.Path(os.environ.get("LEDGAR_EMB", "ledgar_emb.npz"))
 MIN_LEAF = 40
 
 def main():

@@ -15,7 +15,7 @@ from cluster import cohesion
 import urllib.request
 
 API = "https://api.deepseek.com/v1/chat/completions"; MODEL = "deepseek-v4-flash"
-EMB = pathlib.Path("/home/gui/projects/hyperbolic-experiments/crossover/ledgar_emb.npz")
+EMB = pathlib.Path(os.environ.get("LEDGAR_EMB", "ledgar_emb.npz"))
 CANON = {"WEEKLY": r"\bweekly\b", "BI-WEEKLY": r"bi-?weekly|every two weeks|bimonthly",
          "MONTHLY": r"\bmonthly\b|per month|each month", "QUARTERLY": r"\bquarterly\b|each quarter|per quarter",
          "SEMI-ANNUALLY": r"semi-?annual|twice a year|every six months",

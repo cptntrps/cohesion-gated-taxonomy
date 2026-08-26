@@ -12,10 +12,10 @@ Metrics per tree:
   mm_mean       mean leaf multimodality (lower = more coherent leaves)
 Gold is used only to score purity; fmerge/mm are gold-free.
 """
-import json, pathlib
+import os, json, pathlib
 import numpy as np
 
-EMB = pathlib.Path("/home/gui/projects/hyperbolic-experiments/crossover/ledgar_emb.npz")
+EMB = pathlib.Path(os.environ.get("LEDGAR_EMB", "ledgar_emb.npz"))
 FM = 0.10   # cosine-silhouette above this = a real seam = false merge
 
 def load():

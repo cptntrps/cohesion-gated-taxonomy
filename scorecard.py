@@ -11,10 +11,10 @@ Headline metric: clauses a reviewer must READ to reach 90% recall.
 Falsifiable goal: taxonomy reaches 90% recall at >= 3x fewer clauses than keyword.
 Gold labels define truth; they never touch leaf selection or ranking.
 """
-import json, urllib.request, pathlib
+import os, json, urllib.request, pathlib
 import numpy as np
 
-EMB = pathlib.Path("/home/gui/projects/hyperbolic-experiments/crossover/ledgar_emb.npz")
+EMB = pathlib.Path(os.environ.get("LEDGAR_EMB", "ledgar_emb.npz"))
 RECALL = 0.90
 
 # concept -> (gold label name, keyword stem for the baseline)

@@ -1,11 +1,8 @@
 #!/usr/bin/env bash
-# Launch the taxonomy server with the DeepSeek key decrypted into the process env
-# (never written to disk). Used by ledgar-taxonomy.service.
+# Launch the taxonomy server. Provide DEEPSEEK_API_KEY in the environment (or adapt
+# naming.py to any OpenAI-compatible endpoint). The key is never written to disk.
 set -euo pipefail
-export PATH="/home/gui/.local/bin:/usr/local/bin:/usr/bin:/bin"
-cd /home/gui/projects/ledgar-taxonomy-mvp
-export SOPS_AGE_KEY_FILE=/home/gui/.keys/operator-drop.age
-export DEEPSEEK_API_KEY=$(sops -d /home/gui/src/infrastructure-secrets/services/livingos-crons.enc.env \
-  | grep '^DEEPSEEK_API_KEY=' | cut -d= -f2-)
+cd "$(dirname "$0")"
+: "${DEEPSEEK_API_KEY:?set DEEPSEEK_API_KEY}"
 export PORT="${PORT:-8799}"
 exec python3 server.py

@@ -10,7 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 import urllib.request
 
 API = "https://api.deepseek.com/v1/chat/completions"; MODEL = "deepseek-v4-flash"
-EMB = pathlib.Path("/home/gui/projects/hyperbolic-experiments/crossover/ledgar_emb.npz")
+EMB = pathlib.Path(os.environ.get("LEDGAR_EMB", "ledgar_emb.npz"))
 # allow a compound when genuinely two topics; we resolve it afterwards by content
 PROMPT = ("Below are contract clauses grouped by similar language. Give the SHORTEST "
           "canonical clause-library name (1-3 words). If the group genuinely covers TWO "

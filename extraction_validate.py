@@ -15,7 +15,7 @@ from sklearn.cluster import KMeans
 from extraction_test import STATES, ground_state
 from cluster import cohesion
 
-EMB = pathlib.Path("/home/gui/projects/hyperbolic-experiments/crossover/ledgar_emb.npz")
+EMB = pathlib.Path(os.environ.get("LEDGAR_EMB", "ledgar_emb.npz"))
 API = "https://api.deepseek.com/v1/chat/completions"
 MODEL = "deepseek-v4-flash"
 K = 40

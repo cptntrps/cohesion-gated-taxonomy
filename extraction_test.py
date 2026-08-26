@@ -12,11 +12,11 @@ So we can measure the CEILING of cluster-first extraction = weighted state-purit
 the sub-clusters. High purity => one label per cluster propagates correctly to all
 members. Baseline = assign the single most common state to everyone (no reading).
 """
-import re, pathlib, collections
+import os, re, pathlib, collections
 import numpy as np
 from sklearn.cluster import KMeans
 
-EMB = pathlib.Path("/home/gui/projects/hyperbolic-experiments/crossover/ledgar_emb.npz")
+EMB = pathlib.Path(os.environ.get("LEDGAR_EMB", "ledgar_emb.npz"))
 STATES = ["Delaware","New York","California","Nevada","Texas","Illinois","Florida",
           "New Jersey","Massachusetts","Washington","Pennsylvania","Georgia","Ohio",
           "Virginia","Minnesota","Colorado","Connecticut","Maryland","Michigan",

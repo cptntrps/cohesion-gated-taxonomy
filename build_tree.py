@@ -9,7 +9,7 @@ import json, pathlib, sys, os
 import numpy as np
 
 HERE = pathlib.Path(__file__).parent
-EMB = pathlib.Path("/home/gui/projects/hyperbolic-experiments/crossover/ledgar_emb.npz")
+EMB = pathlib.Path(os.environ.get("LEDGAR_EMB", "ledgar_emb.npz"))
 
 def load():
     from datasets import load_dataset

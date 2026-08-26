@@ -38,11 +38,21 @@ def embed(texts):
     return V
 
 def purity(assign, y):
+    """PER-ITEM measure: fraction of items whose label equals their cluster's
+    majority label. NOT interchangeable with NMI -- report both separately, and
+    AMI (chance-corrected) alongside, or a reader conflates them."""
     tot = 0
     for c in set(assign.tolist()):
         m = assign == c
         tot += collections.Counter(y[m].tolist()).most_common(1)[0][1]
     return round(100 * tot / len(y), 1)
+
+def scores(y, assign):
+    """purity (per-item %), NMI (information overlap, not chance-corrected),
+    AMI (chance-corrected). Always report all three; never present NMI as a %."""
+    from sklearn.metrics import normalized_mutual_info_score, adjusted_mutual_info_score
+    return (purity(assign, y), round(normalized_mutual_info_score(y, assign), 3),
+            round(adjusted_mutual_info_score(y, assign), 3))
 
 def main():
     d = fetch_20newsgroups(subset="train", remove=("headers", "footers", "quotes"))
@@ -63,13 +73,15 @@ def main():
     lab_g = KMeans(ng, n_init=4, random_state=13).fit(V).labels_
     lab_s = KMeans(ns, n_init=4, random_state=13).fit(V).labels_
     print("== MAP (cluster count = gold count) ==")
-    print(f"  groups k={ng}: purity {purity(lab_g, groups)}%   (baseline {base_g}%)")
-    print(f"  supers k={ns}: purity {purity(lab_s, supers)}%   (baseline {base_s}%)")
+    pg, ng_nmi, ng_ami = scores(groups, lab_g); ps, ns_nmi, ns_ami = scores(supers, lab_s)
+    print(f"  groups k={ng}: purity {pg}% (per-item) | NMI {ng_nmi} | AMI {ng_ami}   (baseline {base_g}%)")
+    print(f"  supers k={ns}: purity {ps}% (per-item) | NMI {ns_nmi} | AMI {ns_ami}   (baseline {base_s}%)")
 
     # EMERGE (hierarchical recovery): top=6 -> supers, then split each -> groups
     top = KMeans(ns, n_init=4, random_state=13).fit(V).labels_
     print("\n== EMERGE (unsupervised 2-level recovery) ==")
-    print(f"  top-{ns} clusters vs SUPER labels: purity {purity(top, supers)}%")
+    tp, tn, ta = scores(supers, top)
+    print(f"  top-{ns} clusters vs SUPER labels: purity {tp}% (per-item) | NMI {tn} | AMI {ta}")
     leaf_correct, leaf_n, distinct_super = 0, 0, set()
     for c in set(top.tolist()):
         m = np.where(top == c)[0]

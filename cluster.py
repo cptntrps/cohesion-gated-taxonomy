@@ -164,29 +164,23 @@ def build_taxonomy(V, texts, labels, gold_names, anchors=None,
     if geometry == "hyperbolic":
         from hyperbolic import _ball_mean, poincare_dist_matrix
         radius = np.linalg.norm(P, axis=1)
-        misfit = np.full(N, -1.0, dtype=np.float32)
-        owner = {}
+        PER_LEAF = 3   # diversify: at most this many candidates per leaf
+        cand = []      # (score, clause_index, leaf)
         for leaf in leaves:
             idx = np.array(members[leaf["id"]], dtype=int)
             if len(idx) == 0:
                 continue
             cen = _ball_mean(P[idx])
             d = poincare_dist_matrix(P[idx], cen[None, :])[:, 0]
-            misfit[idx] = d
-            for i in idx:
-                owner[int(i)] = leaf
-        # rank by geodesic misfit, break ties toward the boundary (high radius)
-        score = misfit + 0.15 * radius
-        for i in np.argsort(-score)[:40]:
-            i = int(i)
-            if misfit[i] < 0:
-                continue
-            lf = owner.get(i)
+            score = d + 0.15 * radius[idx]
+            for j in np.argsort(-score)[:PER_LEAF]:
+                cand.append((float(score[j]), int(idx[j]), float(d[j]), leaf))
+        cand.sort(key=lambda c: -c[0])
+        for _, i, mf, lf in cand[:40]:
             anomalies.append({
                 "idx": i, "text": texts[i].strip()[:400],
-                "misfit": round(float(misfit[i]), 3), "radius": round(float(radius[i]), 3),
-                "leaf_id": lf["id"] if lf else None, "leaf_name": lf["name"] if lf else None,
-                "gold": gold_names[labels[i]],
+                "misfit": round(mf, 3), "radius": round(float(radius[i]), 3),
+                "leaf_id": lf["id"], "leaf_name": lf["name"], "gold": gold_names[labels[i]],
             })
 
     report = {

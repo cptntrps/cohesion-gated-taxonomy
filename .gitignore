@@ -3,3 +3,4 @@ __pycache__/
 tree.json
 members.json
 *.log
+scorecard.json

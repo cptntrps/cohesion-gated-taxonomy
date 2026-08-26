@@ -7,8 +7,9 @@
 <style>
 :root { color-scheme: dark; }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: system-ui,-apple-system,sans-serif; background:#0f1115; color:#e6e6e6;
-  height:100vh; overflow:hidden; display:flex; flex-direction:column; }
+html, body { height:100%; }
+body { font-family: system-ui,-apple-system,sans-serif; background:#0f1115; color:#e6e6e6; overflow:hidden; }
+#root { height:100vh; display:flex; flex-direction:column; }
 body::before { content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
   background:
     radial-gradient(ellipse 60% 40% at 20% 50%, #1a104020 0%, transparent 70%),
@@ -44,7 +45,7 @@ button.btn.ghost { background:transparent; }
 .anchor .x { cursor:pointer; opacity:.7; }
 .anchor .x:hover { opacity:1; }
 .stats { margin-left:auto; font-size:.8rem; color:#8a8f98; }
-.main { position:relative; flex:1; z-index:1; }
+.main { position:relative; flex:1; min-height:0; z-index:1; }
 #graph { position:absolute; inset:0; }
 .loading { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
   color:#8a8f98; font-size:.95rem; z-index:5; }
@@ -96,6 +97,28 @@ button.btn.ghost { background:transparent; }
 .anomrow .seed { display:flex; gap:.35rem; }
 .anomrow .seed input { flex:1; }
 .tabbtn.on { border-color:#a855f7; color:#e9d5ff; background:#2a1a3a; }
+.viewtoggle { display:inline-flex; border:1px solid #2a2e37; border-radius:8px; overflow:hidden; }
+.viewtoggle button { background:#14171d; border:none; color:#9aa0aa; font:.82rem system-ui; padding:.35rem .8rem; cursor:pointer; }
+.viewtoggle button.on { background:#1c3a5e; color:#dceaff; }
+.tableview { position:absolute; inset:0; z-index:15; overflow:auto; background:#0f1115; padding:0 0 2rem; }
+.tbl-legend { background:#14171d; border-bottom:1px solid #23262e; padding:.55rem 1rem;
+  font-size:.78rem; color:#9aa0aa; line-height:1.5; }
+.tbl-legend b { color:#cbd0d8; }
+table.tax { width:100%; border-collapse:collapse; font-size:.84rem; }
+table.tax thead th { background:#14171d; color:#8a8f98; text-align:left;
+  font-weight:600; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; padding:.5rem .7rem; border-bottom:1px solid #23262e; cursor:pointer; }
+table.tax tbody tr { border-bottom:1px solid #191c22; cursor:pointer; }
+table.tax tbody tr:hover { background:#161a21; }
+table.tax td { padding:.5rem .7rem; vertical-align:middle; }
+table.tax td.name { color:#e6e6e6; }
+table.tax td.name .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:.5rem; vertical-align:baseline; }
+table.tax td.num { text-align:right; color:#b8bdc7; font-variant-numeric:tabular-nums; }
+table.tax td.gold { color:#9aa0aa; }
+.purcell { display:flex; align-items:center; gap:.5rem; }
+.purcell .pbar { width:70px; height:7px; background:#1f2229; border-radius:4px; overflow:hidden; }
+.purcell .pbar > span { display:block; height:100%; background:linear-gradient(90deg,#4a9eff,#6ad0ff); }
+.purcell .pnum { width:44px; text-align:right; color:#cbd0d8; font-variant-numeric:tabular-nums; }
+.hbadge { font-size:.62rem; color:#f6d873; border:1px solid #facc1544; border-radius:4px; padding:.02rem .28rem; margin-left:.4rem; }
 </style>
 </head>
 <body>
@@ -192,11 +215,46 @@ function AnomalyPanel({open, anomalies, onClose, onAnchor, busy, geometry}){
         onAnchor=${name=>onAnchor(name)} />`)}
   </div>`;
 }
+function TableView({data, onSelect, report}){
+  if(!data) return null;
+  const childIds = new Set(data.links.map(l=>l.source));
+  const rows = data.nodes.filter(n=>n.depth>0);
+  return html`<div class="tableview">
+    <div class="tbl-legend">
+      <b>Purity</b> = share of a cluster whose clauses have the same true (gold) type — higher means a tighter, more coherent cluster.
+      <b>Baseline ${report?report.baseline_majority_pct:''}%</b> is the floor: what you'd get guessing every clause is the single most common type.
+      So <b>${report?report.leaf_weighted_purity_pct:''}%</b> average ≈ ${report?Math.round(report.leaf_weighted_purity_pct/report.baseline_majority_pct):''}× better than guessing. Tap a row to open, rename, or anchor it.
+    </div>
+    <table class="tax">
+      <thead><tr><th>cluster (LLM-named)</th><th style=${{textAlign:'right'}}>clauses</th><th>dominant gold type</th><th>purity</th></tr></thead>
+      <tbody>
+      ${rows.map(n=>{ const isLeaf=!childIds.has(n.id); const indent=n.depth-1; return html`
+        <tr key=${n.id} onClick=${()=>onSelect(n)}>
+          <td class="name" style=${{paddingLeft:(0.7+indent*1.2)+'rem'}}>
+            <span class="dot" style=${{background:colorFor(n)}}></span>${n.name}
+            ${n.human_named && html`<span class="hbadge">anchor</span>`}
+            ${!isLeaf && html`<span style=${{color:'#565b66',marginLeft:'.4rem'}}>▸</span>`}
+          </td>
+          <td class="num">${(n.count||0).toLocaleString()}</td>
+          <td class="gold">${n.count?n.gold_dominant:'—'}</td>
+          <td><div class="purcell">${n.count?html`<span class="pbar"><span style=${{width:n.purity+'%'}}></span></span><span class="pnum">${n.purity}%</span>`:html`<span class="pnum">—</span>`}</div></td>
+        </tr>`; })}
+      </tbody>
+    </table></div>`;
+}
 function App(){
   const [data,setData]=useState(null), [err,setErr]=useState(null), [sel,setSel]=useState(null);
   const [q,setQ]=useState(''), [busy,setBusy]=useState(false), [newA,setNewA]=useState('');
-  const [showAnom,setShowAnom]=useState(false);
+  const [showAnom,setShowAnom]=useState(false), [view,setView]=useState('table');
   const mount=useRef(null), fg=useRef(null), dataRef=useRef(null);
+
+  const selectNode = (n) => {
+    const g = fg.current; let t = n;
+    if(g){ const lv = g.graphData().nodes.find(x=>x.id===n.id); if(lv) t = lv; }
+    setSel(t);
+    if(g && t.x!=null){ const dist=60+Math.sqrt(t.count||1); const r=Math.hypot(t.x,t.y,t.z)||1;
+      g.cameraPosition({x:t.x*(1+dist/r),y:t.y*(1+dist/r),z:t.z*(1+dist/r)}, t, 900); }
+  };
 
   const applyTree = d => {
     setData(d); dataRef.current=d;
@@ -220,13 +278,15 @@ function App(){
       .linkColor(()=> '#4a9eff55').linkWidth(.8).linkOpacity(.35)
       .linkDirectionalParticles(2).linkDirectionalParticleWidth(1.1).linkDirectionalParticleSpeed(.006)
       .linkDirectionalParticleColor(()=> '#6ad0ffaa')
-      .onNodeClick(n=>{ setSel(n); const dist=60+Math.sqrt(n.count||1); const r=Math.hypot(n.x,n.y,n.z)||1;
-        g.cameraPosition({x:n.x*(1+dist/r),y:n.y*(1+dist/r),z:n.z*(1+dist/r)},n,900); });
+      .onNodeClick(selectNode);
     g.d3Force('charge').strength(-120);
     fg.current=g;
     const rz=()=>g.width(mount.current.clientWidth).height(mount.current.clientHeight);
     rz(); window.addEventListener('resize',rz); return ()=>window.removeEventListener('resize',rz);
   },[data]);
+
+  useEffect(()=>{ if(view==='graph'&&fg.current&&mount.current){
+    fg.current.width(mount.current.clientWidth).height(mount.current.clientHeight); } },[view]);
 
   useEffect(()=>{ const g=fg.current; if(!g||!dataRef.current) return;
     const s=q.trim().toLowerCase();
@@ -251,12 +311,16 @@ function App(){
       <h1>LEDGAR Taxonomy <small>hyperbolic cluster-finding · LLM names only · human anchors re-run the geometry</small></h1>
       ${rep && html`<div class="verdict">
         <span>${rep.n_provisions.toLocaleString()} clauses · ${rep.n_leaves} leaves · ${rep.geometry}</span>
-        <span>leaf purity <b>${rep.leaf_weighted_purity_pct}%</b>${rep.flat_leaf_purity_pct!=null?` (flat ${rep.flat_leaf_purity_pct}%)`:''} vs base ${rep.baseline_majority_pct}%</span>
+        <span title=${`Purity = share of a cluster with the same true type. Baseline ${rep.baseline_majority_pct}% = guessing the most common type. ${rep.leaf_weighted_purity_pct}% is ~${Math.round(rep.leaf_weighted_purity_pct/rep.baseline_majority_pct)}x better than guessing.`}>leaf purity <b>${rep.leaf_weighted_purity_pct}%</b>${rep.flat_leaf_purity_pct!=null?` (flat ${rep.flat_leaf_purity_pct}%)`:''} vs base ${rep.baseline_majority_pct}%</span>
         ${rep.naming_failures>0 && html`<span class="err">${rep.naming_failures} name fails</span>`}
         <span class=${'badge '+(rep.verdict==='PASS'?'pass':'fail')}>${rep.verdict}</span></div>`}
     </header>
     <div class="toolbar">
-      <input class="tin" style=${{width:'220px'}} placeholder="search names / gold types…" value=${q} onInput=${e=>setQ(e.target.value)}/>
+      <div class="viewtoggle">
+        <button class=${view==='table'?'on':''} onClick=${()=>setView('table')}>▤ Table</button>
+        <button class=${view==='graph'?'on':''} onClick=${()=>setView('graph')}>◈ Graph</button>
+      </div>
+      <input class="tin" style=${{width:'200px'}} placeholder="search names / gold types…" value=${q} onInput=${e=>setQ(e.target.value)}/>
       <input class="tin" style=${{width:'190px'}} placeholder="add a named cluster…" value=${newA}
              onInput=${e=>setNewA(e.target.value)} onKeyDown=${e=>{ if(e.key==='Enter'&&newA.trim()){ action('/anchor',{name:newA.trim()}); setNewA(''); } }}/>
       <button class="btn" disabled=${busy||!newA.trim()} onClick=${()=>{ action('/anchor',{name:newA.trim()}); setNewA(''); }}>+ anchor & re-run</button>
@@ -269,7 +333,8 @@ function App(){
       <span class="stats">${data?data.nodes.length+' nodes':''}</span>
     </div>
     <div class="main">
-      <div id="graph" ref=${mount}></div>
+      <div id="graph" ref=${mount} style=${{display: view==='graph'?'block':'none'}}></div>
+      ${view==='table' && html`<${TableView} data=${data} report=${rep} onSelect=${selectNode}/>`}
       ${!data && html`<div class="loading">loading taxonomy…</div>`}
       ${busy && html`<div class="busy"><div class="spinner"></div>
         <div>re-clustering (hyperbolic) + re-naming via DeepSeek…</div>

@@ -4,7 +4,8 @@ Ordered by value to the competition entry. Owner: this repo.
 
 ## Measured state (2026-08-26)
 - Discovery clustering: hyperbolic leaf purity 41.6% vs flat 50.6% vs 5.3% baseline (PASS >=2x). Flat wins purity.
-- Anomaly (hyperbolic): surfaces real misassignments (Base Salary stranded in an interest cluster); diversified <=3/leaf.
+- Anomaly (hyperbolic): surfaces real misassignments; note cohesion (+0.74) matches the
+  hyperbolic misfit (-0.73), so the hyperbolic path adds surface area for no measured gain.
 - Retrieval productivity (`scorecard.py`): on PARAPHRASE concepts where keyword recall < 90%
   (Governing Law 1.3%, Confidentiality 89.5%, Severability 13.5%), semantic retrieval reaches 90%
   recall at 3/3 pass >=3x, median 7.7x fewer clauses. Keyword-literal concepts: keyword already works.
@@ -15,7 +16,7 @@ Ordered by value to the competition entry. Owner: this repo.
    precision + keyword baseline). A judge types a concept, sees the productivity number. The claim
    is currently CLI-only (`scorecard.py`); this makes it demoable. Highest presentation value.
 
-2. **Poincare-disk layout + jump.** Render the ACTUAL 2-D Poincare disk (the tree already lives in the
+2. **Poincare-disk layout + jump.** [LOW PRIORITY after the 2026-08-26 retraction: hyperbolic has no measured advantage here.] Render the ACTUAL 2-D Poincare disk (the tree already lives in the
    ball, `hyperbolic.make_ball`) instead of the force graph: radius = depth/generality, geodesic edges.
    "Jump" = click a node, travel the geodesic to concept-neighbors across branches. Presentation, not a
    new claim. This is the dimensionality-reduction strength made visible (many Euclidean dims -> 2-D).

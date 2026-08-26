@@ -11,3 +11,7 @@ naming_conciseness.json
 extraction_semantic.json
 ng_emb.npz
 amz_emb.npz
+amz_big_emb.npz
+amazon_scale*.json
+amazon_scale.log
+*.npz

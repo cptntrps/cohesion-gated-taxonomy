@@ -1,0 +1,10 @@
+{
+ "n_items": 205000,
+ "n_nodes": 283792,
+ "dim": 8,
+ "n_pairs": 13798,
+ "target_distinct": 22,
+ "verdict": "NOT confirmed",
+ "euclidean": 0.8323681499038477,
+ "hyperbolic": 0.06651772135765487
+}

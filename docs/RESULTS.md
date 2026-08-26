@@ -140,7 +140,7 @@ instead of returning nothing.
 |---|---|---|
 | Hyperbolic clusters better | **FALSE, 6×** — incl. natively-trained Riemannian: NMI 0.19 vs Euclidean 0.47 | `native_hyperbolic.py` |
 | Crystallization feedback refines | **FALSE** — degrades monotonically 0.522 → 0.284 → 0.227 → 0.172 | `crystallize_loop.py` |
-| Hyperbolic stores hierarchy at scale | **TRUE** — tree-dist corr flat 0.42–0.46 from 20k→600k nodes at dim 8, vs Euclidean 0.14–0.21 | `tree_scale.py` |
+| Hyperbolic stores hierarchy at scale | **RETRACTED — was a measurement artifact.** See §11. | `tree_scale_fixed.py` |
 | Whitening improves clustering | **FALSE** — 68.9% → 45.4%; top PCA components *are* the signal | `amz_geometry.py` |
 | Mean-centering fixes anisotropy free | **TRUE** — cat-pair cosine 0.91 → −0.24, clustering unchanged | `amz_geometry.py` |
 | Removing a concept direction disentangles | **WEAK** — needs mean-centering first; effect small | `amz_concept_erase.py` |
@@ -160,3 +160,48 @@ refutation — the comparison did not match their tuning budgets or protocols.
 - LEDGAR clauses are standalone; the contract-level rollup is untested.
 - EMERGE has no validated gold-free quality metric — the open problem in §10 of the PRD.
 - Cross-domain runs used balanced subsets (2,500–6,000 items), not full corpora.
+
+
+---
+
+## 11. Correction — the retracted hyperbolic storage claim (2026-08-26)
+
+**What we published:** hyperbolic embeddings store a large hierarchy without collapse,
+tree-distance correlation flat at 0.42–0.46 from 20k→600k nodes at dim 8, vs Euclidean
+0.14–0.21 (`tree_scale.py`).
+
+**The defect.** Evaluation pairs were sampled uniformly at random
+(`pa = rng.integers(0, N, 800)`). In a broad tree, two random nodes almost always meet
+only at the root, so the target tree-distance was nearly constant — in one diagnostic,
+643 of 800 pairs shared the identical distance (std 0.89). Spearman correlation against
+a near-constant target is not meaningful. The same defect first surfaced on the real
+Amazon run, where **both** geometries scored ≈0 (−0.018 / −0.033) — a broken
+measurement, not a result.
+
+**The fix.** Stratified pair sampling (one partner drawn per ancestor level, spanning
+the full distance range) plus a validity gate that refuses to report any correlation
+when the target has <4 distinct values or std <0.5.
+
+**Corrected results** (`tree_scale_fixed.py`, `amazon_scale_fixed.py`):
+
+| hierarchy | nodes | Euclidean | hyperbolic |
+|---|---|---|---|
+| synthetic k-ary (b=5) | 200,000 | **0.588** | 0.318 |
+| synthetic k-ary (b=5) | 600,000 | **0.501** | 0.230 |
+| real discovered, wide/shallow (8×5) | 234,828 | **0.840** | 0.082 |
+| real discovered, narrow/deep (3×11) | 283,792 | **0.832** | 0.067 |
+
+**Ruled out** as alternative explanations: training budget (re-ran at 5× — synthetic
+numbers unchanged) and tree shape (tested wide/shallow and narrow/deep on real data —
+same verdict).
+
+**Standing conclusion.** Euclidean preserves tree distance better than hyperbolic at
+dim 8 on every hierarchy we tested, synthetic and real. Hyperbolic now has **no**
+measured advantage anywhere in this project — 7 independent losses. The honest nuance:
+under the original far-pairs-only sampling hyperbolic scored higher, so it may preserve
+*maximally distant* relations better; preserving the full distance range is the correct
+test for storage, and it loses that.
+
+**Scope.** This does not replicate or refute published hyperbolic-embedding results
+(e.g. Sala et al. ICML 2018), which use different dimensions, losses and metrics
+(Hits@10, depth–radius correlation, MAP). It retracts *our* measurement only.

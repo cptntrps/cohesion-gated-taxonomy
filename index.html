@@ -118,7 +118,7 @@ function colorFor(n){
   return n.depth===1 ? c : c+'cc';
 }
 async function post(route, body){
-  const r = await fetch(route, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body||{})});
+  const r = await fetch(route, {method:'POST', headers:{'Content-Type':'application/json','ngrok-skip-browser-warning':'1'}, body:JSON.stringify(body||{})});
   const d = await r.json();
   if(!r.ok || d.error) throw new Error(d.error||('HTTP '+r.status));
   return d;
@@ -204,7 +204,7 @@ function App(){
     d.nodes.forEach(n=> n._hasChildren = childIds.has(n.id));
     if(fg.current) fg.current.graphData({nodes:d.nodes.map(n=>({...n})), links:d.links.map(l=>({...l}))});
   };
-  useEffect(()=>{ fetch('tree.json?_='+Date.now()).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+  useEffect(()=>{ fetch('tree.json?_='+Date.now(),{headers:{'ngrok-skip-browser-warning':'1'}}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
     .then(applyTree).catch(e=>setErr(e.message)); },[]);
 
   useEffect(()=>{

@@ -20,10 +20,12 @@ def name_cluster(sample_texts, ancestors=None):
     prompt = (
         ctx +
         "Below are contract clauses that a clustering algorithm grouped together "
-        "because their language is similar. Give the group a short category name "
-        "(2 to 5 words), the kind of heading a lawyer uses in a clause library.\n\n"
+        "because their language is similar. Give the group the SHORTEST canonical "
+        "category name: 1 to 3 words, the single standard clause-library term. Do NOT "
+        "combine multiple topics with 'and' — pick the dominant one. Prefer the common "
+        "legal heading (e.g. 'Benefits', 'Notices', 'Governing Law', 'Counterparts').\n\n"
         f"{clauses}\n\n"
-        "Reply with ONLY the category name. No quotes, no explanation."
+        "Reply with ONLY the name. No quotes, no explanation."
     )
     body = json.dumps({
         "model": MODEL, "messages": [{"role": "user", "content": prompt}],

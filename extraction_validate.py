@@ -25,7 +25,7 @@ WORKERS = 8
 def ask_state(clauses):
     """One DeepSeek call: given 1+ governing-law clauses, return the US state."""
     key = os.environ["DEEPSEEK_API_KEY"]
-    body = json.dumps({"model": MODEL, "temperature": 0.0, "max_tokens": 700, "stream": False,
+    body = json.dumps({"model": MODEL, "temperature": 0.0, "max_tokens": 800, "stream": False,
         "messages": [{"role": "user", "content":
             "The following are contract governing-law clauses. Which single US state's law "
             "governs? Reply with ONLY the state name (e.g. 'Delaware'), or 'NONE'.\n\n"

@@ -7,3 +7,5 @@ scorecard.json
 purity_probe.json
 extraction.json
 extraction_validate.json
+naming_conciseness.json
+extraction_semantic.json

@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LEDGAR Taxonomy -- hyperbolic clusters, LLM-named, human-anchored</title>
+<style>
+:root { color-scheme: dark; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui,-apple-system,sans-serif; background:#0f1115; color:#e6e6e6;
+  height:100vh; overflow:hidden; display:flex; flex-direction:column; }
+body::before { content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 50%, #1a104020 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 80% 20%, #0a1a3020 0%, transparent 70%),
+    radial-gradient(ellipse 70% 50% at 60% 80%, #0f1a2020 0%, transparent 70%), #0f1115;
+  animation: bgshift 24s ease-in-out infinite alternate; }
+@keyframes bgshift { 0%{filter:hue-rotate(0)} 100%{filter:hue-rotate(30deg)} }
+header { position:relative; z-index:10; display:flex; align-items:center; gap:.8rem;
+  padding:.7rem 1.2rem; background:rgba(15,17,21,.92); border-bottom:1px solid #2a2e37;
+  backdrop-filter:blur(8px); flex-shrink:0; }
+header .logo { font-size:1.25rem; color:#4a9eff; }
+header h1 { font-size:1.02rem; font-weight:700; }
+header h1 small { color:#8a8f98; font-weight:400; font-size:.8rem; margin-left:.5rem; }
+.verdict { margin-left:auto; display:flex; align-items:center; gap:1rem; font-size:.8rem; color:#b8bdc7; }
+.verdict b { color:#e6e6e6; }
+.badge { padding:.2rem .6rem; border-radius:6px; font-weight:700; font-size:.8rem; }
+.badge.pass { background:#16351f; color:#4ade80; border:1px solid #245c33; }
+.badge.fail { background:#3a1717; color:#f87171; border:1px solid #6b2626; }
+.toolbar { position:relative; z-index:10; display:flex; align-items:center; gap:.6rem;
+  padding:.5rem 1rem; background:rgba(15,17,21,.88); border-bottom:1px solid #1f2229;
+  backdrop-filter:blur(8px); flex-shrink:0; flex-wrap:wrap; }
+input.tin { background:#1a1d24; border:1px solid #2a2e37; border-radius:8px; color:#e6e6e6;
+  font:.85rem system-ui; padding:.35rem .7rem; outline:none; }
+input.tin:focus { border-color:#4a9eff; }
+button.btn { background:#1a1d24; border:1px solid #2a2e37; color:#e6e6e6; border-radius:8px;
+  font:.82rem system-ui; padding:.35rem .7rem; cursor:pointer; }
+button.btn:hover { border-color:#4a9eff; }
+button.btn.primary { background:#1c3a5e; border-color:#2f6aa8; color:#dceaff; }
+button.btn.ghost { background:transparent; }
+.anchors { display:flex; gap:.4rem; flex-wrap:wrap; align-items:center; }
+.anchor { display:inline-flex; align-items:center; gap:.35rem; padding:.2rem .5rem;
+  border-radius:20px; font-size:.76rem; background:#facc1518; border:1px solid #facc1544; color:#f6d873; }
+.anchor .x { cursor:pointer; opacity:.7; }
+.anchor .x:hover { opacity:1; }
+.stats { margin-left:auto; font-size:.8rem; color:#8a8f98; }
+.main { position:relative; flex:1; z-index:1; }
+#graph { position:absolute; inset:0; }
+.loading { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  color:#8a8f98; font-size:.95rem; z-index:5; }
+.busy { position:absolute; inset:0; z-index:40; display:flex; flex-direction:column; gap:.6rem;
+  align-items:center; justify-content:center; background:rgba(9,11,15,.72); backdrop-filter:blur(3px);
+  color:#dceaff; font-size:.95rem; }
+.spinner { width:34px; height:34px; border:3px solid #2a3550; border-top-color:#4a9eff;
+  border-radius:50%; animation:spin .8s linear infinite; }
+@keyframes spin { to { transform:rotate(360deg) } }
+.panel { position:absolute; top:0; right:0; height:100%; width:390px; z-index:20;
+  background:rgba(17,20,26,.97); border-left:1px solid #2a2e37; backdrop-filter:blur(12px);
+  transform:translateX(100%); transition:transform .22s ease; overflow-y:auto; padding:1.1rem; }
+.panel.open { transform:translateX(0); }
+.panel h2 { font-size:1.02rem; margin-bottom:.3rem; line-height:1.3; }
+.panel .depthtag { font-size:.72rem; color:#8a8f98; text-transform:uppercase; letter-spacing:.05em; }
+.panel .close { position:absolute; top:.8rem; right:.9rem; cursor:pointer; color:#8a8f98;
+  font-size:1.3rem; background:none; border:none; }
+.panel .row { margin:.9rem 0; }
+.panel .label { font-size:.74rem; color:#8a8f98; text-transform:uppercase; letter-spacing:.05em; margin-bottom:.35rem; }
+.editrow { display:flex; gap:.4rem; }
+.editrow input { flex:1; }
+.bar { height:8px; border-radius:4px; background:#1f2229; overflow:hidden; }
+.bar>span { display:block; height:100%; background:linear-gradient(90deg,#4a9eff,#6ad0ff); }
+.goldrow { display:flex; align-items:center; gap:.5rem; margin:.3rem 0; font-size:.8rem; }
+.goldrow .gbar { flex:1; height:6px; background:#1f2229; border-radius:3px; overflow:hidden; }
+.goldrow .gbar>span { display:block; height:100%; background:#facc15aa; }
+.goldrow .gname { width:130px; color:#cbd0d8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.goldrow .gcount { color:#8a8f98; width:44px; text-align:right; }
+.sample { font-size:.78rem; color:#b8bdc7; line-height:1.45; background:#14171d; border:1px solid #1f2229;
+  border-radius:8px; padding:.55rem .65rem; margin:.4rem 0; }
+.kv { display:flex; justify-content:space-between; font-size:.85rem; margin:.25rem 0; }
+.kv .v { color:#e6e6e6; font-weight:600; }
+.human { display:inline-block; font-size:.68rem; color:#f6d873; border:1px solid #facc1544;
+  border-radius:5px; padding:.05rem .3rem; margin-left:.4rem; vertical-align:middle; }
+.hint { font-size:.76rem; color:#565b66; padding:.4rem 1rem; }
+.gtip { font-size:.8rem; line-height:1.4; } .gtip b { color:#fff; } .gtip .muted { color:#9aa0aa; }
+.err { color:#f87171; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/htm/dist/htm.umd.js"></script>
+<script src="//cdn.jsdelivr.net/npm/3d-force-graph"></script>
+<script>
+const { useState, useEffect, useRef } = React;
+const html = htm.bind(React.createElement);
+const BRANCH = ['#4a9eff','#f472b6','#4ade80','#fb923c','#a78bfa','#2dd4bf','#facc15','#f87171','#38bdf8','#fb7185'];
+const ROOT_COLOR = '#e6e6e6';
+function branchIndex(id){ const m=String(id).match(/[_](\d+)/); return m?(+m[1])%BRANCH.length:0; }
+function isAnchorNode(id){ return String(id).startsWith('A_'); }
+function colorFor(n){
+  if(n.depth===0) return ROOT_COLOR;
+  if(n.human_named) return '#facc15';
+  const c = BRANCH[branchIndex(n.id)]||'#6b7280';
+  return n.depth===1 ? c : c+'cc';
+}
+async function post(route, body){
+  const r = await fetch(route, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body||{})});
+  const d = await r.json();
+  if(!r.ok || d.error) throw new Error(d.error||('HTTP '+r.status));
+  return d;
+}
+function GoldBars({top3}){
+  if(!top3||!top3.length) return null;
+  const max = Math.max(...top3.map(t=>t[1]));
+  return top3.map((t,i)=> html`<div class="goldrow" key=${i}>
+    <span class="gname" title=${t[0]}>${t[0]}</span>
+    <span class="gbar"><span style=${{width:(100*t[1]/max)+'%'}}></span></span>
+    <span class="gcount">${t[1]}</span></div>`);
+}
+function Panel({node, onClose, onRename, busy}){
+  const [name,setName] = useState('');
+  useEffect(()=>{ setName(node?node.name:''); },[node&&node.id, node&&node.name]);
+  if(!node) return null;
+  const isLeaf = !node._hasChildren;
+  return html`<div class="panel open">
+    <button class="close" onClick=${onClose}>×</button>
+    <div class="depthtag">${node.depth===0?'root':(isAnchorNode(node.id)?'human anchor':(node.depth===1?'top-level branch':'cluster'))}
+      ${node.human_named && html`<span class="human">human</span>`}</div>
+    <h2>${node.name}</h2>
+    ${node.depth>0 && html`<div class="row">
+      <div class="label">rename this cluster → re-runs the whole embedding clustering with your name as an anchor</div>
+      <div class="editrow">
+        <input class="tin" value=${name} onInput=${e=>setName(e.target.value)}
+               onKeyDown=${e=>{ if(e.key==='Enter' && name.trim()) onRename(node.id,name.trim()); }}/>
+        <button class="btn primary" disabled=${busy||!name.trim()}
+                onClick=${()=>onRename(node.id,name.trim())}>Rename & re-run</button>
+      </div></div>`}
+    <div class="row">
+      <div class="kv"><span>clauses</span><span class="v">${node.count.toLocaleString()}</span></div>
+      ${node.gold_dominant && node.count>0 && html`
+        <div class="kv"><span>dominant gold type</span><span class="v">${node.gold_dominant}</span></div>
+        <div class="label" style=${{marginTop:'.7rem'}}>cluster purity (gold, post-hoc) — ${node.purity}%</div>
+        <div class="bar"><span style=${{width:node.purity+'%'}}></span></div>`}
+      ${node.count===0 && html`<div class="hint" style=${{padding:0}}>empty anchor — no clause cleared the similarity gate yet.</div>`}
+    </div>
+    ${isLeaf && node.gold_top3 && node.gold_top3.length>0 && html`<div class="row">
+      <div class="label">gold labels present (never shown to the LLM)</div>
+      <${GoldBars} top3=${node.gold_top3}/></div>`}
+    ${isLeaf && node.samples && node.samples.length>0 && html`<div class="row">
+      <div class="label">representative clauses (what the LLM named from)</div>
+      ${node.samples.slice(0,4).map((s,i)=> html`<div class="sample" key=${i}>${s}…</div>`)}</div>`}
+  </div>`;
+}
+function App(){
+  const [data,setData]=useState(null), [err,setErr]=useState(null), [sel,setSel]=useState(null);
+  const [q,setQ]=useState(''), [busy,setBusy]=useState(false), [newA,setNewA]=useState('');
+  const mount=useRef(null), fg=useRef(null), dataRef=useRef(null);
+
+  const applyTree = d => {
+    setData(d); dataRef.current=d;
+    const childIds = new Set(d.links.map(l=>l.source));
+    d.nodes.forEach(n=> n._hasChildren = childIds.has(n.id));
+    if(fg.current) fg.current.graphData({nodes:d.nodes.map(n=>({...n})), links:d.links.map(l=>({...l}))});
+  };
+  useEffect(()=>{ fetch('tree.json?_='+Date.now()).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json();})
+    .then(applyTree).catch(e=>setErr(e.message)); },[]);
+
+  useEffect(()=>{
+    if(!data||!mount.current||fg.current) return;
+    const childIds=new Set(data.links.map(l=>l.source));
+    data.nodes.forEach(n=> n._hasChildren=childIds.has(n.id));
+    const g=ForceGraph3D()(mount.current).backgroundColor('rgba(0,0,0,0)')
+      .graphData({nodes:data.nodes.map(n=>({...n})),links:data.links.map(l=>({...l}))})
+      .nodeId('id').nodeVal(n=>Math.max(1,Math.sqrt(n.count||1))).nodeRelSize(4)
+      .nodeColor(colorFor).nodeOpacity(.95).nodeResolution(12)
+      .nodeLabel(n=>`<div class="gtip"><b>${n.name}</b>${n.human_named?' ★':''}<br><span class="muted">`
+        +`${(n.count||0).toLocaleString()} clauses`+(n.gold_dominant&&n.count?` · gold ~ ${n.gold_dominant} ${n.purity}%`:'')+`</span></div>`)
+      .linkColor(()=> '#4a9eff55').linkWidth(.8).linkOpacity(.35)
+      .linkDirectionalParticles(2).linkDirectionalParticleWidth(1.1).linkDirectionalParticleSpeed(.006)
+      .linkDirectionalParticleColor(()=> '#6ad0ffaa')
+      .onNodeClick(n=>{ setSel(n); const dist=60+Math.sqrt(n.count||1); const r=Math.hypot(n.x,n.y,n.z)||1;
+        g.cameraPosition({x:n.x*(1+dist/r),y:n.y*(1+dist/r),z:n.z*(1+dist/r)},n,900); });
+    g.d3Force('charge').strength(-120);
+    fg.current=g;
+    const rz=()=>g.width(mount.current.clientWidth).height(mount.current.clientHeight);
+    rz(); window.addEventListener('resize',rz); return ()=>window.removeEventListener('resize',rz);
+  },[data]);
+
+  useEffect(()=>{ const g=fg.current; if(!g||!dataRef.current) return;
+    const s=q.trim().toLowerCase();
+    const match=n=>!s||(n.name||'').toLowerCase().includes(s)||(n.gold_dominant||'').toLowerCase().includes(s);
+    g.nodeColor(n=> match(n)?colorFor(n):'#2a2e37');
+  },[q,data]);
+
+  const action = async (route, body) => {
+    setBusy(true); setErr(null);
+    try { const d=await post(route,body); applyTree(d); setSel(null); }
+    catch(e){ setErr(e.message); }
+    finally { setBusy(false); }
+  };
+  const onRename = (id,name)=> action('/rename',{id,name});
+
+  if(err && !data) return html`<div class="loading err">Failed to load: ${err}. Start server.py, then open this page.</div>`;
+  const rep = data && data.report;
+  const anchors = (data && data.anchors) || [];
+  return html`<${React.Fragment}>
+    <header>
+      <span class="logo">◈</span>
+      <h1>LEDGAR Taxonomy <small>hyperbolic cluster-finding · LLM names only · human anchors re-run the geometry</small></h1>
+      ${rep && html`<div class="verdict">
+        <span>${rep.n_provisions.toLocaleString()} clauses · ${rep.n_leaves} leaves · ${rep.geometry}</span>
+        <span>leaf purity <b>${rep.leaf_weighted_purity_pct}%</b>${rep.flat_leaf_purity_pct!=null?` (flat ${rep.flat_leaf_purity_pct}%)`:''} vs base ${rep.baseline_majority_pct}%</span>
+        ${rep.naming_failures>0 && html`<span class="err">${rep.naming_failures} name fails</span>`}
+        <span class=${'badge '+(rep.verdict==='PASS'?'pass':'fail')}>${rep.verdict}</span></div>`}
+    </header>
+    <div class="toolbar">
+      <input class="tin" style=${{width:'220px'}} placeholder="search names / gold types…" value=${q} onInput=${e=>setQ(e.target.value)}/>
+      <input class="tin" style=${{width:'190px'}} placeholder="add a named cluster…" value=${newA}
+             onInput=${e=>setNewA(e.target.value)} onKeyDown=${e=>{ if(e.key==='Enter'&&newA.trim()){ action('/anchor',{name:newA.trim()}); setNewA(''); } }}/>
+      <button class="btn" disabled=${busy||!newA.trim()} onClick=${()=>{ action('/anchor',{name:newA.trim()}); setNewA(''); }}>+ anchor & re-run</button>
+      <button class="btn primary" disabled=${busy} onClick=${()=>action('/rerun',{})}>Re-run</button>
+      <button class="btn ghost" disabled=${busy} onClick=${()=>action('/reset',{})}>Reset (discovery)</button>
+      ${anchors.length>0 && html`<div class="anchors">
+        ${anchors.map((a,i)=> html`<span class="anchor" key=${i}>${a}
+          <span class="x" onClick=${()=>action('/unanchor',{name:a})}>×</span></span>`)}</div>`}
+      <span class="stats">${data?data.nodes.length+' nodes':''}</span>
+    </div>
+    <div class="main">
+      <div id="graph" ref=${mount}></div>
+      ${!data && html`<div class="loading">loading taxonomy…</div>`}
+      ${busy && html`<div class="busy"><div class="spinner"></div>
+        <div>re-clustering (hyperbolic) + re-naming via DeepSeek…</div>
+        <div class="hint">whole corpus rebuilds around your anchors — ~30-60s</div></div>`}
+      <${Panel} node=${sel} onClose=${()=>setSel(null)} onRename=${onRename} busy=${busy}/>
+    </div>
+    ${err && data && html`<div class="hint err">error: ${err}</div>`}
+    <div class="hint">hyperbolic KMeans (Poincare ball) finds clusters from clause language · DeepSeek names discovered clusters · gold labels score purity post-hoc, never shown to the model · edit a name or add a cluster to anchor the geometry and re-run</div>
+  <//>`;
+}
+ReactDOM.createRoot(document.getElementById('root')).render(html`<${App}/>`);
+</script>
+</body>
+</html>

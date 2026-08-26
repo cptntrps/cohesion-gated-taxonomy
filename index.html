@@ -327,6 +327,7 @@ function App(){
       <button class="btn primary" disabled=${busy} onClick=${()=>action('/rerun',{})}>Re-run</button>
       <button class=${'btn tabbtn'+(showAnom?' on':'')} onClick=${()=>setShowAnom(s=>!s)}>⚠ Novel${data&&data.anomalies?` (${data.anomalies.length})`:''}</button>
       <button class="btn ghost" disabled=${busy} onClick=${()=>action('/reset',{})}>Reset (discovery)</button>
+      <a class="btn" href="extraction.html" style=${{textDecoration:'none',borderColor:'#245c33',color:'#8fe0a8'}}>→ Extraction demo</a>
       ${anchors.length>0 && html`<div class="anchors">
         ${anchors.map((a,i)=> html`<span class="anchor" key=${i}>${a}
           <span class="x" onClick=${()=>action('/unanchor',{name:a})}>×</span></span>`)}</div>`}

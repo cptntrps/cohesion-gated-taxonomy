@@ -5,3 +5,5 @@ members.json
 *.log
 scorecard.json
 purity_probe.json
+extraction.json
+extraction_validate.json

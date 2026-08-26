@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Contract field extraction — governing_law</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:system-ui,-apple-system,sans-serif;background:#0f1115;color:#e6e6e6;overflow-y:auto}
+.wrap{max-width:1100px;margin:0 auto;padding:1.2rem}
+a.back{color:#4a9eff;text-decoration:none;font-size:.85rem}
+h1{font-size:1.3rem;margin:.5rem 0 .2rem}
+h1 small{color:#8a8f98;font-weight:400;font-size:.85rem}
+.lead{color:#b8bdc7;font-size:.9rem;line-height:1.5;margin:.6rem 0 1.2rem;max-width:820px}
+.lead code{background:#1a1d24;padding:.05rem .35rem;border-radius:5px;color:#8fd0ff}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.8rem;margin-bottom:1.4rem}
+.card{background:#14171d;border:1px solid #23262e;border-radius:12px;padding:1rem}
+.card .big{font-size:1.9rem;font-weight:700;line-height:1.1}
+.card .lbl{font-size:.76rem;color:#8a8f98;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem}
+.card .sub{font-size:.8rem;color:#9aa0aa;margin-top:.3rem}
+.card.win{border-color:#245c33;background:#101c14}
+.card.win .big{color:#4ade80}
+.card.gate{border-color:#4a2f6a;background:#160f22}
+h2{font-size:1rem;margin:1.4rem 0 .6rem;color:#cbd0d8}
+.dist{display:flex;flex-direction:column;gap:.3rem;margin-bottom:.6rem}
+.drow{display:flex;align-items:center;gap:.6rem;font-size:.85rem}
+.drow .dn{width:130px;color:#cbd0d8}
+.drow .db{flex:1;height:16px;background:#1a1d24;border-radius:5px;overflow:hidden}
+.drow .db>span{display:block;height:100%;background:linear-gradient(90deg,#4a9eff,#6ad0ff)}
+.drow .dc{width:64px;text-align:right;color:#8a8f98;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:.4rem}
+th{text-align:left;color:#8a8f98;font-size:.72rem;text-transform:uppercase;letter-spacing:.04em;padding:.5rem .6rem;border-bottom:1px solid #23262e}
+td{padding:.5rem .6rem;border-bottom:1px solid #191c22;vertical-align:top}
+tr.low{background:#1c1410}
+.val{font-weight:600}
+.badge{font-size:.68rem;border-radius:5px;padding:.05rem .4rem}
+.badge.high{background:#16351f;color:#4ade80;border:1px solid #245c33}
+.badge.low{background:#3a2410;color:#f6a94a;border:1px solid #6a4a1f}
+.num{text-align:right;font-variant-numeric:tabular-nums}
+.samp{color:#7f858f;font-size:.76rem;line-height:1.4;max-width:460px}
+.foot{color:#565b66;font-size:.78rem;margin:1.4rem 0;line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← taxonomy</a>
+  <h1>Contract field extraction <small>concept → sub-cluster → value → <code>contract.governing_law</code></small></h1>
+  <div class="lead" id="lead"></div>
+  <div class="cards" id="cards"></div>
+  <h2>The extracted column — <code>governing_law</code> value distribution</h2>
+  <div class="dist" id="dist"></div>
+  <h2>Sub-clusters — one LLM call each, propagated to every member</h2>
+  <div style="overflow-x:auto"><table id="tbl"></table></div>
+  <div class="foot" id="foot"></div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+fetch('extraction.json',{headers:{'ngrok-skip-browser-warning':'1'}}).then(r=>r.json()).then(d=>{
+  const cheaper=Math.round(d.read_all_calls/d.k);
+  $('lead').innerHTML=`Every governing-law clause is grouped into <b>${d.k} sub-clusters</b>; the LLM is asked the state <b>once per sub-cluster</b> (${d.k} calls), and every clause in it inherits the answer — the field <code>${d.field}</code>. Ground truth is the state written in the clause text. This is the measured alternative to an LLM reading all <b>${d.n_clauses.toLocaleString()}</b> clauses.`;
+  const cards=[
+    {c:'win',big:d.cluster_first_acc+'%',lbl:'cluster-first accuracy',sub:d.k+' LLM calls · '+d.fanout+'× fanout'},
+    {c:'',big:d.read_all_acc+'%',lbl:'read-everything accuracy',sub:d.read_all_calls.toLocaleString()+' LLM calls'},
+    {c:'win',big:cheaper+'×',lbl:'fewer LLM calls',sub:Math.round(d.cluster_first_acc/d.read_all_acc*100)+'% of the accuracy at '+(100*d.k/d.n_clauses).toFixed(1)+'% of the cost'},
+    {c:'gate',big:d.hi_coh_acc+' / '+d.lo_coh_acc,lbl:'cohesion gate (high / low %)',sub:'gold-free confidence isolates errors — read only low-confidence'},
+  ];
+  $('cards').innerHTML=cards.map(c=>`<div class="card ${c.c}"><div class="lbl">${c.lbl}</div><div class="big">${c.big}</div><div class="sub">${c.sub}</div></div>`).join('');
+  const max=Math.max(...d.field_distribution.map(x=>x[1]));
+  $('dist').innerHTML=d.field_distribution.map(([v,c])=>`<div class="drow"><span class="dn">${v}</span><span class="db"><span style="width:${100*c/max}%"></span></span><span class="dc">${c.toLocaleString()}</span></div>`).join('');
+  $('tbl').innerHTML='<thead><tr><th>value (LLM)</th><th>clauses</th><th>confidence</th><th>accuracy</th><th>example clause</th></tr></thead><tbody>'+
+    d.rows.map(r=>`<tr class="${r.confidence}"><td class="val">${r.value}</td><td class="num">${r.size.toLocaleString()}</td><td><span class="badge ${r.confidence}">${r.confidence==='low'?'review':'trust'}</span></td><td class="num">${r.accuracy}%</td><td class="samp">${(r.samples[0]||'').replace(/</g,'&lt;')}…</td></tr>`).join('')+'</tbody>';
+  $('foot').innerHTML=`Concept clustering is category-blind, gold-free. The <b>${d.rows.filter(r=>r.confidence==='low').length}</b> low-confidence sub-clusters (marked "review") hold most of the errors — send only those to a human or a per-clause LLM read, trust the rest. On real contracts each clause's value rolls up to its contract row; LEDGAR clauses are standalone, so this is the clause-level field.`;
+}).catch(e=>{$('lead').textContent='Failed to load extraction.json — run build_extraction.py.';});
+</script>
+</body>
+</html>

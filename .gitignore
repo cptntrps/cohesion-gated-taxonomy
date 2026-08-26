@@ -4,3 +4,4 @@ tree.json
 members.json
 *.log
 scorecard.json
+purity_probe.json

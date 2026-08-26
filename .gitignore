@@ -9,3 +9,4 @@ extraction.json
 extraction_validate.json
 naming_conciseness.json
 extraction_semantic.json
+ng_emb.npz

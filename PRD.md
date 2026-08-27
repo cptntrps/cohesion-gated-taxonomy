@@ -105,10 +105,11 @@ items arrive.
 - **Not "cheaper AI review".** Per-document AI review has commoditized (~$0.11–0.50;
   RelativityOne bundles aiR at no additional cost from early 2026). An LLM-call saving
   is a margin lever, not a wedge. The wedge is EMERGE + local/private operation.
-- **No hyperbolic claim, in either direction.** The product is Euclidean-only. Our
-  hyperbolic measurements were withdrawn twice (docs/RESULTS.md §11–§12) and the arm
-  fails its WordNet positive control, so we assert nothing about hyperbolic — the
-  apparatus cannot currently measure it. Nothing in the shipped pipeline depends on it.
+- **The shipped product is Euclidean-only** — but not because hyperbolic failed. Our
+  hyperbolic-negative results were an artifact of gradient-descent Poincaré training;
+  with Sarkar's combinatorial construction, hyperbolic represents WordNet's hierarchy
+  better in 2 dimensions than our Euclidean does in 8 (docs/RESULTS.md §13). Hyperbolic
+  is simply not needed for the cohesion-gated extraction pipeline, which is the product.
 - **Not a novelty claim.** Every component has prior art; only the specific pre-call
   gating policy was not located. See README.
 

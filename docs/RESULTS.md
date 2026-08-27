@@ -249,3 +249,53 @@ here. `wordnet_control.py` and `wordnet_metric_check.py` are the control harness
 **Note on the rest of the repo.** The Euclidean-only results — the cohesion gate, the
 extraction frontier, naming, MAP/EMERGE, cross-domain generality — do not depend on the
 hyperbolic arm and are unaffected by this correction.
+
+
+---
+
+## 13. THIRD CORRECTION — hyperbolic works; our OPTIMIZER was the problem (2026-08-27)
+
+§12 said "no verdict — our apparatus cannot measure hyperbolic". We can now measure it,
+and **hyperbolic wins**. The fault was never the geometry; it was using gradient descent
+at all.
+
+**The pointer.** [Sala et al., ICML 2018](https://proceedings.mlr.press/v80/sala18a/sala18a.pdf)
+abandon SGD for hyperbolic embeddings *precisely because* it suffers poor local minima
+and severe initialization sensitivity, and instead use a deterministic **combinatorial
+construction** (Sarkar's). Our gradient failure reproduced their documented failure mode
+exactly: 88.6% of points pinned at the projection ceiling, radius↔depth ρ = 0.025, loss
+falling the whole time.
+
+**Sarkar's construction** (`sarkar_construction.py`, no optimization at all): root at the
+origin; children placed at even angular intervals at hyperbolic step τ, positioned via
+Möbius isometries that carry each parent to the origin and back.
+
+**WordNet nouns, 82,115 synsets, τ=3.0, TWO dimensions:**
+
+| method | dims | radius↔depth | tree-distance ρ |
+|---|---|---|---|
+| gradient-trained hyperbolic (ours) | 8 | +0.025 | −0.351 |
+| gradient-trained Euclidean (ours) | 8 | — | +0.610 |
+| **Sarkar-constructed hyperbolic** | **2** | **+0.774** | **+0.864** |
+
+**Hyperbolic in 2 dimensions beats Euclidean in 8** — the dimension-efficiency result the
+literature reports, reproduced here once the construction replaces the optimizer.
+
+**τ sweep** (40k subset) shows the expected curve, including the precision wall Sala et al.
+flag: τ=0.4 → 0.479, τ=0.8 → 0.557, τ=1.5 → 0.707, **τ=3.0 → 0.880**, τ=5.0 → 0.626
+(degrades; 80% of points past r>0.999999, float64 exhausted).
+
+**Standing position on hyperbolic — REVISED AGAIN:**
+- Hyperbolic **does** represent hierarchies with far better dimension efficiency, when
+  built by combinatorial construction.
+- **Gradient-based Poincaré training is unreliable** and was the sole cause of every
+  negative hyperbolic result in this repo. Those results measure our optimizer, not the
+  geometry, and should not be cited as evidence about hyperbolic embeddings.
+- The clustering comparisons (§9, "hyperbolic loses at clustering 6×") used the same
+  broken gradient training and are **likewise not evidence about hyperbolic**. They are
+  untrustworthy and would need re-running with a constructed embedding.
+
+**Method note for anyone reproducing:** do not gradient-train Poincaré embeddings without
+first passing a control where the answer is known. `wordnet_control.py` +
+`hyp_diagnose.py` (radius↔depth ρ, boundary-pinning %) are that gate. Loss is *not* a
+health signal — ours fell monotonically while the representation carried no hierarchy.

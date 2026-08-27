@@ -73,15 +73,17 @@ e-commerce (Amazon products). Same map-strong pattern in all three.
   failure with a named target, not a refutation.
 - **A crystallization feedback loop degrades monotonically**: feeding the discovered
   tree back in and re-embedding drives leaf-NMI 0.522 → 0.284 → 0.227 → 0.172.
-- **All hyperbolic comparisons in this repo: NO VERDICT (withdrawn twice).** We first
-  reported hyperbolic winning at hierarchy storage; that used degenerate evaluation
-  sampling and was retracted. The replacement conclusion ("Euclidean wins everywhere")
-  is *also* withdrawn: our hyperbolic arm **fails its positive control** on WordNet,
-  the benchmark where hyperbolic is published to win (we get MRR 0.391 vs a published
-  ≈0.98, while our Euclidean arm gets 0.756). The likely cause is optimizer
-  configuration, not geometry. We make no claim about hyperbolic in either direction —
-  our apparatus cannot currently measure it. See [docs/RESULTS.md §11–§12](docs/RESULTS.md).
-  **The Euclidean-only results below are unaffected.**
+- **Hyperbolic: our gradient training was broken; the geometry is fine.** Every negative
+  hyperbolic result we produced came from gradient-descent Poincaré training, which
+  [Sala et al. (ICML 2018)](https://proceedings.mlr.press/v80/sala18a/sala18a.pdf) show
+  is unreliable (poor local minima). We reproduced that failure exactly: 88.6% of points
+  pinned at the ball's projection ceiling and radius↔depth ρ = 0.025 while the loss fell
+  steadily. Replacing the optimizer with **Sarkar's combinatorial construction**, on
+  WordNet (82,115 synsets): radius↔depth **+0.774**, tree-distance **+0.864 in TWO
+  dimensions** — beating our gradient-trained Euclidean at 8 dimensions (+0.610).
+  **All hyperbolic-negative results in this repo measure our optimizer, not the geometry,
+  and should not be cited as evidence about hyperbolic embeddings.**
+  See [docs/RESULTS.md §11–§13](docs/RESULTS.md). Euclidean-only results are unaffected.
 - **Embedding anisotropy** (all category-pair cosines ≈0.91) is fixed for free by
   mean-centering — step one of All-but-the-Top (ICLR 2018) — with no clustering loss.
 - **Incidental attributes fail cluster-first extraction**: periodicity (mentioned in

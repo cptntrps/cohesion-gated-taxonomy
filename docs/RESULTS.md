@@ -205,3 +205,47 @@ test for storage, and it loses that.
 **Scope.** This does not replicate or refute published hyperbolic-embedding results
 (e.g. Sala et al. ICML 2018), which use different dimensions, losses and metrics
 (Hits@10, depth–radius correlation, MAP). It retracts *our* measurement only.
+
+
+---
+
+## 12. SECOND CORRECTION — our hyperbolic arm fails its positive control (2026-08-26)
+
+§11 retracted the hyperbolic storage claim and concluded "Euclidean wins everywhere".
+**That conclusion is now also withdrawn.** It was produced by a hyperbolic
+implementation that does not pass a benchmark with a known answer.
+
+**The control.** WordNet nouns (82,115 synsets, depth 18) are the canonical benchmark
+where hyperbolic embeddings are published to win decisively — Nickel & Kiela (NeurIPS
+2017) and Sala et al. (ICML 2018, MAP 0.989 in *two* dimensions). Run under our own
+protocol, with the transitive closure of the hypernym relation (603,757 edges,
+matching the published setup):
+
+| metric | Euclidean | hyperbolic | published expectation |
+|---|---|---|---|
+| MRR, parent reconstruction (published-style) | **0.756** | 0.391 | hyperbolic ≈0.98 |
+| tree-distance Spearman (our metric) | **0.610** | −0.351 | — |
+
+Hyperbolic loses on **both** metrics, including the one the literature uses. Our
+hyperbolic number is far below published values while our Euclidean number is
+reasonable. The most likely cause is optimizer configuration — RiemannianAdam at
+lr=0.05 with no burn-in phase, saturating points against the ball boundary in float32.
+Published protocols use burn-in (10 epochs at one-tenth the learning rate) and tuned
+Riemannian SGD.
+
+**Standing position on hyperbolic in this repo: NO VERDICT.**
+- The original "hyperbolic stores hierarchies without collapse" claim: **withdrawn**
+  (degenerate evaluation sampling, §11).
+- The replacement "Euclidean wins everywhere" claim: **also withdrawn** (the hyperbolic
+  arm fails its positive control).
+- We are not asserting that hyperbolic is better *or* worse. We are asserting that
+  **our apparatus cannot currently measure it**, and we know this because it fails a
+  benchmark with a known answer.
+
+Anyone reproducing hyperbolic comparisons from this repo should fix the optimizer
+setup and re-establish the WordNet control **before** trusting any hyperbolic number
+here. `wordnet_control.py` and `wordnet_metric_check.py` are the control harness.
+
+**Note on the rest of the repo.** The Euclidean-only results — the cohesion gate, the
+extraction frontier, naming, MAP/EMERGE, cross-domain generality — do not depend on the
+hyperbolic arm and are unaffected by this correction.

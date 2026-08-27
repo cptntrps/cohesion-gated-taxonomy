@@ -73,14 +73,15 @@ e-commerce (Amazon products). Same map-strong pattern in all three.
   failure with a named target, not a refutation.
 - **A crystallization feedback loop degrades monotonically**: feeding the discovered
   tree back in and re-embedding drives leaf-NMI 0.522 → 0.284 → 0.227 → 0.172.
-- **Hyperbolic storage advantage — RETRACTED (2026-08-26).** We originally reported
-  hyperbolic holding tree-distance correlation at 0.42–0.46 vs Euclidean 0.14–0.21.
-  That used degenerate evaluation sampling (random node pairs in a broad tree almost
-  all sit at the same distance). Re-measured with stratified pairs and a validity gate,
-  **Euclidean wins everywhere**: 0.588/0.501 vs 0.318/0.230 on synthetic trees at
-  200k/600k nodes, and 0.840 vs 0.082 on a real 234k-node discovered hierarchy.
-  Hyperbolic now has no measured advantage anywhere in this project (7 losses).
-  Details and ruled-out alternatives in [docs/RESULTS.md §11](docs/RESULTS.md).
+- **All hyperbolic comparisons in this repo: NO VERDICT (withdrawn twice).** We first
+  reported hyperbolic winning at hierarchy storage; that used degenerate evaluation
+  sampling and was retracted. The replacement conclusion ("Euclidean wins everywhere")
+  is *also* withdrawn: our hyperbolic arm **fails its positive control** on WordNet,
+  the benchmark where hyperbolic is published to win (we get MRR 0.391 vs a published
+  ≈0.98, while our Euclidean arm gets 0.756). The likely cause is optimizer
+  configuration, not geometry. We make no claim about hyperbolic in either direction —
+  our apparatus cannot currently measure it. See [docs/RESULTS.md §11–§12](docs/RESULTS.md).
+  **The Euclidean-only results below are unaffected.**
 - **Embedding anisotropy** (all category-pair cosines ≈0.91) is fixed for free by
   mean-centering — step one of All-but-the-Top (ICLR 2018) — with no clustering loss.
 - **Incidental attributes fail cluster-first extraction**: periodicity (mentioned in

@@ -1,0 +1,105 @@
+{
+ "central_types": [
+  [
+   "Authorizations",
+   0.6527265906333923,
+   620
+  ],
+  [
+   "Binding Effects",
+   0.6538248062133789,
+   588
+  ],
+  [
+   "Existence",
+   0.6560986042022705,
+   258
+  ],
+  [
+   "Consents",
+   0.6568827629089355,
+   444
+  ],
+  [
+   "Specific Performance",
+   0.6574282050132751,
+   326
+  ],
+  [
+   "Successors",
+   0.6578171253204346,
+   444
+  ],
+  [
+   "Authority",
+   0.6578423380851746,
+   549
+  ],
+  [
+   "Approvals",
+   0.6593999266624451,
+   178
+  ]
+ ],
+ "peripheral_types": [
+  [
+   "Death",
+   0.744996964931488,
+   278
+  ],
+  [
+   "Positions",
+   0.7454637885093689,
+   190
+  ],
+  [
+   "Defined Terms",
+   0.7488251328468323,
+   354
+  ],
+  [
+   "Counterparts",
+   0.7491495013237,
+   2427
+  ],
+  [
+   "Capitalization",
+   0.7508816123008728,
+   434
+  ],
+  [
+   "Headings",
+   0.7539923191070557,
+   587
+  ],
+  [
+   "Vacations",
+   0.7869594097137451,
+   341
+  ],
+  [
+   "Base Salary",
+   0.8129998445510864,
+   656
+  ]
+ ],
+ "scores": {
+  "E1 misfit": {
+   "auc_novel": 0.651,
+   "p40_novel": 17.5
+  },
+  "min-dist-any-leaf": {
+   "auc_novel": 0.668,
+   "p40_novel": 55.0
+  },
+  "E1 - 0.5*z(radius)": {
+   "auc_novel": 0.655,
+   "p40_novel": 37.5
+  },
+  "minall - 0.5*z(radius)": {
+   "auc_novel": 0.673,
+   "p40_novel": 50.0
+  }
+ },
+ "verdict": "SIGN WAS WRONG \u2014 inverted radius adds >= 10 pts to misfit's novel yield; min-dist-any-leaf still best overall"
+}

@@ -1,0 +1,182 @@
+{
+ "20ng": {
+  "n": 6000,
+  "k": 40,
+  "labels": 20,
+  "read_all": 67.0,
+  "cluster_first": 57.2,
+  "frontier": [
+   {
+    "frac": 0.0,
+    "calls": 40,
+    "acc": 57.2,
+    "ci": [
+     -14.8,
+     -4.8
+    ],
+    "random_gate": 57.2,
+    "parity": false
+   },
+   {
+    "frac": 0.1,
+    "calls": 640,
+    "acc": 62.3,
+    "ci": [
+     -9.2,
+     -0.2
+    ],
+    "random_gate": 58.3,
+    "parity": false
+   },
+   {
+    "frac": 0.2,
+    "calls": 1240,
+    "acc": 62.7,
+    "ci": [
+     -8.2,
+     -0.2
+    ],
+    "random_gate": 59.4,
+    "parity": false
+   },
+   {
+    "frac": 0.3,
+    "calls": 1840,
+    "acc": 63.0,
+    "ci": [
+     -8.0,
+     -0.2
+    ],
+    "random_gate": 60.3,
+    "parity": false
+   },
+   {
+    "frac": 0.4,
+    "calls": 2440,
+    "acc": 65.2,
+    "ci": [
+     -5.5,
+     1.8
+    ],
+    "random_gate": 61.1,
+    "parity": false
+   },
+   {
+    "frac": 0.5,
+    "calls": 3040,
+    "acc": 67.5,
+    "ci": [
+     -2.8,
+     3.8
+    ],
+    "random_gate": 62.2,
+    "parity": false
+   }
+  ],
+  "parity_frac": null,
+  "oos": {
+   "chosen_frac": 0.4,
+   "eval_acc": 65.0,
+   "eval_read_all": 65.5,
+   "ci": [
+    -5.5,
+    4.5
+   ],
+   "parity": false
+  }
+ },
+ "amazon": {
+  "n": 2500,
+  "k": 24,
+  "labels": 5,
+  "read_all": 65.2,
+  "cluster_first": 44.5,
+  "frontier": [
+   {
+    "frac": 0.0,
+    "calls": 24,
+    "acc": 44.5,
+    "ci": [
+     -26.0,
+     -15.5
+    ],
+    "random_gate": 44.5,
+    "parity": false
+   },
+   {
+    "frac": 0.1,
+    "calls": 274,
+    "acc": 46.5,
+    "ci": [
+     -23.8,
+     -13.8
+    ],
+    "random_gate": 46.9,
+    "parity": false
+   },
+   {
+    "frac": 0.2,
+    "calls": 524,
+    "acc": 49.2,
+    "ci": [
+     -20.8,
+     -11.2
+    ],
+    "random_gate": 49.2,
+    "parity": false
+   },
+   {
+    "frac": 0.3,
+    "calls": 774,
+    "acc": 55.0,
+    "ci": [
+     -14.2,
+     -6.0
+    ],
+    "random_gate": 51.3,
+    "parity": false
+   },
+   {
+    "frac": 0.4,
+    "calls": 1024,
+    "acc": 54.8,
+    "ci": [
+     -14.5,
+     -6.5
+    ],
+    "random_gate": 53.3,
+    "parity": false
+   },
+   {
+    "frac": 0.5,
+    "calls": 1274,
+    "acc": 57.5,
+    "ci": [
+     -11.2,
+     -4.5
+    ],
+    "random_gate": 55.5,
+    "parity": false
+   }
+  ],
+  "parity_frac": null,
+  "oos": {
+   "chosen_frac": 0.5,
+   "eval_acc": 54.0,
+   "eval_read_all": 65.0,
+   "ci": [
+    -16.0,
+    -6.0
+   ],
+   "parity": false
+  }
+ },
+ "verdicts": {
+  "F1_gate_dead": false,
+  "F2_no_parity_below_100": true,
+  "parity_fracs": {
+   "20ng": null,
+   "amazon": null
+  }
+ }
+}

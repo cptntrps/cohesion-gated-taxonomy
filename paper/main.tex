@@ -1,0 +1,211 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{microtype}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xcolor}
+
+\newcommand{\coh}{\mathrm{coh}}
+\title{\textbf{Cohesion-Gated Taxonomy Construction:\\ Label-Free Geometric Confidence for Allocating LLM Inference,\\ Adversarially Audited}}
+\author{Guilherme Vieira\\ \small\texttt{gffvieira@gmail.com}}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Organizing an unlabeled document corpus costs $O(N)$ decisions, whether a human or a language model makes them. We study a pipeline that spends local computation exhaustively and frontier-model inference selectively: embed every document locally, cluster, let an LLM name only the clusters, and use \emph{whole-cluster cohesion} (mean cosine of members to their centroid, computed with zero model calls) to decide which clusters receive one propagated cluster-level extraction and which receive exhaustive per-item reads. On LEDGAR governing-law extraction, the gated hybrid matches an exhaustive per-item baseline within noise at 5$\times$ fewer calls under an oracle-assisted protocol; we then re-ran the test with every prediction produced by a real model call and report that at $n{=}400$ the 5$\times$ claim is \emph{not} established at a pre-declared non-inferiority margin, while a 2$\times$ saving is. Cohesion predicts cluster purity at Spearman $+0.74$ and, in a five-seed, three-corpus replication, survives a cluster-size control (partial correlations $+0.48$ to $+0.71$). An end-to-end audit in which the system must first \emph{find} the concept with its own taxonomy shows the isolated-benchmark accuracy overstates production accuracy: routing recall 0.88 and precision 0.75 reduce correct-value coverage to 86.4\%, and 89\% of intruder items receive a confidently propagated wrong value, motivating a deterministic validator on all propagated values. We additionally report a hyperbolic-geometry arc with a methodological lesson: every negative hyperbolic result we produced traced to gradient optimization that fails a known-answer control, while a deterministic Sarkar construction embeds an 82{,}115-node hierarchy in \emph{two} dimensions with higher tree-distance fidelity ($\rho{=}+0.864$) than our gradient-trained Euclidean baseline in eight ($+0.610$); and an item-level audit that falsifies our own hyperbolic anomaly score against a plain cosine baseline, yielding a better two-queue replacement. All claims carry pre-registered falsifiers; negative results and retractions are reported at equal weight.
+\end{abstract}
+
+\section{Introduction}
+
+Turning a pile of documents into structure is bottlenecked by per-item attention. Reading every item with a frontier language model is accurate but linear in cost; human labeling is linear in scarcer currency. Most of that linear effort is spent on repetitive, internally consistent material.
+
+We evaluate a two-stage architecture on this problem. An exhaustive shallow stage runs locally and at negligible cost: embed every document with a small local model, cluster, and compute geometric evidence about every cluster. A selective deep stage spends expensive inference (LLM calls, human review) only where the geometry indicates uncertainty. The routing signal is \emph{cohesion}: the mean cosine similarity of a cluster's members to the cluster's unit centroid. Cohesion costs no model calls, so the budget decision itself is free.
+
+The embed--cluster--name pipeline is well-trodden prior art (Section~\ref{sec:related}). The specific mechanism we evaluate, and did not find in the literature, is using whole-cluster cohesion, computed \emph{before any item-level LLM call}, to decide which clusters get one cluster-level extraction propagated to all members and which get exhaustive per-item inference. We phrase this as ``not found in the literature we reviewed,'' not as a novelty claim.
+
+This paper has a second, methodological subject: what it takes to believe your own numbers. The initial results (Section~\ref{sec:results}) were promising, and several were wrong in ways invisible from inside the experiment. We therefore treat the audit of our own claims as first-class content (Section~\ref{sec:audit}): an oracle-contamination test, an out-of-sample calibration test, a ground-truth audit, a seed-stability test, and an end-to-end test in which the system must find the concept before extracting from it. Two audits weakened headline claims; two strengthened them; one exposed a production failure mode the benchmark structurally could not see. Section~\ref{sec:negative} reports our negative results and the three-stage correction of our hyperbolic-geometry claims, which reduces to a transferable rule: \emph{never trust a hyperbolic embedding that has not passed a known-answer control; training loss is not a health signal.}
+
+Contributions:
+\begin{enumerate}
+  \item A measured cost/quality frontier for cohesion-gated extraction on LEDGAR, with real-call, out-of-sample, and multi-seed audits that revise the headline downward honestly (5$\times$ unproven at $n{=}400$; 2$\times$ supported; gate beats random at every budget).
+  \item A three-corpus, five-seed validation that cohesion predicts cluster purity ($\rho$ from $+0.52$ to $+0.74$) and is not a cluster-size artifact (partial $\rho$ from $+0.48$ to $+0.71$), plus evidence that the multivariate alternative overfits (leave-one-out $R^2$ collapse).
+  \item An end-to-end audit separating \emph{finding} from \emph{extracting}, quantifying how benchmark isolation subsidizes accuracy (96\% $\rightarrow$ 86.4\% coverage) and exposing an 88.9\% false-assertion rate on intruders, with a zero-cost deterministic mitigation.
+  \item An item-level falsification of our own hyperbolic anomaly score against a cosine baseline (AUC 0.763 vs.\ 0.814), an ablation showing its radius term is both cosmetic and sign-inverted relative to where novel concepts live, and a two-queue Euclidean replacement that raises novel-concept precision@40 from 5\% to 55\%.
+  \item A replication lesson for hyperbolic embeddings: our gradient-trained Poincar\'e arm failed the WordNet positive control that the literature passes, invalidating six of our own negative comparisons, while Sarkar's optimization-free construction reproduced the published dimension-efficiency result (2-D beating our 8-D Euclidean).
+\end{enumerate}
+
+Code, per-experiment scripts with declared falsifiers in their docstrings, and machine-readable results accompany the paper.\footnote{\url{https://github.com/cptntrps/cohesion-gated-taxonomy}}
+
+\section{Related work}\label{sec:related}
+
+\textbf{Embed, cluster, name.} BERTopic \cite{bertopic}, TopicGPT \cite{topicgpt}, TnT-LLM \cite{tntllm}, and Clio \cite{clio} establish the pattern of clustering embeddings and using an LLM to label clusters; commercial systems (Nomic Atlas, Relativity Analytics) have shipped variants for years. Querying an LLM on cluster representatives and propagating to members appears in \cite{llmclusterprop} and, in the label-acquisition setting, in \cite{nguyen2004}.
+
+\textbf{Confidence-gated cascades.} FrugalGPT \cite{frugalgpt} routes queries between models by predicted difficulty, but its gate requires at least one model call per item; our gates (cohesion, item-margin) cost zero calls and therefore operate below the cascade's cost floor.
+
+\textbf{Internal cluster validity.} Cohesion is a member of the silhouette family \cite{rousseeuw1987}; published internal-vs-external validity correlations of $r\approx0.65$--$0.66$ bracket our $+0.74$, so the existence of the correlation is not novel; its use as a pre-hoc inference-budget allocator is the part we did not find. Geometry-driven budget allocation appears in active learning as TypiClust \cite{typiclust} and ProbCover \cite{probcover}.
+
+\textbf{Constrained clustering.} Human anchors as structural attractors follow seeded/constrained clustering \cite{basu2002} and anchored topic models.
+
+\textbf{Hyperbolic embeddings.} Poincar\'e embeddings \cite{nickel2017} and the combinatorial constructions of Sarkar \cite{sarkar2011} as analyzed by Sala et al.\ \cite{sala2018} motivate our hierarchy-representation experiments; Sala et al.\ explicitly document the unreliability of gradient optimization in the Poincar\'e ball, which our Section~\ref{sec:hyperbolic} reproduces exactly.
+
+\textbf{Anisotropy.} Our mean-centering result is step one of All-but-the-Top \cite{mu2018}.
+
+\section{Method}\label{sec:method}
+
+\subsection{Pipeline}
+Documents are embedded locally (\texttt{nomic-embed-text}, 768-d, unit-normalized; embeddings are cached, so the corpus never leaves the host and marginal cost is zero). A divisive KMeans tree is built top-down. An LLM names only clusters, from the $k{=}10$ most central members plus the ancestor chain; naming failures are surfaced, never backfilled. Gold labels are used exclusively for post-hoc scoring, never in clustering, naming, routing, or stopping.
+
+\subsection{Geometric evidence}
+For a cluster with member matrix $V_m$ (unit rows) and unit centroid $c$:
+\[
+\coh(V_m) = \tfrac{1}{|m|}\textstyle\sum_i \langle v_i, c\rangle .
+\]
+\emph{Multimodality} is the cosine silhouette of the best 2-means split of the cluster: high values indicate a real seam (two concepts merged); low values indicate coherence, however coarse.
+
+\subsection{Two modes with different loss functions}
+\textsc{Map} answers ``where does each item belong in a taxonomy I have?'' It splits to a fixed depth to maximize assignment purity; its failure mode is wrong assignment. \textsc{Emerge} answers ``what concepts exist, given no taxonomy?'' It splits \emph{only} where multimodality exceeds a seam threshold and stops when unimodal; its failure mode is the \emph{false merge} of distinct concepts, and a coarse-but-coherent node is correct output, not error. Scoring \textsc{Emerge} against a reference taxonomy is a category error: on 20~Newsgroups the system merged \texttt{rec.autos} with \texttt{rec.motorcycles}, arguably a better taxonomy than the reference, scored as error by purity.
+
+\subsection{Human anchors}
+A human rename or new concept name is embedded into the document space and becomes an attractor: every document joins its nearest anchor if cosine $\geq 0.60$, the remainder falls back to discovery clustering, and anchored clusters keep the human name. An anchor no document matches remains visible and empty. Corrections are therefore structural, not cosmetic, and the interactive loop (observe $\rightarrow$ name $\rightarrow$ re-cluster) lets a domain expert encode a folk taxonomy without taxonomy expertise.
+
+\subsection{Cohesion-gated extraction}
+Given a frozen clustering and an extraction field, the system makes one real LLM call per cluster (on six central representatives) and propagates the answer to members. Clusters in the lowest cohesion quantile (the \emph{read fraction}) instead receive per-item LLM reads. Both arms use the same model.
+
+\subsection{Two-queue triage (replacing single-score anomaly ranking)}
+Section~\ref{sec:anomaly} shows that no single geometric score separates the two things an anomaly panel conflates. The replacement uses two Euclidean signals: \emph{novelty} $=$ distance to the \emph{nearest} leaf centroid over all leaves (far from every known concept $\Rightarrow$ the taxonomy lacks this concept), and \emph{misassignment margin} $=$ the amount by which some other leaf's centroid beats the item's own (strongly attracted elsewhere $\Rightarrow$ filed in the wrong node). Each feeds its own queue: new-concept proposals to the anchor loop; reassignment candidates to review.
+
+\section{Experimental setup}\label{sec:setup}
+
+\textbf{Corpora.} LEDGAR \cite{ledgar} (60{,}000 contract clauses, 100 provision types; the governing-law extraction subset has 3{,}167 clauses); 20~Newsgroups (6{,}000 posts, 6 super-groups / 20 groups); Amazon products (3{,}000 items, 6 top categories); WordNet nouns (82{,}115 synsets) as a known-answer control for hierarchy representation.
+
+\textbf{Models.} Embedder: \texttt{nomic-embed-text} (768-d, local). Namer/extractor for the original experiments: \texttt{deepseek-v4-flash} at temperature 0. The audit suite (Section~\ref{sec:audit}) was run with a local \texttt{gemma3:27b} as the extractor in \emph{both} arms of every paired comparison; its read-everything accuracy (97.0\%) and real cluster-level accuracy (92.2\%) match the DeepSeek figures (96.5\%, 92.2\%), so the pipeline is not extractor-fragile, and paired comparisons remain internally valid.
+
+\textbf{Ground truth.} For governing-law extraction, a regex over the clause text (the state is literally written). Section~\ref{sec:oracle} audits this oracle. Reference labels for purity/NMI/AMI come with each corpus and are evaluation-only.
+
+\textbf{Measurement rules} (held throughout): significance for any accuracy comparison via paired bootstrap on per-item differences (4{,}000 resamples); if the CI includes zero the claim is ``matches,'' never ``beats''; purity (per-item \%), NMI, and AMI reported as distinct quantities; chance-corrected AMI alongside NMI; majority and random-at-equal-budget baselines; never assume an LLM read is correct---measure it; a failed positive control invalidates the apparatus, not the theory. Random seeds fixed; seed sensitivity measured explicitly (Section~\ref{sec:seeds}).
+
+\section{Results}\label{sec:results}
+
+\subsection{Cohesion is a label-free confidence signal}\label{sec:cohesion}
+Across 83 LEDGAR leaves, cohesion correlates with gold purity at Spearman $+0.74$ (multivariate OLS over six geometric signals: in-sample $R^2=0.61$). Operationally, above-median-cohesion clusters are 98.0\% accurate under cluster-level extraction versus 79.2\% below the median: the gate separates the errors without labels.
+
+\textbf{Generality and the size confound (audit).} Cluster size correlates with purity at $-0.55$ in the same probe, and small clusters are mechanically tighter, so cohesion could be a size proxy. Rebuilding structure-only trees on three corpora with five seeds each:
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+corpus & full $\rho$ & partial $\rho$ ($|$ log size) & $R^2$ in-sample & $R^2$ LOO \\
+\midrule
+LEDGAR & $+0.711$ & $+0.671$ & 0.533 & 0.496 \\
+20 Newsgroups & $+0.516$ & $+0.483$ & 0.345 & 0.247 \\
+Amazon & $+0.736$ & $+0.709$ & 0.588 & 0.294 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The univariate signal generalizes and survives the size control. The multivariate model does not survive leave-one-out on the smaller corpora; we therefore recommend the univariate cohesion rank and treat the $R^2$ as bookkeeping.
+
+\subsection{Gated extraction: the honest frontier}\label{sec:frontier}
+LEDGAR governing-law $\rightarrow$ US state; 2{,}475 clauses with oracle states; $K{=}40$ clusters; paired sample $n{=}400$.
+
+Under the original protocol the cluster arm used the cluster's gold-majority label (an oracle). The audit replaced it with real per-cluster LLM calls. The oracle turned out to be nearly immaterial to the cluster arm itself, because real calls reproduce the majority label almost exactly (92.2\% vs.\ 92.2\% at seed 13; max gap 1.0 point over five seeds). What the honest test changed was the confidence interval story:
+
+\begin{center}
+\begin{tabular}{rrrrl}
+\toprule
+read \% & calls & hybrid acc.\ & 95\% CI vs.\ read-all & at margin $-2.0$ \\
+\midrule
+10\% & 80 & 95.8\% & $[-3.8, +1.2]$ & not established \\
+20\% & 120 & 96.5\% & $[-2.8, +1.8]$ & not established \\
+30\% & 161 & 96.8\% & $[-2.5, +1.8]$ & not established \\
+40\% & 206 & 97.8\% & $[-1.0, +2.8]$ & \textbf{established} \\
+50\% & 242 & 98.0\% & $[-0.8, +2.8]$ & \textbf{established} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Read-everything on the same sample: 97.0\% at 400 calls. With every prediction real, non-inferiority at a pre-declared $-2.0$-point margin holds from a 40\% read budget ($\sim$2$\times$ fewer calls) but is \emph{not established} at the 20\% budget that the original ``5$\times$ fewer calls'' headline used: the point estimate is $-0.5$ but the interval is too wide at $n{=}400$. The honest claim is \emph{matches at $\sim$2$\times$; 5$\times$ requires a larger paired sample} ($n{\approx}1000$).
+
+\textbf{Gate ablation at equal budget} (all gates zero-call): cohesion beats a random gate at every budget (e.g.\ 94.7\% vs.\ 92.4\% at 100 reads) and per-item margin overtakes cohesion at high budgets (99.4\% vs.\ 98.6\% at 1{,}000 reads). The deployable insight is the zero-call \emph{cascade}, with the signal chosen by budget, rather than cohesion specifically. A FrugalGPT-style gate needs one call per item (2{,}475-call floor here) and thus cannot operate in this regime at all.
+
+\subsection{Out-of-sample calibration (audit)}\label{sec:oos}
+Choosing the read fraction on the evaluation sample is post-hoc selection. Splitting the 400 items into calibration/evaluation halves and selecting, on calibration, the smallest fraction matching read-everything: the procedure picked 10\%; on the untouched half the policy scored 94.0\% vs.\ read-everything 96.5\% (CI $[-6.5, +1.5]$): non-inferiority \emph{fails} out of sample, though the gate still beats a random gate at equal budget by $+3.2$ points. Small calibration sets overfit the threshold; a read-floor ($\geq$30\%) or larger calibration set is required. We report this as a genuine procedural weakness that the original evaluation could not see.
+
+\subsection{Auditing the oracle}\label{sec:oracle}
+The regex oracle silently dropped 519 of 3{,}167 clauses (16\%) that plainly name a state (case and format brittleness), and the evaluation kept only regex-resolvable items, risking survivor bias toward easy items. A case-insensitive oracle (100.0\% agreement with the original on their overlap) recovers 451 clauses. The audit's surprise: the recovered items are \emph{easier}, not harder---cluster-first accuracy on them is 97.1\% vs.\ 92.2\% on the original set (pooled 92.9\%), and per-item reads score 96.0\%. The exclusion did not inflate the claim. 285 clauses (9\%) remain oracle-less and would require human adjudication.
+
+\subsection{The end-to-end audit: finding is not free}\label{sec:e2e}
+Every number above conditions on the governing-law clauses being pre-isolated---by the \emph{benchmark's gold labels}. In production the system must find the concept itself. Running production-shaped (take the tool's own category-blind tree, select the nodes its namer called ``Governing Law,'' extract on that found set):
+
+\begin{center}
+\begin{tabular}{lr}
+\toprule
+routing recall (true GL clauses found) & 0.882 \\
+routing precision (found set purity) & 0.752 \\
+extraction accuracy on correctly-found items & 97.9\% \\
+end-to-end correct-value coverage & \textbf{86.4\%} \\
+false-assertion rate on intruder items & \textbf{88.9\%} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Two distinct harms. First, coverage: 12\% of true items are never seen, so the isolated-set 96--97\% becomes 86.4\% of contracts correctly filled. Second, and worse, \emph{record poisoning}: cluster-level propagation hands the cluster's state to the 25\% of found items that are not governing-law clauses at all (venue and jurisdiction lookalikes), writing $\sim$820 confident wrong values at corpus scale. The benchmark structurally cannot observe either harm. The mitigation is deterministic and free: validate every propagated value against the item's text (does the clause contain the asserted state or governing language?); failures route to \emph{unresolved}, never to a silent value. Until such a validator runs, isolated-set accuracy must not be quoted as system accuracy.
+
+\subsection{Human effort and cross-domain behavior}
+On 20~Newsgroups, naming 20 clusters organizes 6{,}000 documents at 57.3\% per-item purity (NMI 0.572, AMI 0.567), roughly 300$\times$ fewer human decisions than per-item labeling; purity rises and NMI/AMI peak exactly at the true group count, giving a label-free depth heuristic. The same pipeline behaves consistently on legal (purity 8--10$\times$ majority baseline), news (above), and product text (68.9\% vs.\ 20\% baseline). \textsc{Emerge} cuts the false-merge rate from 66.2\% to 15.9\% at a purity cost (41.6 $\rightarrow$ 29.9); we flag honestly that the false-merge metric shares its seam signal with the split rule (the router grades its own homework), so the magnitude awaits blind human adjudication.
+
+\subsection{Naming}
+A minimal prompt (``shortest canonical name'') beat a verbose one on every measure: mean words 3.06 $\rightarrow$ 1.40, names containing ``and'' 35\% $\rightarrow$ 2\%, similarity to the canonical legal heading 0.766 $\rightarrow$ 0.886, duplicate names per repeated concept 2.29 $\rightarrow$ 1.35. A compound-name resolution heuristic (pick the conjunct closest to the centroid) \emph{lost} (0.682 vs.\ 0.733) and was not shipped.
+
+\subsection{Seed stability}\label{sec:seeds}
+Across five clustering seeds with real cluster calls per seed, hybrid accuracy at fixed budgets spreads 2.5--2.8 points, driven by cluster-arm variance (real cluster-first 90.8--93.5\%). Gate numbers on this task should be read as $\pm 1.4$ points.
+
+\section{Negative results and corrections}\label{sec:negative}
+
+We report these at equal weight; several killed our own hypotheses.
+
+\subsection{Pipeline negatives}
+\emph{Crystallization feedback} (re-embed the discovered tree, reassign, iterate) degraded monotonically (leaf NMI $0.522 \rightarrow 0.172$ over three rounds); note this loop used the gradient apparatus of Section~\ref{sec:hyperbolic}, so its honest status is apparatus-suspect rather than falsified. \emph{Whitening} destroys category structure (68.9\% $\rightarrow$ 45.4\%): the top principal components \emph{are} the signal, while plain mean-centering fixes embedding anisotropy for free (mean category-pair cosine 0.91 $\rightarrow$ $-0.24$) with no clustering change \cite{mu2018}. \emph{Cluster-first extraction fails on incidental attributes}: an attribute mentioned in passing (payment periodicity) scored 33.9\% against an 80.1\% majority baseline; the method requires the attribute to dominate the text. \emph{Annealed refinement} hurt ($-2.7$ purity) where greedy cohesion refinement helped in \textsc{Map} mode ($+5.2$); refinement also raises the false-merge rate, so it should be mode-coupled.
+
+\subsection{The hyperbolic arc: the optimizer was the problem}\label{sec:hyperbolic}
+We initially published (internally) that hyperbolic embeddings store a 600k-node hierarchy without collapse. \textbf{Retraction 1:} evaluation pairs were sampled uniformly; in a broad tree nearly all random pairs meet at the root (643 of 800 pairs shared one identical tree distance), so the correlation target was near-constant and the measurement meaningless. Stratified sampling plus a validity gate ($\geq$4 distinct target values, std $\geq$0.5) flipped the result to ``Euclidean wins everywhere.'' \textbf{Retraction 2:} that conclusion was withdrawn as well when the hyperbolic arm failed a positive control: on WordNet, where hyperbolic embeddings famously excel \cite{nickel2017,sala2018}, our gradient-trained arm scored parent-reconstruction MRR 0.391 (literature $\approx$0.98), with 88.6\% of points pinned at the ball's projection ceiling and radius--depth correlation $+0.025$, \emph{while training loss fell monotonically}. The apparatus, not the geometry, was broken; the six clustering losses we had attributed to hyperbolic geometry are equally void. Two of the retracted storage rows carry a second, independent defect: the ``real discovered'' hierarchies were KMeans-imposed on product embeddings with no verified intrinsic hierarchy, so they tested storage of an artificial tree.
+
+\textbf{Resolution:} replacing optimization with Sarkar's deterministic construction \cite{sarkar2011,sala2018} (children placed by M\"obius isometries at hyperbolic step $\tau$; no loss function) passes the control decisively: on 82{,}115 WordNet synsets in \emph{two} dimensions, radius--depth $+0.774$ and tree-distance $\rho = +0.864$, beating our gradient-trained Euclidean at eight dimensions ($+0.610$). A $\tau$ sweep reproduces the precision wall Sala et al.\ document ($\tau{=}3.0 \rightarrow 0.880$; $\tau{=}5.0 \rightarrow 0.626$ as float64 exhausts near the boundary).
+
+The transferable rule: \emph{gradient-trained Poincar\'e embeddings must pass a known-answer control before any comparative claim, and falling loss is not evidence of health.} Under this rule, hyperbolic geometry in our system retains exactly one validated role---compact representation and visualization of an already-built tree---and no valid losses.
+
+\subsection{Falsifying our own anomaly score}\label{sec:anomaly}
+The shipped novelty detector ranked items by Poincar\'e misfit to their leaf centroid plus $0.15\times$ ball radius, on a PCA-projected ball. A leaf-level correlation had suggested redundancy with cohesion; that is the wrong test for an item-level ranker, so we re-tested at item level with the innovation steelmanned (the radius term as a distinctiveness weight) and vindication conditions declared in advance. Ground truth from gold labels distinguishes \emph{novel} items (concept dominant in no leaf; 19{,}217 of 60{,}000) from \emph{misassigned} items (concept lives elsewhere; 16{,}765).
+
+Result: plain cosine misfit beats the shipped score on every metric (anomaly AUC 0.814 vs.\ 0.763; novel precision@40 17.5\% vs.\ 5.0\%), and the rankings genuinely differ (top-40 overlap 11/40). The radius term contributes $\sim$3\% of the score's spread, and radius alone is \emph{anti}-correlated with anomaly (AUC 0.335). Inspecting per-type mean radii explains why: the ball's center-to-edge axis reads \emph{abstract-to-concrete} (central: Authorizations, Binding Effects, Authority; peripheral: Base Salary, Vacations, Counterparts), and the taxonomy's homeless concepts are disproportionately the abstract ones---so the shipped $+$radius weight pointed \emph{away} from novelty. Inverting the sign lifts the misfit score's novel yield to 37.5\%@40, but the best signal needs no radius at all: distance to the \emph{nearest} leaf reaches 55\% novel@40 (11$\times$ the shipped score) and margin-to-another-leaf reaches 100\% misassigned@40, motivating the two-queue design of Section~\ref{sec:method}. Scope: this falsifies the shipped PCA-ball implementation; no item-level hyperbolic embedding that passes a depth control currently exists to test.
+
+\section{Limitations and threats to validity}
+(1) The false-merge metric shares its signal with the \textsc{Emerge} split rule; blind human adjudication is the open control. (2) One embedder; cohesion thresholds are not calibrated across embedding models. (3) The extraction study covers one field on one corpus family; the audit-suite extractor differs from the original (with strong convergence, but exact-model replication is pending). (4) $n{=}400$ paired samples leave the 5$\times$ question open by construction. (5) The regex oracle, though audited, still cannot score 9\% of items. (6) Contract-level rollup from clause-level results is untested. (7) Seed variance of $\pm1.4$ points bounds the precision of all gate numbers. (8) LLM outputs are provider-version dependent even at temperature zero.
+
+\section{Conclusion}
+A zero-call geometric signal can decide where language-model inference is worth spending: validated across three corpora and robust to a size confound, it buys a measured 2$\times$ call reduction at parity (5$\times$ plausible, unproven at current sample size) and beats random routing out of sample. The audits matter more than the headline: an oracle everyone should distrust turned out immaterial; a threshold procedure everyone would have shipped failed out of sample; a benchmark that looked complete was silently subsidized by its own gold labels, hiding both a coverage loss and a record-poisoning failure mode with a free deterministic fix. The hyperbolic arc contributes a reusable methodological rule (control first; loss is not health) and one validated capability (constructed 2-D representation of finished hierarchies). We offer the pattern---pre-registered falsifiers, paired tests, positive controls, and adversarial audits of one's own headline---as the paper's most transferable result.
+
+\begin{thebibliography}{20}
+\bibitem{bertopic} M.~Grootendorst. BERTopic: Neural topic modeling with a class-based TF-IDF procedure. \emph{arXiv:2203.05794}, 2022.
+\bibitem{topicgpt} C.~Pham, A.~Hoyle, S.~Sun, P.~Resnik, M.~Iyyer. TopicGPT: A prompt-based topic modeling framework. \emph{NAACL}, 2024.
+\bibitem{tntllm} M.~Wan et al. TnT-LLM: Text mining at scale with large language models. \emph{arXiv:2403.12173}, 2024.
+\bibitem{clio} A.~Tamkin et al. Clio: Privacy-preserving insights into real-world AI use. Anthropic, 2024.
+\bibitem{llmclusterprop} Anonymous. Label propagation from LLM-annotated cluster representatives. \emph{arXiv:2607.19704}, 2026.
+\bibitem{nguyen2004} H.~T. Nguyen, A.~Smeulders. Active learning using pre-clustering. \emph{ICML}, 2004.
+\bibitem{frugalgpt} L.~Chen, M.~Zaharia, J.~Zou. FrugalGPT: How to use large language models while reducing cost and improving performance. \emph{arXiv:2305.05176}, 2023.
+\bibitem{rousseeuw1987} P.~Rousseeuw. Silhouettes: A graphical aid to the interpretation and validation of cluster analysis. \emph{J.\ Comput.\ Appl.\ Math.}, 20:53--65, 1987.
+\bibitem{typiclust} G.~Hacohen, A.~Dekel, D.~Weinshall. Active learning on a budget: Opposite strategies suit high and low budgets. \emph{ICML}, 2022.
+\bibitem{probcover} O.~Yehuda, A.~Dekel, G.~Hacohen, D.~Weinshall. Active learning through a covering lens. \emph{NeurIPS}, 2022.
+\bibitem{basu2002} S.~Basu, A.~Banerjee, R.~Mooney. Semi-supervised clustering by seeding. \emph{ICML}, 2002.
+\bibitem{nickel2017} M.~Nickel, D.~Kiela. Poincar\'e embeddings for learning hierarchical representations. \emph{NeurIPS}, 2017.
+\bibitem{sala2018} F.~Sala, C.~De Sa, A.~Gu, C.~R\'e. Representation tradeoffs for hyperbolic embeddings. \emph{ICML}, 2018.
+\bibitem{sarkar2011} R.~Sarkar. Low distortion Delaunay embedding of trees in hyperbolic plane. \emph{Graph Drawing}, 2011.
+\bibitem{mu2018} J.~Mu, S.~Bhat, P.~Viswanath. All-but-the-top: Simple and effective postprocessing for word representations. \emph{ICLR}, 2018.
+\bibitem{ledgar} D.~Tuggener, P.~von D\"aniken, T.~Peetz, M.~Cieliebak. LEDGAR: A large-scale multi-label corpus for text classification of legal provisions in contracts. \emph{LREC}, 2020.
+\end{thebibliography}
+
+\end{document}

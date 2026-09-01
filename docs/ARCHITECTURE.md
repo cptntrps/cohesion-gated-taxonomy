@@ -42,9 +42,13 @@ The invariant: **nothing that scales with N is paid for by a human or an LLM.**
 
 ### Clustering is Euclidean, not hyperbolic
 Hyperbolic lost at clustering in 6 independent tests including a natively-trained
-Riemannian embedding (NMI 0.19 vs 0.47). Hyperbolic is retained only for
-scale-resilient storage of an *already-discovered* hierarchy, where it holds
-tree-distance fidelity flat from 20k → 600k nodes at dim 8.
+Riemannian embedding (NMI 0.19 vs 0.47) — but those runs used apparatus that later
+failed its positive control, so they are not evidence about the geometry (RESULTS
+§12–13). The earlier "holds tree-distance fidelity flat 20k → 600k at dim 8" storage
+claim is retracted (degenerate pair sampling, RESULTS §11). Current standing: Sarkar
+combinatorial construction passes the WordNet control decisively (2-D beats our
+8-D Euclidean, RESULTS §13); integration into the product tree is pending. Do not
+gradient-train Poincaré embeddings here without first passing `wordnet_control.py`.
 
 ### Mean-centering, not whitening
 Raw embeddings are anisotropic (all category-pair cosines ≈0.91), which makes concept

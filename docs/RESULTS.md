@@ -299,3 +299,14 @@ flag: τ=0.4 → 0.479, τ=0.8 → 0.557, τ=1.5 → 0.707, **τ=3.0 → 0.880**
 first passing a control where the answer is known. `wordnet_control.py` +
 `hyp_diagnose.py` (radius↔depth ρ, boundary-pinning %) are that gate. Loss is *not* a
 health signal — ours fell monotonically while the representation carried no hierarchy.
+
+**Scope addendum (owner, 2026-09-01) — the §11 "real discovered" rows have a second,
+independent defect.** Those 235k/284k-node hierarchies were imposed by divisive KMeans
+on Amazon product embeddings; no one verified the underlying data has intrinsic deep
+hierarchy. A storage test on a KMeans-imposed tree measures an artificial hierarchy —
+a known input limitation, not evidence about hyperbolic geometry. This argument covers
+the "real discovered" rows only: the synthetic k-ary rows were genuinely hierarchical
+by construction, so their result is explained by the broken optimizer alone (§12–13).
+Any future storage test must first pass the target-distance validity gate (≥4 distinct
+values, std ≥0.5) AND establish that the tree reflects real structure, e.g. a
+gold-label hierarchy or WordNet, not a clustering artifact.

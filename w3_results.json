@@ -1,0 +1,12 @@
+{
+ "n_gl": 3167,
+ "old_resolved": 2475,
+ "new_resolved": 2882,
+ "newly": 451,
+ "overlap_agreement_pct": 100.0,
+ "cf_acc_original_pct": 92.2,
+ "cf_acc_newly_pct": 97.1,
+ "cf_acc_pooled_pct": 92.9,
+ "read_acc_newly_pct": 96.0,
+ "g5": "NOT MATERIALLY INFLATED"
+}

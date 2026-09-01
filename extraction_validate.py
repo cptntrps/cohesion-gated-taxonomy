@@ -16,8 +16,8 @@ from extraction_test import STATES, ground_state
 from cluster import cohesion
 
 EMB = pathlib.Path(os.environ.get("LEDGAR_EMB", "ledgar_emb.npz"))
-API = "https://api.deepseek.com/v1/chat/completions"
-MODEL = "deepseek-v4-flash"
+API = os.environ.get("EXTRACT_API", "https://api.deepseek.com/v1/chat/completions")
+MODEL = os.environ.get("EXTRACT_MODEL", "deepseek-v4-flash")
 K = 40
 READ_SAMPLE = 150
 WORKERS = 8

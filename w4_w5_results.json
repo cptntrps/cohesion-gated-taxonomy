@@ -1,0 +1,151 @@
+{
+ "ledgar": {
+  "rows": [
+   {
+    "seed": 13,
+    "n_leaves": 128,
+    "full": 0.724,
+    "partial": 0.688,
+    "r2_in": 0.552,
+    "r2_loo": 0.52
+   },
+   {
+    "seed": 21,
+    "n_leaves": 124,
+    "full": 0.685,
+    "partial": 0.656,
+    "r2_in": 0.534,
+    "r2_loo": 0.495
+   },
+   {
+    "seed": 34,
+    "n_leaves": 128,
+    "full": 0.709,
+    "partial": 0.677,
+    "r2_in": 0.498,
+    "r2_loo": 0.45
+   },
+   {
+    "seed": 55,
+    "n_leaves": 132,
+    "full": 0.711,
+    "partial": 0.674,
+    "r2_in": 0.527,
+    "r2_loo": 0.494
+   },
+   {
+    "seed": 89,
+    "n_leaves": 124,
+    "full": 0.728,
+    "partial": 0.661,
+    "r2_in": 0.554,
+    "r2_loo": 0.522
+   }
+  ],
+  "mean_full": 0.711,
+  "mean_partial": 0.671,
+  "mean_r2_in": 0.533,
+  "mean_r2_loo": 0.496
+ },
+ "20ng": {
+  "rows": [
+   {
+    "seed": 13,
+    "n_leaves": 75,
+    "full": 0.533,
+    "partial": 0.478,
+    "r2_in": 0.375,
+    "r2_loo": 0.295
+   },
+   {
+    "seed": 21,
+    "n_leaves": 79,
+    "full": 0.536,
+    "partial": 0.503,
+    "r2_in": 0.307,
+    "r2_loo": 0.221
+   },
+   {
+    "seed": 34,
+    "n_leaves": 68,
+    "full": 0.448,
+    "partial": 0.46,
+    "r2_in": 0.328,
+    "r2_loo": 0.204
+   },
+   {
+    "seed": 55,
+    "n_leaves": 71,
+    "full": 0.532,
+    "partial": 0.474,
+    "r2_in": 0.351,
+    "r2_loo": 0.256
+   },
+   {
+    "seed": 89,
+    "n_leaves": 73,
+    "full": 0.531,
+    "partial": 0.502,
+    "r2_in": 0.363,
+    "r2_loo": 0.261
+   }
+  ],
+  "mean_full": 0.516,
+  "mean_partial": 0.483,
+  "mean_r2_in": 0.345,
+  "mean_r2_loo": 0.247
+ },
+ "amazon": {
+  "rows": [
+   {
+    "seed": 13,
+    "n_leaves": 25,
+    "full": 0.814,
+    "partial": 0.766,
+    "r2_in": 0.674,
+    "r2_loo": 0.447
+   },
+   {
+    "seed": 21,
+    "n_leaves": 23,
+    "full": 0.707,
+    "partial": 0.676,
+    "r2_in": 0.573,
+    "r2_loo": 0.221
+   },
+   {
+    "seed": 34,
+    "n_leaves": 22,
+    "full": 0.79,
+    "partial": 0.738,
+    "r2_in": 0.736,
+    "r2_loo": 0.577
+   },
+   {
+    "seed": 55,
+    "n_leaves": 26,
+    "full": 0.691,
+    "partial": 0.697,
+    "r2_in": 0.461,
+    "r2_loo": 0.09
+   },
+   {
+    "seed": 89,
+    "n_leaves": 27,
+    "full": 0.678,
+    "partial": 0.669,
+    "r2_in": 0.494,
+    "r2_loo": 0.136
+   }
+  ],
+  "mean_full": 0.736,
+  "mean_partial": 0.709,
+  "mean_r2_in": 0.588,
+  "mean_r2_loo": 0.294
+ },
+ "verdicts": {
+  "g6": "PASS",
+  "g7": "PASS",
+  "g8": "FAIL"
+ }
+}

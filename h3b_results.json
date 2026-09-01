@@ -1,0 +1,12 @@
+{
+ "novelty_queue": {
+  "auc_novel": 0.669,
+  "p40_novel_pct": 55.0
+ },
+ "misassign_queue": {
+  "auc_mis": 0.754,
+  "p40_mis_pct": 100.0
+ },
+ "shipped_reference_p40_novel_pct": 5.0,
+ "verdict": "TWO-QUEUE DESIGN WINS \u2014 replace the single hyperbolic panel"
+}

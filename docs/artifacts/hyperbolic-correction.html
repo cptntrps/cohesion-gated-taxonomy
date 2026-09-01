@@ -1,0 +1,363 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<title>The optimizer was the problem — a hyperbolic embedding correction</title>
+<style>
+  :root{
+    --ink:#12161C; --paper:#EFF1F3; --card:#FFFFFF; --rule:#D8DCE0;
+    --muted:#5A626C; --euclid:#4E6E8C; --hyper:#C9385E; --caution:#8A6D1F;
+    --disk:#E4E8EC; --diskline:#C6CCD3;
+    --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--ink:#E6EAEE; --paper:#0D1014; --card:#151A20; --rule:#262D35;
+      --muted:#98A2AD; --euclid:#7FA6C7; --hyper:#F2708F; --caution:#C8A44A;
+      --disk:#1B2128; --diskline:#2E3742;}
+  }
+  :root[data-theme="dark"]{--ink:#E6EAEE; --paper:#0D1014; --card:#151A20; --rule:#262D35;
+    --muted:#98A2AD; --euclid:#7FA6C7; --hyper:#F2708F; --caution:#C8A44A;
+    --disk:#1B2128; --diskline:#2E3742;}
+  :root[data-theme="light"]{--ink:#12161C; --paper:#EFF1F3; --card:#FFFFFF; --rule:#D8DCE0;
+    --muted:#5A626C; --euclid:#4E6E8C; --hyper:#C9385E; --caution:#8A6D1F;
+    --disk:#E4E8EC; --diskline:#C6CCD3;}
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+    line-height:1.62;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:70ch;margin:0 auto;padding:clamp(2rem,5vw,4.5rem) 1.25rem 6rem;
+    display:flex;flex-direction:column;gap:3rem}
+  .eyebrow{font:600 .72rem/1.4 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted)}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(2rem,5.2vw,3.1rem);
+    line-height:1.1;letter-spacing:-.015em;text-wrap:balance;margin:.7rem 0 0}
+  h2{font-family:var(--serif);font-weight:600;font-size:clamp(1.3rem,2.8vw,1.72rem);
+    line-height:1.2;text-wrap:balance;margin-bottom:.5rem}
+  h3{font:600 .95rem/1.35 var(--sans);margin-bottom:.35rem}
+  p{max-width:66ch}
+  .lede{font-size:1.09rem;color:var(--muted);margin-top:1rem;max-width:60ch}
+  a{color:inherit;text-underline-offset:3px;text-decoration-thickness:1px}
+  a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--hyper);
+    outline-offset:3px}
+  section{display:flex;flex-direction:column;gap:1rem}
+  .rule{height:1px;background:var(--rule);border:0}
+
+  /* hero disk */
+  .stage{background:var(--card);border:1px solid var(--rule);border-radius:2px;
+    padding:1.25rem;display:flex;flex-direction:column;gap:.9rem}
+  .diskwrap{display:flex;justify-content:center}
+  canvas{width:100%;max-width:440px;height:auto;display:block;touch-action:none}
+  .ctl{display:flex;align-items:center;gap:.9rem;flex-wrap:wrap;
+    font:500 .8rem/1.4 var(--mono)}
+  .ctl label{color:var(--muted);letter-spacing:.04em}
+  input[type=range]{flex:1;min-width:170px;accent-color:var(--hyper)}
+  .tau{font-variant-numeric:tabular-nums;color:var(--hyper);font-weight:700;min-width:3.4ch}
+  .readout{display:flex;gap:1.4rem;flex-wrap:wrap;font:500 .78rem/1.5 var(--mono);
+    color:var(--muted);border-top:1px solid var(--rule);padding-top:.75rem}
+  .readout b{color:var(--ink);font-variant-numeric:tabular-nums;font-weight:700}
+  .warnpill{color:var(--caution);font-weight:700}
+
+  /* comparison bars */
+  .bars{display:flex;flex-direction:column;gap:.7rem}
+  .bar{display:grid;grid-template-columns:minmax(9.5rem,auto) 1fr auto;gap:.8rem;
+    align-items:center;font:500 .84rem/1.3 var(--sans)}
+  .bar .track{height:1.45rem;background:var(--disk);position:relative;border-radius:1px;
+    overflow:hidden}
+  .bar .fill{position:absolute;inset:0 auto 0 0;border-radius:1px}
+  .bar .val{font:700 .86rem/1 var(--mono);font-variant-numeric:tabular-nums;min-width:4.2ch;
+    text-align:right}
+  .bar .dims{color:var(--muted);font:500 .72rem/1 var(--mono)}
+  .neg .fill{background:var(--rule)}
+
+  table{width:100%;border-collapse:collapse;font:500 .84rem/1.45 var(--sans)}
+  .tblwrap{overflow-x:auto;border:1px solid var(--rule);border-radius:2px;background:var(--card)}
+  th{font:600 .68rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted);text-align:left;padding:.7rem .85rem;border-bottom:1px solid var(--rule);
+    white-space:nowrap}
+  td{padding:.62rem .85rem;border-bottom:1px solid var(--rule);white-space:nowrap}
+  tr:last-child td{border-bottom:0}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+  .win{color:var(--hyper);font-weight:700}
+  .lose{color:var(--muted)}
+  tr.peak td{background:color-mix(in srgb,var(--hyper) 9%,transparent)}
+
+  /* correction sequence — numbered because it IS a sequence */
+  ol.chain{list-style:none;display:flex;flex-direction:column;gap:1.1rem;counter-reset:c}
+  ol.chain li{counter-increment:c;display:grid;grid-template-columns:2.1rem 1fr;gap:.9rem;
+    align-items:start}
+  ol.chain li::before{content:counter(c);font:700 .78rem/2.1rem var(--mono);
+    text-align:center;color:var(--paper);background:var(--caution);border-radius:50%;
+    width:2.1rem;height:2.1rem}
+  ol.chain li:last-child::before{background:var(--hyper)}
+  .verdict{font:600 .72rem/1.4 var(--mono);letter-spacing:.09em;text-transform:uppercase;
+    color:var(--caution)}
+  ol.chain li:last-child .verdict{color:var(--hyper)}
+
+  .callout{border-left:2px solid var(--hyper);padding:.15rem 0 .15rem 1.05rem;
+    color:var(--muted)}
+  .callout strong{color:var(--ink)}
+  footer{font:500 .78rem/1.6 var(--mono);color:var(--muted);border-top:1px solid var(--rule);
+    padding-top:1.2rem}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="eyebrow">Correction · WordNet · 82,115 synsets</div>
+    <h1>The optimizer was the problem, not the geometry</h1>
+    <p class="lede">Seven experiments concluded hyperbolic embeddings were useless for
+    hierarchy. All seven were measuring a broken gradient descent. Replacing the optimizer
+    with a deterministic construction reversed the result: hyperbolic represents WordNet's
+    tree better in <strong>two</strong> dimensions than Euclidean does in eight.</p>
+  </header>
+
+  <section>
+    <h2>Sarkar's construction, live</h2>
+    <p>Children are placed at even angular intervals around each parent and pushed outward
+    by a hyperbolic step τ, positioned through Möbius isometries. No gradient descent, no
+    loss function — the tree is <em>placed</em>, not learned. Drag τ to watch the exponential
+    volume near the boundary do the work, then keep going until float precision fails.</p>
+
+    <div class="stage">
+      <div class="diskwrap"><canvas id="disk" width="880" height="880"
+        aria-label="Poincaré disk showing a tree placed by Sarkar's construction"></canvas></div>
+      <div class="ctl">
+        <label for="tau">τ</label>
+        <input id="tau" type="range" min="0.2" max="6" step="0.1" value="3">
+        <span class="tau" id="tauv">3.0</span>
+      </div>
+      <div class="readout">
+        <span>depth <b id="rd">6</b></span>
+        <span>nodes <b id="rn">0</b></span>
+        <span>max radius <b id="rr">0</b></span>
+        <span id="rw"></span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <h2>The result</h2>
+    <p>Tree-distance fidelity — Spearman correlation between embedded distance and true
+    hop distance, on stratified pairs spanning the full range. Same corpus, same evaluation.</p>
+
+    <div class="bars">
+      <div class="bar">
+        <div>Sarkar construction<div class="dims">2 dimensions</div></div>
+        <div class="track"><div class="fill" style="width:86.4%;background:var(--hyper)"></div></div>
+        <div class="val win">+0.864</div>
+      </div>
+      <div class="bar">
+        <div>Euclidean, gradient<div class="dims">8 dimensions</div></div>
+        <div class="track"><div class="fill" style="width:61%;background:var(--euclid)"></div></div>
+        <div class="val">+0.610</div>
+      </div>
+      <div class="bar neg">
+        <div>Hyperbolic, gradient<div class="dims">8 dimensions</div></div>
+        <div class="track"><div class="fill" style="width:35.1%"></div></div>
+        <div class="val lose">−0.351</div>
+      </div>
+    </div>
+
+    <p class="callout"><strong>Four times fewer dimensions, and it wins.</strong> That is the
+    dimension-efficiency claim the literature makes for hyperbolic space, reproduced here
+    only once the construction replaced the optimizer.</p>
+  </section>
+
+  <section>
+    <h2>τ sweep — and the precision wall</h2>
+    <p>Larger τ separates levels more sharply and fidelity climbs, exactly as Sala et al.
+    predict. It also drives points toward the boundary, and past τ≈3 float64 runs out of
+    room to distinguish them. The degradation at τ=5 is not a tuning failure; it is the
+    documented limit of the representation.</p>
+
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>τ</th><th class="num">radius ↔ depth</th><th class="num">tree-distance ρ</th><th>state</th></tr></thead>
+        <tbody>
+          <tr><td class="num">0.4</td><td class="num">+0.393</td><td class="num">+0.479</td><td class="lose">under-separated</td></tr>
+          <tr><td class="num">0.8</td><td class="num">+0.476</td><td class="num">+0.557</td><td class="lose">under-separated</td></tr>
+          <tr><td class="num">1.5</td><td class="num">+0.696</td><td class="num">+0.707</td><td class="lose">approaching</td></tr>
+          <tr class="peak"><td class="num">3.0</td><td class="num">+0.810</td><td class="num win">+0.880</td><td class="win">optimum</td></tr>
+          <tr><td class="num">5.0</td><td class="num">+0.843</td><td class="num">+0.626</td><td class="warnpill">precision wall</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="eyebrow">τ sweep measured on a 40,000-synset subset; headline figures on the full 82,115.</p>
+  </section>
+
+  <hr class="rule">
+
+  <section>
+    <h2>What the failure actually looked like</h2>
+    <p>Gradient descent did not fail loudly. It found a degenerate optimum: shoving every
+    point against the ball's projection ceiling maximizes distance from negative samples,
+    so the loss fell steadily while the representation stopped encoding anything.</p>
+
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>diagnostic</th><th class="num">gradient</th><th class="num">construction</th></tr></thead>
+        <tbody>
+          <tr><td>radius ↔ depth correlation</td><td class="num lose">+0.025</td><td class="num win">+0.774</td></tr>
+          <tr><td>points pinned at r &gt; 0.99</td><td class="num lose">88.6%</td><td class="num win">0%</td></tr>
+          <tr><td>training loss</td><td class="num">2.197 → 0.164</td><td class="num">—</td></tr>
+          <tr><td>tree-distance ρ</td><td class="num lose">−0.351</td><td class="num win">+0.864</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="callout"><strong>Loss was never a health signal.</strong> It improved
+    monotonically the entire time the geometry was collapsing. Nothing in the pipeline could
+    distinguish learning from collapse — which is why the error survived seven experiments
+    and two published conclusions.</p>
+  </section>
+
+  <section>
+    <h2>Three corrections</h2>
+    <p>Each conclusion was published, then overturned by the next check. The sequence
+    matters: every step was a real finding at the time, defeated by a better control.</p>
+
+    <ol class="chain">
+      <li>
+        <div>
+          <div class="verdict">Retracted — degenerate sampling</div>
+          <h3>“Hyperbolic stores hierarchy without collapse”</h3>
+          <p>Evaluation pairs were drawn at random. In a broad tree, random nodes almost
+          always meet only at the root — 643 of 800 pairs shared one identical distance.
+          Correlation against a near-constant target is meaningless.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="verdict">Withdrawn — failed control</div>
+          <h3>“Euclidean wins everywhere”</h3>
+          <p>Stratified sampling fixed the target and flipped the result. But the hyperbolic
+          arm scored 0.391 on WordNet reconstruction where the literature reports ≈0.98 —
+          a benchmark with a known answer, failed. The apparatus, not the geometry.</p>
+        </div>
+      </li>
+      <li>
+        <div>
+          <div class="verdict">Standing</div>
+          <h3>The construction wins in 2D</h3>
+          <p>Sala et al. abandon gradient descent for hyperbolic embeddings precisely because
+          it suffers poor local minima. Substituting Sarkar's combinatorial construction
+          produced +0.864 in two dimensions — and retroactively invalidated every
+          hyperbolic-negative result in the project, including six clustering losses.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <footer>
+    WordNet nouns via NLTK, 82,115 synsets, first-hypernym tree, max depth 20.<br>
+    Construction: Sarkar placement in the Poincaré disk, float64, no optimization.<br>
+    Baselines: RiemannianAdam / Adam, lr 0.05, 600 epochs × 100k samples, dim 8.<br>
+    Gate: never gradient-train a Poincaré embedding without first passing a known-answer control.
+  </footer>
+</div>
+
+<script>
+(function(){
+  const cv=document.getElementById('disk'), ctx=cv.getContext('2d');
+  const tauEl=document.getElementById('tau'), tauv=document.getElementById('tauv');
+  const rd=document.getElementById('rd'), rn=document.getElementById('rn'),
+        rr=document.getElementById('rr'), rw=document.getElementById('rw');
+  const B=3, DEPTH=6;
+
+  // complex helpers
+  const cadd=(a,b)=>[a[0]+b[0],a[1]+b[1]];
+  const csub=(a,b)=>[a[0]-b[0],a[1]-b[1]];
+  const cmul=(a,b)=>[a[0]*b[0]-a[1]*b[1],a[0]*b[1]+a[1]*b[0]];
+  const cconj=a=>[a[0],-a[1]];
+  const cdiv=(a,b)=>{const d=b[0]*b[0]+b[1]*b[1]||1e-18;
+    return [(a[0]*b[0]+a[1]*b[1])/d,(a[1]*b[0]-a[0]*b[1])/d];};
+  const cabs=a=>Math.hypot(a[0],a[1]);
+  // Möbius: takes x -> 0 (toOrigin), and 0 -> x (fromOrigin)
+  const toOrigin=(x,z)=>cdiv(csub(z,x),csub([1,0],cmul(cconj(x),z)));
+  const fromOrigin=(x,z)=>cdiv(cadd(z,x),cadd([1,0],cmul(cconj(x),z)));
+
+  function build(tau){
+    const R=Math.tanh(tau/2);
+    const nodes=[{p:[0,0],parent:-1,depth:0}];
+    let frontier=[0];
+    for(let d=0;d<DEPTH;d++){
+      const next=[];
+      for(const ui of frontier){
+        const u=nodes[ui], k=B;
+        let base=0;
+        if(u.parent>=0){ const zp=toOrigin(u.p,nodes[u.parent].p); base=Math.atan2(zp[1],zp[0]); }
+        for(let i=0;i<k;i++){
+          const a = u.parent<0 ? (2*Math.PI*i/k)
+                               : base+Math.PI*(1+2*(i+1)/(k+1));
+          const local=[R*Math.cos(a),R*Math.sin(a)];
+          const p=fromOrigin(u.p,local);
+          if(!isFinite(p[0])||!isFinite(p[1])) continue;
+          nodes.push({p:p,parent:ui,depth:d+1});
+          next.push(nodes.length-1);
+        }
+      }
+      frontier=next;
+    }
+    return nodes;
+  }
+
+  function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+  function draw(){
+    const tau=parseFloat(tauEl.value);
+    tauv.textContent=tau.toFixed(1);
+    const nodes=build(tau);
+    const S=cv.width, C=S/2, Rd=S/2-14;
+    ctx.clearRect(0,0,S,S);
+
+    // disk ground + boundary
+    ctx.fillStyle=css('--disk'); ctx.beginPath();
+    ctx.arc(C,C,Rd,0,7); ctx.fill();
+    ctx.strokeStyle=css('--diskline'); ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(C,C,Rd,0,7); ctx.stroke();
+    // faint radial guides
+    ctx.strokeStyle=css('--diskline'); ctx.lineWidth=1; ctx.globalAlpha=.5;
+    [0.25,0.5,0.75].forEach(f=>{ctx.beginPath();ctx.arc(C,C,Rd*f,0,7);ctx.stroke();});
+    ctx.globalAlpha=1;
+
+    const X=p=>C+p[0]*Rd, Y=p=>C-p[1]*Rd;
+    // edges, faded by depth
+    const hyper=css('--hyper');
+    ctx.lineWidth=1.4;
+    for(const n of nodes){
+      if(n.parent<0) continue;
+      const q=nodes[n.parent];
+      ctx.globalAlpha=Math.max(.12,.72-n.depth*.1);
+      ctx.strokeStyle=hyper;
+      ctx.beginPath(); ctx.moveTo(X(q.p),Y(q.p)); ctx.lineTo(X(n.p),Y(n.p)); ctx.stroke();
+    }
+    ctx.globalAlpha=1;
+    // nodes
+    let maxr=0;
+    for(const n of nodes){
+      const r=cabs(n.p); if(r>maxr)maxr=r;
+      const rad=Math.max(1.1,6.2-n.depth*0.85);
+      ctx.fillStyle= n.depth===0 ? css('--ink') : hyper;
+      ctx.globalAlpha= n.depth===0 ? 1 : Math.max(.30,.95-n.depth*.11);
+      ctx.beginPath(); ctx.arc(X(n.p),Y(n.p),rad,0,7); ctx.fill();
+    }
+    ctx.globalAlpha=1;
+
+    rd.textContent=DEPTH; rn.textContent=nodes.length.toLocaleString();
+    rr.textContent=maxr.toFixed(6);
+    const conf=1-maxr*maxr;
+    rw.innerHTML = conf < 1e-6
+      ? '<span class="warnpill">precision wall — 1−‖x‖² = '+conf.toExponential(1)+'</span>'
+      : '<span style="color:var(--muted)">1−‖x‖² = '+conf.toExponential(1)+'</span>';
+  }
+
+  tauEl.addEventListener('input',draw);
+  matchMedia('(prefers-color-scheme:dark)').addEventListener('change',draw);
+  new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+  draw();
+})();
+</script>
+
+</body></html>

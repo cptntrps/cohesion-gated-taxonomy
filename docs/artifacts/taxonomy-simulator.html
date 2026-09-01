@@ -1,0 +1,387 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<title>Taxonomy simulator &mdash; emerge a structure, then map into it</title>
+<style>
+  :root{
+    --ground:#EFEFED; --ink:#191A1C; --card:#FFFFFF; --rule:#DAD9D5; --muted:#63656B;
+    --unsorted:#C4C3BE; --machine:#2A2C31; --review:#A8642C; --trust:#2C7256;
+    --c1:#6E5697; --c2:#37698F; --c3:#2A7F6B; --c4:#A67C2E;
+    --c5:#A4544A; --c6:#5A7439; --c7:#8B5F86; --c8:#48606E;
+    --sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--ground:#131417; --ink:#E9E9E6; --card:#1B1D21; --rule:#2E3036; --muted:#9B9EA6;
+      --unsorted:#3A3D43; --machine:#C9CBD1; --review:#DB9A54; --trust:#5CBE96;
+      --c1:#A48CCB; --c2:#6FA3CC; --c3:#5CBBA2; --c4:#D7AC5C;
+      --c5:#D8867B; --c6:#96B268; --c7:#C193BC; --c8:#8AA3B3;}
+  }
+  :root[data-theme="dark"]{--ground:#131417; --ink:#E9E9E6; --card:#1B1D21; --rule:#2E3036;
+    --muted:#9B9EA6; --unsorted:#3A3D43; --machine:#C9CBD1; --review:#DB9A54; --trust:#5CBE96;
+    --c1:#A48CCB; --c2:#6FA3CC; --c3:#5CBBA2; --c4:#D7AC5C; --c5:#D8867B; --c6:#96B268;
+    --c7:#C193BC; --c8:#8AA3B3;}
+  :root[data-theme="light"]{--ground:#EFEFED; --ink:#191A1C; --card:#FFFFFF; --rule:#DAD9D5;
+    --muted:#63656B; --unsorted:#C4C3BE; --machine:#2A2C31; --review:#A8642C; --trust:#2C7256;
+    --c1:#6E5697; --c2:#37698F; --c3:#2A7F6B; --c4:#A67C2E; --c5:#A4544A; --c6:#5A7439;
+    --c7:#8B5F86; --c8:#48606E;}
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.58}
+  .wrap{max-width:76ch;margin:0 auto;padding:clamp(2rem,5vw,3.6rem) 1.2rem 5rem;
+    display:flex;flex-direction:column;gap:2.6rem}
+  .kicker{font:600 .68rem/1.4 var(--mono);letter-spacing:.17em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:clamp(1.9rem,4.8vw,2.7rem);font-weight:760;letter-spacing:-.032em;line-height:1.06;
+    text-wrap:balance;margin-top:.6rem}
+  h2{font-size:1.22rem;font-weight:720;letter-spacing:-.02em;margin-bottom:.15rem}
+  .lede{font-size:1.04rem;color:var(--muted);margin-top:.85rem;max-width:62ch}
+  p{max-width:68ch}
+  .note{font-size:.85rem;color:var(--muted)}
+  section{display:flex;flex-direction:column;gap:.9rem}
+  hr{border:0;height:1px;background:var(--rule)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--machine);outline-offset:2px}
+
+  .sim{background:var(--card);border:1px solid var(--rule);border-radius:3px;overflow:hidden}
+  .simhead{display:flex;align-items:baseline;gap:.6rem;padding:.75rem 1rem;
+    border-bottom:1px solid var(--rule);flex-wrap:wrap}
+  .simhead .mode{font:700 .66rem/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;
+    padding:.3rem .45rem;border-radius:2px}
+  .mode.emg{background:color-mix(in srgb,var(--trust) 17%,transparent);color:var(--trust)}
+  .mode.map{background:color-mix(in srgb,var(--review) 20%,transparent);color:var(--review)}
+  .simhead .q{font-size:.88rem;color:var(--muted)}
+  .simbody{padding:1rem}
+  canvas{width:100%;height:auto;display:block;border-radius:2px}
+
+  .steps{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:.85rem}
+  .steps button{font:600 .78rem/1 var(--sans);padding:.6rem .8rem;border-radius:2px;
+    border:1px solid var(--rule);background:transparent;color:var(--ink);cursor:pointer}
+  .steps button:disabled{opacity:.38;cursor:not-allowed}
+  .steps button.go{background:var(--machine);color:var(--card);border-color:var(--machine)}
+  .steps button.ghost{color:var(--muted)}
+
+  .meters{display:grid;grid-template-columns:repeat(auto-fit,minmax(7.5rem,1fr));gap:.85rem;
+    border-top:1px solid var(--rule);margin-top:.9rem;padding-top:.85rem}
+  .m .k{font:600 .64rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .m .v{font:700 1.35rem/1.2 var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .m .v small{font-size:.72rem;font-weight:600;color:var(--muted);letter-spacing:0}
+  .log{font:500 .8rem/1.55 var(--mono);color:var(--muted);margin-top:.8rem;min-height:2.6em}
+  .log b{color:var(--ink)}
+
+  .names{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.8rem}
+  .chip{font:600 .74rem/1 var(--sans);padding:.34rem .5rem;border-radius:2px;
+    border:1px solid var(--rule);cursor:pointer;background:transparent;color:var(--ink);
+    display:inline-flex;align-items:center;gap:.35rem}
+  .chip .dot{width:.55rem;height:.55rem;border-radius:50%}
+  .chip.merged{border-style:dashed;color:var(--muted)}
+
+  /* map sim */
+  .grid{display:grid;grid-template-columns:repeat(40,1fr);gap:2px}
+  @media (max-width:640px){.grid{grid-template-columns:repeat(20,1fr)}}
+  .cell{aspect-ratio:1;background:var(--unsorted);border-radius:1px;transition:background .3s}
+  .cell.read{background:var(--review)} .cell.inherit{background:var(--trust)}
+  .slider{display:flex;align-items:center;gap:.8rem;margin:.9rem 0 .2rem;
+    font:600 .78rem/1 var(--mono);color:var(--muted);flex-wrap:wrap}
+  input[type=range]{flex:1;min-width:180px;accent-color:var(--review)}
+  .legend{display:flex;gap:1rem;flex-wrap:wrap;font:500 .73rem/1.4 var(--mono);color:var(--muted);
+    margin-top:.6rem}
+  .sw{display:inline-block;width:.6rem;height:.6rem;border-radius:1px;margin-right:.3rem}
+  .measured{font:600 .66rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+    color:var(--trust);padding:.2rem .35rem;border:1px solid color-mix(in srgb,var(--trust) 40%,transparent);
+    border-radius:2px}
+  .interp{color:var(--muted);border-color:var(--rule)}
+  .clause{font-family:var(--serif);font-size:.85rem;color:var(--muted);
+    border-left:2px solid var(--rule);padding:.4rem .7rem;margin-top:.7rem}
+  .callout{border-left:2px solid var(--machine);padding-left:1rem;color:var(--muted)}
+  .callout strong{color:var(--ink)}
+  footer{font:500 .75rem/1.6 var(--mono);color:var(--muted);border-top:1px solid var(--rule);padding-top:1rem}
+  @media (prefers-reduced-motion:reduce){.cell{transition:none}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="kicker">Interactive simulation &middot; real measured outcomes</div>
+    <h1>Emerge a structure, then map into it</h1>
+    <p class="lede">Two simulators. The first discovers a taxonomy from an undifferentiated
+    pile and counts what the human had to do. The second uses that taxonomy to fill a column
+    and lets you choose how much of the corpus an LLM actually reads. Every number they
+    report is measured, not invented.</p>
+  </header>
+
+  <!-- EMERGE -->
+  <section>
+    <div class="sim">
+      <div class="simhead">
+        <span class="mode emg">Emerge</span>
+        <span class="q">&ldquo;I have 240 clauses and no taxonomy. Find one.&rdquo;</span>
+      </div>
+      <div class="simbody">
+        <div class="steps">
+          <button id="e1" class="go">1 &middot; Cluster blind</button>
+          <button id="e2">2 &middot; Name clusters</button>
+          <button id="e3">3 &middot; Split the false merge</button>
+          <button id="eR" class="ghost">Reset</button>
+        </div>
+        <canvas id="ec" width="960" height="420" aria-label="Clauses organising into clusters"></canvas>
+        <div class="names" id="enames"></div>
+        <div class="log" id="elog">240 clauses, no labels, no categories supplied. Nothing read yet.</div>
+        <div class="meters">
+          <div class="m"><div class="k">Human decisions</div><div class="v" id="eH">0</div></div>
+          <div class="m"><div class="k">LLM calls</div><div class="v" id="eL">0</div></div>
+          <div class="m"><div class="k">False merges</div><div class="v" id="eF">&mdash;</div></div>
+          <div class="m"><div class="k">vs labelling by hand</div><div class="v" id="eV">&mdash;</div></div>
+        </div>
+      </div>
+    </div>
+    <p class="callout"><strong>Coarse is not wrong.</strong> Emerge fails only when it
+    <em>merges distinct concepts</em>. A cluster that sits one level too high is a valid
+    higher node &mdash; which is why scoring emerge against someone else's reference taxonomy
+    punishes correct answers. Measured on the full corpus, seam-aware splitting cut false
+    merges from <strong>66% to 15.9%</strong>.</p>
+  </section>
+
+  <hr>
+
+  <!-- MAP -->
+  <section>
+    <div class="sim">
+      <div class="simhead">
+        <span class="mode map">Map</span>
+        <span class="q">&ldquo;Now fill <code>governing_law</code> for 2,475 clauses.&rdquo;</span>
+      </div>
+      <div class="simbody">
+        <p class="note">Each clause inherits its cluster's answer unless you spend a read on
+        it. Cohesion &mdash; computed with zero model calls &mdash; ranks which clusters are least safe,
+        so the budget is spent worst-first.</p>
+
+        <div class="slider">
+          <label for="bud">Review budget</label>
+          <input id="bud" type="range" min="0" max="100" step="5" value="20">
+          <span id="budv" style="color:var(--review);font-weight:700;min-width:9ch">20% of clusters</span>
+        </div>
+
+        <div class="grid" id="mgrid" aria-hidden="true"></div>
+        <div class="legend">
+          <span><span class="sw" style="background:var(--review)"></span>LLM reads it</span>
+          <span><span class="sw" style="background:var(--trust)"></span>inherits cluster answer</span>
+        </div>
+
+        <div class="meters">
+          <div class="m"><div class="k">LLM calls</div><div class="v" id="mC">80</div></div>
+          <div class="m"><div class="k">Accuracy</div><div class="v" id="mA">96.2<small>%</small></div></div>
+          <div class="m"><div class="k">vs read-everything</div><div class="v" id="mR">5&times;<small> fewer</small></div></div>
+          <div class="m"><div class="k">Evidence</div><div class="v" style="font-size:.8rem;padding-top:.4rem"><span id="mE" class="measured">measured</span></div></div>
+        </div>
+        <div class="log" id="mlog"></div>
+      </div>
+    </div>
+
+    <div class="clause">This Agreement shall be governed by and construed in accordance with
+      the laws of the State of Delaware, without regard to conflicts of law principles.</div>
+    <p class="note">&rarr; <code>governing_law = Delaware</code>, decided once for its sub-cluster
+    and inherited by every member of it.</p>
+  </section>
+
+  <section>
+    <h2>What the two simulations together show</h2>
+    <p><strong>Map is a cheaper version of reading everything</strong>, and that is the point:
+    same column, same accuracy, a fifth of the calls. The gate only decides <em>which</em>
+    clauses get read.</p>
+    <p><strong>Emerge is not.</strong> Reading each document in turn yields N independent
+    labels, never a taxonomy &mdash; structure lives in the relationships <em>between</em>
+    documents, which a per-document pass never sees.</p>
+    <p>The obvious objection is a long-context model: put the whole corpus in one
+    prompt. Two things cut against each other here, and neither wins outright.
+    <em>Clustering compares exhaustively but shallowly</em> &mdash; 240 clauses means all
+    28,680 similarities are actually computed, nothing skipped, so a category nobody
+    expected still surfaces. But each comparison is a cosine score from a 137M-parameter
+    embedder, which blurs distinctions a frontier model finds trivial: negation is the
+    classic failure, with &ldquo;shall indemnify&rdquo; and &ldquo;shall not indemnify&rdquo;
+    landing close together. <em>A frontier model compares deeply but selectively</em>
+    &mdash; genuine comprehension per pair, no guarantee it surveyed everything, and
+    position bias over long contexts.</p>
+    <p>So this is not &ldquo;clustering beats the model&rdquo;. The false merges in the
+    simulation above, and the 41&ndash;50% leaf purity measured on LEDGAR, <em>are</em> the
+    shallow-comparison ceiling showing through. That is precisely why the gate exists: the
+    cheap pass organises everything and flags where it is unsure, and the expensive model is
+    spent there. <em>The head-to-head against a long-context frontier model has not been
+    run &mdash; treat the comparison as an open question, not a result.</em></p>
+    <div class="callout"><strong>The honest ceiling:</strong> at a 100% budget you are reading
+    everything, and accuracy lands at 96.5% &mdash; the gated hybrid reaches 96.2% at a fifth of
+    that. The paired bootstrap puts the gap at &minus;0.2 points, 95% CI [&minus;2.5, +2.0]: parity, not
+    a win. Anyone claiming the shortcut beats exhaustive reading is over-reading the noise.</div>
+  </section>
+
+  <footer>
+    Emerge figures: 20 Newsgroups, 6,000 documents, 20 cluster namings &asymp; 300&times; fewer decisions than manual labelling.<br>
+    Map figures: LEDGAR governing-law, n=400 paired sample, 4,000-resample bootstrap. Measured points at 0 / 10 / 20 / 50 / 100% budget.<br>
+    Embeddings run locally at zero cost; the corpus never leaves the host.
+  </footer>
+</div>
+
+<script>
+(function(){
+/* ---------------- EMERGE ---------------- */
+const cv=document.getElementById('ec'), cx=cv.getContext('2d');
+const N=240, K=8;
+const NAMES=["Notices","Counterparts","Severability","Governing Law","Entire Agreement",
+             "Waiver of Jury Trial","Base Salary","Indemnification"];
+const PAL_L=['#6E5697','#37698F','#2A7F6B','#A67C2E','#A4544A','#5A7439','#8B5F86','#48606E'];
+const PAL_D=['#A48CCB','#6FA3CC','#5CBBA2','#D7AC5C','#D8867B','#96B268','#C193BC','#8AA3B3'];
+function isDark(){
+  const a=document.documentElement.getAttribute('data-theme');
+  if(a==='dark') return true; if(a==='light') return false;
+  return matchMedia('(prefers-color-scheme:dark)').matches;
+}
+const PAL=()=>isDark()?PAL_D:PAL_L;
+const UNSORTED=()=>isDark()?'#3A3D43':'#C4C3BE';
+let pts=[], stage=0, anim=null;
+const rnd=(a,b)=>a+Math.random()*(b-a);
+function css(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+function centers(){
+  const W=cv.width,H=cv.height, out=[];
+  for(let i=0;i<K;i++){
+    const col=i%4, row=Math.floor(i/4);
+    out.push({x:W*(0.155+col*0.23), y:H*(row?0.70:0.30)});
+  }
+  return out;
+}
+function init(){
+  pts=[];
+  for(let i=0;i<N;i++){
+    // cluster 5 (Waiver of Jury Trial) is seeded INSIDE cluster 4's blob = the false merge
+    let c=i%K;
+    pts.push({x:rnd(30,cv.width-30), y:rnd(30,cv.height-30), tx:0, ty:0, c:c, shown:-1});
+  }
+  stage=0; render(); meters();
+  mark();
+  document.getElementById('enames').innerHTML='';
+  document.getElementById('elog').innerHTML='240 clauses, no labels, no categories supplied. Nothing read yet.';
+}
+function targets(merged){
+  const C=centers();
+  pts.forEach(p=>{
+    // when merged, cluster 5 shares cluster 4's centre -> visibly one blob
+    const eff = (merged && p.c===5) ? 4 : p.c;
+    const a=Math.random()*Math.PI*2, r=Math.sqrt(Math.random())*46;
+    p.tx=C[eff].x+Math.cos(a)*r; p.ty=C[eff].y+Math.sin(a)*r;
+    p.shown = merged && p.c===5 ? 4 : p.c;
+  });
+}
+function render(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  pts.forEach(p=>{
+    cx.beginPath(); cx.arc(p.x,p.y,5.2,0,7);
+    cx.fillStyle = p.shown<0 ? UNSORTED() : PAL()[p.shown];
+    cx.globalAlpha = p.shown<0 ? .85 : .92;
+    cx.fill();
+  });
+  cx.globalAlpha=1;
+}
+function fly(dur=900){
+  if(anim) cancelAnimationFrame(anim);
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const s=pts.map(p=>({x:p.x,y:p.y})), t0=performance.now();
+  if(reduce){pts.forEach(p=>{p.x=p.tx;p.y=p.ty});render();return;}
+  (function step(now){
+    const k=Math.min(1,((now||performance.now())-t0)/dur), e=1-Math.pow(1-k,3);
+    pts.forEach((p,i)=>{p.x=s[i].x+(p.tx-s[i].x)*e; p.y=s[i].y+(p.ty-s[i].y)*e;});
+    render();
+    if(k<1) anim=requestAnimationFrame(step);
+  })(t0);
+  // hard guarantee: snap to final positions if the animation never completes
+  setTimeout(()=>{pts.forEach(p=>{p.x=p.tx;p.y=p.ty});render();}, dur+120);
+}
+function chips(splitDone){
+  const box=document.getElementById('enames'); box.innerHTML='';
+  const list = splitDone ? NAMES : NAMES.filter((_,i)=>i!==5);
+  list.forEach(n=>{
+    const i=NAMES.indexOf(n);
+    const b=document.createElement('span');
+    b.className='chip'+(!splitDone && i===4?' merged':'');
+    b.innerHTML='<span class="dot" style="background:'+PAL()[i]+'"></span>'+
+      (!splitDone && i===4 ? 'Entire Agreement <em>+ jury waiver</em>' : n);
+    box.appendChild(b);
+  });
+}
+function meters(){
+  const H=[0,0,7,8][stage], L=[0,0,7,8][stage];
+  document.getElementById('eH').textContent=H;
+  document.getElementById('eL').textContent=L;
+  document.getElementById('eF').textContent = stage<2 ? '\u2014' : (stage===2 ? '1 of 7' : '0 of 8');
+  document.getElementById('eV').textContent = H? Math.round(N/H)+'\u00d7' : '\u2014';
+}
+function doStep1(){
+  stage=1; targets(true); fly(); meters();
+  document.getElementById('elog').innerHTML='Clustered on language alone \u2014 <b>0 LLM calls, 0 human decisions</b>. The machine did all 240 assignments. Groups exist but have no names.';
+  mark();
+}
+function doStep2(){
+  if(stage<1) doStep1();
+  stage=2; chips(false); meters();
+  document.getElementById('elog').innerHTML='<b>7 LLM calls</b> \u2014 one per cluster, each named in a single canonical term. Note the dashed cluster: jury-waiver clauses were absorbed into \u201cEntire Agreement\u201d. That is a <b>false merge</b>, the only real emerge failure.';
+  mark();
+}
+function doStep3(){
+  if(stage<2) doStep2();
+  stage=3; targets(false); fly(); chips(true); meters();
+  document.getElementById('elog').innerHTML='You split one cluster \u2014 <b>1 human decision</b>. The corpus re-clustered around the correction. Total human effort: <b>8 decisions for 240 clauses</b>, versus 240 by hand.';
+  mark();
+}
+function mark(){
+  [['e1',1],['e2',2],['e3',3]].forEach(([id,st])=>{
+    const b=document.getElementById(id);
+    b.disabled=false;
+    b.classList.toggle('go', stage+1===st || (stage===3&&st===3));
+  });
+}
+document.getElementById('e1').onclick=doStep1;
+document.getElementById('e2').onclick=doStep2;
+document.getElementById('e3').onclick=doStep3;
+document.getElementById('eR').onclick=init;
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',render);
+new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+init();
+
+/* ---------------- MAP ---------------- */
+const G=400, KC=40, PER=G/KC;
+const grid=document.getElementById('mgrid'), cells=[];
+for(let i=0;i<G;i++){const d=document.createElement('div');d.className='cell';grid.appendChild(d);cells.push(d);}
+// measured points: budget% -> [calls, accuracy]
+const MEAS={0:[0,92.2],10:[40,95.5],20:[80,96.2],50:[202,97.2],100:[400,96.5]};
+const bud=document.getElementById('bud');
+function mapUpdate(){
+  const b=+bud.value;
+  const keys=Object.keys(MEAS).map(Number).sort((a,x)=>a-x);
+  let calls,acc,exact=MEAS[b]!==undefined;
+  if(exact){[calls,acc]=MEAS[b];}
+  else{
+    let lo=keys[0],hi=keys[keys.length-1];
+    for(let i=0;i<keys.length-1;i++){if(b>keys[i]&&b<keys[i+1]){lo=keys[i];hi=keys[i+1];}}
+    const t=(b-lo)/(hi-lo);
+    calls=Math.round(MEAS[lo][0]+(MEAS[hi][0]-MEAS[lo][0])*t);
+    acc=(MEAS[lo][1]+(MEAS[hi][1]-MEAS[lo][1])*t);
+  }
+  const nRead=Math.round(KC*b/100);
+  cells.forEach((c,i)=>{
+    c.className='cell '+(Math.floor(i/PER)<nRead?'read':'inherit');
+  });
+  document.getElementById('budv').textContent=b+'% of clusters';
+  document.getElementById('mC').textContent=calls;
+  document.getElementById('mA').innerHTML=acc.toFixed(1)+'<small>%</small>';
+  const rel = b===100 ? 'baseline' : (400/Math.max(calls,1)).toFixed(1)+'\u00d7';
+  document.getElementById('mR').innerHTML = b===100 ? 'baseline' : rel+'<small> fewer</small>';
+  const e=document.getElementById('mE');
+  e.textContent = exact?'measured':'interpolated';
+  e.className = 'measured'+(exact?'':' interp');
+  document.getElementById('mlog').innerHTML = b===0
+    ? 'No reads at all \u2014 every clause takes its cluster\'s answer. <b>92.2%</b>, and the errors sit in the clusters cohesion already flagged as weak.'
+    : b===100
+    ? 'Reading everything: <b>400 calls for 96.5%</b>. Roughly nine in ten of those calls land on clauses the clustering had already right.'
+    : 'The <b>'+nRead+'</b> least-coherent clusters get read per item; the remaining <b>'+(KC-nRead)+'</b> inherit. '+
+      (b===20?'This is the operating point: parity with exhaustive reading at a fifth of the calls.':'');
+}
+bud.addEventListener('input',mapUpdate); mapUpdate();
+})();
+</script>
+
+</body></html>

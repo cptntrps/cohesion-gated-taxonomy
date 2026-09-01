@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cohesion-gated taxonomy — presentation artifacts</title>
+<style>
+body{margin:0;padding:3rem 1.2rem;font:16px/1.6 system-ui,sans-serif;background:#EFEFED;color:#191A1C;max-width:70ch;margin-inline:auto}
+@media(prefers-color-scheme:dark){body{background:#131417;color:#E9E9E6}a{color:#8C9AF0}.warn{background:#2a2413;border-color:#5c4d1e}}
+h1{font-size:1.6rem;letter-spacing:-.02em}
+li{margin:.7rem 0}
+.warn{background:#f6efd8;border:1px solid #d9c98a;border-radius:3px;padding:.8rem 1rem;font-size:.9rem;margin:1.4rem 0}
+.note{font-size:.85rem;color:#777}
+</style></head><body>
+<h1>Presentation artifacts</h1>
+<p>Interactive explainers built during the 2026-08-27 experiment campaign, mirrored from claude.ai so they live next to the tool.</p>
+<ul>
+<li><a href="map-or-emerge.html">Map or Emerge — two jobs, one clustering engine</a><br>
+<span class="note">What the two modes are, where the expensive calls go, where the method breaks.</span></li>
+<li><a href="taxonomy-simulator.html">Taxonomy simulator — emerge a structure, then map into it</a><br>
+<span class="note">Interactive: discover a taxonomy step by step, then spend a read budget and watch accuracy.</span></li>
+<li><a href="hyperbolic-correction.html">The optimizer was the problem — a hyperbolic embedding correction</a><br>
+<span class="note">The three-correction saga, with a live Sarkar construction on the Poincare disk.</span></li>
+</ul>
+<div class="warn"><strong>Dated 2026-08-27.</strong> The 2026-09-01 validation pass supersedes some numbers shown inside:
+the "96.2% at 5x fewer calls" headline is an isolated-benchmark figure — with real cluster calls the 5x saving is unproven at n=400 (2x is supported), and end-to-end (tool finds the concept itself) correct-value coverage is 86.4%. The hyperbolic anomaly scoring shown as a feature was falsified and is being replaced by a two-queue Euclidean design. Current truth: the Validation Brief (Google Drive) and docs/RESULTS.md.</div>
+</body></html>

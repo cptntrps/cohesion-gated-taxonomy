@@ -1,0 +1,323 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}</style></head><body>
+<title>Map or Emerge — two jobs, one clustering engine</title>
+<style>
+  :root{
+    --ground:#EDEFF2; --ink:#14181D; --card:#FFFFFF; --rule:#DCE0E6; --muted:#5D6672;
+    --accent:#2E3A8C; --trust:#1B7A5A; --review:#B06A00; --idle:#C9CFD8; --spec:#F6F7F9;
+    --sans:system-ui,-apple-system,"Segoe UI Variable Text","Segoe UI",Roboto,sans-serif;
+    --serif:"Iowan Old Style",Georgia,"Times New Roman",serif;
+    --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{--ground:#0E1116; --ink:#E7EBF0; --card:#161B22; --rule:#28303A; --muted:#96A1AE;
+      --accent:#8C9AF0; --trust:#4FC79B; --review:#E0A44A; --idle:#2B333E; --spec:#12171E;}
+  }
+  :root[data-theme="dark"]{--ground:#0E1116; --ink:#E7EBF0; --card:#161B22; --rule:#28303A;
+    --muted:#96A1AE; --accent:#8C9AF0; --trust:#4FC79B; --review:#E0A44A; --idle:#2B333E; --spec:#12171E;}
+  :root[data-theme="light"]{--ground:#EDEFF2; --ink:#14181D; --card:#FFFFFF; --rule:#DCE0E6;
+    --muted:#5D6672; --accent:#2E3A8C; --trust:#1B7A5A; --review:#B06A00; --idle:#C9CFD8; --spec:#F6F7F9;}
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ground);color:var(--ink);font-family:var(--sans);line-height:1.6;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:74ch;margin:0 auto;padding:clamp(2rem,5vw,4rem) 1.2rem 5rem;
+    display:flex;flex-direction:column;gap:2.8rem}
+  .kicker{font:600 .7rem/1.4 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:clamp(2rem,5vw,2.9rem);font-weight:750;letter-spacing:-.03em;line-height:1.05;
+    text-wrap:balance;margin-top:.65rem}
+  h2{font-size:clamp(1.25rem,2.6vw,1.6rem);font-weight:700;letter-spacing:-.02em;
+    text-wrap:balance;margin-bottom:.4rem}
+  h3{font-size:.95rem;font-weight:650;margin-bottom:.2rem}
+  p{max-width:68ch}
+  .lede{font-size:1.06rem;color:var(--muted);margin-top:.9rem;max-width:62ch}
+  section{display:flex;flex-direction:column;gap:1rem}
+  hr{border:0;height:1px;background:var(--rule)}
+  a{color:var(--accent)}
+  button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+  .panel{background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:1.15rem}
+
+  /* strategy switch */
+  .seg{display:flex;gap:0;border:1px solid var(--rule);border-radius:3px;overflow:hidden;
+    flex-wrap:wrap}
+  .seg button{flex:1;min-width:9rem;background:transparent;border:0;color:var(--muted);
+    font:600 .82rem/1 var(--sans);padding:.7rem .6rem;cursor:pointer;letter-spacing:-.01em}
+  .seg button+button{border-left:1px solid var(--rule)}
+  .seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+  @media (prefers-color-scheme:dark){.seg button[aria-pressed="true"]{color:#0E1116}}
+
+  .grid{display:grid;grid-template-columns:repeat(40,1fr);gap:2px;margin:1rem 0 .9rem}
+  .cell{aspect-ratio:1;background:var(--idle);border-radius:1px;transition:background .32s ease}
+  @media (prefers-reduced-motion:reduce){.cell{transition:none}}
+  .cell.read{background:var(--review)}
+  .cell.trust{background:var(--trust)}
+  .legend{display:flex;gap:1.1rem;flex-wrap:wrap;font:500 .74rem/1.4 var(--mono);color:var(--muted)}
+  .sw{display:inline-block;width:.62rem;height:.62rem;border-radius:1px;margin-right:.35rem;
+    vertical-align:baseline}
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(8rem,1fr));gap:.9rem;
+    border-top:1px solid var(--rule);padding-top:.9rem;margin-top:.2rem}
+  .stat .k{font:600 .68rem/1.4 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  .stat .v{font:700 1.5rem/1.15 var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .stat .v.sm{font-size:1.15rem}
+  .note{font-size:.85rem;color:var(--muted)}
+
+  /* mode compare */
+  .modes{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  @media (max-width:640px){.modes{grid-template-columns:1fr}.grid{grid-template-columns:repeat(20,1fr)}}
+  .mode{background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:1.05rem;
+    display:flex;flex-direction:column;gap:.55rem}
+  .mode .tag{font:700 .68rem/1 var(--mono);letter-spacing:.13em;text-transform:uppercase}
+  .mode.map{border-top:2px solid var(--accent)} .mode.map .tag{color:var(--accent)}
+  .mode.emg{border-top:2px solid var(--trust)} .mode.emg .tag{color:var(--trust)}
+  .mode dl{display:flex;flex-direction:column;gap:.5rem;margin-top:.3rem}
+  .mode dt{font:600 .67rem/1.3 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+  .mode dd{font-size:.88rem}
+
+  ol.flow{list-style:none;counter-reset:s;display:flex;flex-direction:column;gap:.55rem}
+  ol.flow li{counter-increment:s;display:grid;grid-template-columns:1.5rem 1fr;gap:.6rem;
+    font-size:.88rem;align-items:start}
+  ol.flow li::before{content:counter(s);font:700 .68rem/1.5rem var(--mono);text-align:center;
+    color:var(--muted);border:1px solid var(--rule);border-radius:2px;height:1.5rem}
+  .who{font:600 .66rem/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;
+    padding:.16rem .34rem;border-radius:2px;margin-right:.4rem;white-space:nowrap}
+  .who.h{background:color-mix(in srgb,var(--review) 20%,transparent);color:var(--review)}
+  .who.m{background:color-mix(in srgb,var(--accent) 16%,transparent);color:var(--accent)}
+
+  .tblwrap{overflow-x:auto;border:1px solid var(--rule);border-radius:3px;background:var(--card)}
+  table{width:100%;border-collapse:collapse;font-size:.85rem}
+  th{font:600 .66rem/1.3 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+    text-align:left;padding:.62rem .8rem;border-bottom:1px solid var(--rule);white-space:nowrap}
+  td{padding:.55rem .8rem;border-bottom:1px solid var(--rule)}
+  tr:last-child td{border-bottom:0}
+  .num{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+  .pill{font:700 .64rem/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;
+    padding:.24rem .4rem;border-radius:2px}
+  .pill.t{background:color-mix(in srgb,var(--trust) 18%,transparent);color:var(--trust)}
+  .pill.r{background:color-mix(in srgb,var(--review) 22%,transparent);color:var(--review)}
+  .clause{font-family:var(--serif);font-size:.86rem;color:var(--muted);background:var(--spec);
+    border-left:2px solid var(--rule);padding:.5rem .7rem;border-radius:0 2px 2px 0}
+  .callout{border-left:2px solid var(--accent);padding-left:1rem;color:var(--muted)}
+  .callout strong{color:var(--ink)}
+  footer{font:500 .76rem/1.6 var(--mono);color:var(--muted);border-top:1px solid var(--rule);
+    padding-top:1.1rem}
+</style>
+
+<div class="wrap">
+
+  <header>
+    <div class="kicker">Clause &amp; document taxonomy</div>
+    <h1>Two jobs that look identical and fail differently</h1>
+    <p class="lede">Both start with a pile of documents and end with structure. But
+    <em>mapping</em> into a taxonomy you already have and <em>discovering</em> one you don't
+    are different problems, with different failure modes and different definitions of
+    success. Conflating them is why most tools only do one well.</p>
+  </header>
+
+  <section>
+    <h2>Where the expensive calls go</h2>
+    <p>2,475 governing-law clauses. Every strategy produces a filled
+    <code>governing_law</code> column — they differ only in how many clauses an LLM actually
+    reads. Switch strategy and watch the budget.</p>
+
+    <div class="panel">
+      <div class="seg" role="group" aria-label="Extraction strategy">
+        <button id="b0" aria-pressed="false">Read everything</button>
+        <button id="b1" aria-pressed="false">Cluster-first only</button>
+        <button id="b2" aria-pressed="true">Cohesion-gated hybrid</button>
+      </div>
+
+      <div class="grid" id="grid" aria-hidden="true"></div>
+
+      <div class="legend">
+        <span><span class="sw" style="background:var(--review)"></span>LLM reads this clause</span>
+        <span><span class="sw" style="background:var(--trust)"></span>inherits its cluster's answer</span>
+        <span><span class="sw" style="background:var(--idle)"></span>not yet resolved</span>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><div class="k">LLM calls</div><div class="v" id="sCalls">—</div></div>
+        <div class="stat"><div class="k">Accuracy</div><div class="v" id="sAcc">—</div></div>
+        <div class="stat"><div class="k">vs read-all</div><div class="v sm" id="sRel">—</div></div>
+      </div>
+      <p class="note" id="sNote"></p>
+    </div>
+
+    <p class="callout"><strong>The gate is the product.</strong> Cluster cohesion — computed
+    with zero model calls — predicts which clusters are safe to trust (98.0% accurate) and
+    which need reading (79.2%). Spend the calls only on the second kind.</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>The two modes</h2>
+    <div class="modes">
+      <div class="mode map">
+        <div class="tag">Map</div>
+        <h3>“Assign these to my taxonomy.”</h3>
+        <p class="note">You already have a clause library, a playbook, a schema. The job is
+        putting 60,000 items in the right box.</p>
+        <dl>
+          <dt>Failure mode</dt><dd>Wrong node. Measured against the reference.</dd>
+          <dt>Success metric</dt><dd>Accuracy / purity vs the known taxonomy.</dd>
+          <dt>Coarse output is</dt><dd><strong>a failure</strong> — you asked for a specific box.</dd>
+          <dt>Measured</dt><dd>96.2% at 80 LLM calls, matching a 400-call exhaustive read.</dd>
+        </dl>
+      </div>
+      <div class="mode emg">
+        <div class="tag">Emerge</div>
+        <h3>“I don't have a taxonomy. Find one.”</h3>
+        <p class="note">Nobody has written down what's in this corpus. The categories have
+        to come out of the documents themselves.</p>
+        <dl>
+          <dt>Failure mode</dt><dd><strong>False merge</strong> — two distinct concepts stuck together.</dd>
+          <dt>Success metric</dt><dd>Coherence, not agreement with a reference.</dd>
+          <dt>Coarse output is</dt><dd><strong>not wrong</strong> — just a higher level of the tree.</dd>
+          <dt>Measured</dt><dd>False merges cut from 66% to 15.9%.</dd>
+        </dl>
+      </div>
+    </div>
+    <p class="callout">Scoring <em>emerge</em> against a reference taxonomy is a category
+    error. On news articles the system merged <code>rec.autos</code> with
+    <code>rec.motorcycles</code>, and <code>mac.hardware</code> with
+    <code>ibm.pc.hardware</code> — arguably a <strong>better</strong> taxonomy than the
+    official one, scored as two mistakes.</p>
+  </section>
+
+  <section>
+    <h2>What the operator actually does</h2>
+    <div class="modes">
+      <div class="mode map">
+        <div class="tag">Map flow</div>
+        <ol class="flow">
+          <li><span class="who m">system</span>Embeds every item locally, assigns to the nearest node.</li>
+          <li><span class="who m">system</span>Scores each cluster's cohesion — no model calls.</li>
+          <li><span class="who m">system</span>Trusts the confident clusters, routes the rest to a per-item read.</li>
+          <li><span class="who h">human</span>Adjudicates only the flagged cells.</li>
+        </ol>
+      </div>
+      <div class="mode emg">
+        <div class="tag">Emerge flow</div>
+        <ol class="flow">
+          <li><span class="who m">system</span>Clusters blind — no labels, no categories supplied.</li>
+          <li><span class="who m">system</span>Splits only where a real seam exists; stops when coherent.</li>
+          <li><span class="who m">system</span>Names each cluster in one short canonical term.</li>
+          <li><span class="who h">human</span>Renames or merges the handful that are off.</li>
+          <li><span class="who m">system</span>Re-clusters the whole corpus around the corrected names.</li>
+        </ol>
+      </div>
+    </div>
+    <p class="callout"><strong>The human never touches the O(N) work.</strong> Naming
+    20 clusters organized 6,000 documents — about <strong>300× fewer decisions</strong> than
+    labelling them one by one. A rename isn't cosmetic: the name becomes an anchor and the
+    corpus re-clusters around it.</p>
+  </section>
+
+  <hr>
+
+  <section>
+    <h2>What comes out</h2>
+    <p>Emerge produces named clusters; map fills a column. Both flag their own uncertainty
+    rather than failing silently.</p>
+
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Discovered cluster</th><th class="num">clauses</th><th class="num">purity</th><th>gate</th></tr></thead>
+        <tbody>
+          <tr><td>Notices</td><td class="num">1,177</td><td class="num">98.7%</td><td><span class="pill t">trust</span></td></tr>
+          <tr><td>Waiver of Jury Trial</td><td class="num">567</td><td class="num">97.7%</td><td><span class="pill t">trust</span></td></tr>
+          <tr><td>Severability</td><td class="num">850</td><td class="num">96.4%</td><td><span class="pill t">trust</span></td></tr>
+          <tr><td>Governing Law <span class="note">(human-anchored)</span></td><td class="num">1,241</td><td class="num">82.0%</td><td><span class="pill t">trust</span></td></tr>
+          <tr><td>Binding Effect; Assignment</td><td class="num">9,523</td><td class="num">8.1%</td><td><span class="pill r">review</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="note">Cluster names come from the model in one canonical term — the prompt
+    forces the shortest form, which cut average name length from 3.06 words to 1.40 and
+    moved names closer to the canonical legal heading. “Benefits and Reimbursement” becomes
+    “Benefits”, so duplicate clusters finally share a name and can consolidate.</p>
+
+    <div class="clause">This Agreement shall be governed by and construed in accordance with
+      the laws of the State of Delaware, without regard to conflicts of law principles.</div>
+    <p class="note">→ <code>governing_law = Delaware</code>. The value is decided once per
+    sub-cluster and inherited by every member.</p>
+  </section>
+
+  <section>
+    <h2>Why not just search for it</h2>
+    <p>On a field with a clean pattern, a regular expression silently dropped
+    <strong>519 of 3,167</strong> clauses that plainly named their state — 16%, lost to
+    capitalisation and phrasing alone. It returned nothing and reported nothing.</p>
+    <div class="clause" style="text-transform:uppercase;font-size:.78rem">THIS AMENDMENT SHALL BE
+      GOVERNED BY THE LAWS OF THE STATE OF NEW YORK…</div>
+    <p class="note">Matched by meaning, missed by pattern. Clauses that genuinely name no
+    jurisdiction end up in their own visible bucket instead of vanishing.</p>
+  </section>
+
+  <section>
+    <h2>Where it holds, and where it doesn't</h2>
+    <div class="tblwrap">
+      <table>
+        <thead><tr><th>Condition</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td>Legal clauses · news articles · e-commerce products</td><td>same behaviour in all three — not domain-specific</td></tr>
+          <tr><td>Attribute is central to the text <span class="note">(governing law → state)</span></td><td>89–96% accurate at a fraction of the calls</td></tr>
+          <tr><td>Attribute is incidental <span class="note">(a payment frequency mentioned in passing)</span></td><td><strong>fails</strong> — 33.9% against an 80.1% baseline</td></tr>
+          <tr><td>Value is continuous <span class="note">(a salary figure)</span></td><td>clustering can't separate it; extract per item</td></tr>
+          <tr><td>Budget is large <span class="note">(reading half the corpus anyway)</span></td><td>item-level confidence overtakes the cluster gate</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    Figures measured on LEDGAR (60,000 contract clauses), 20 Newsgroups and Amazon products.<br>
+    Extraction: paired test, n=400, 4,000-resample bootstrap — 96.2% @ 80 calls vs 96.5% @ 400;<br>
+    the difference is not statistically distinguishable, so the claim is parity at 5× fewer calls.<br>
+    Embeddings run locally at zero cost; the corpus never leaves the host.
+  </footer>
+</div>
+
+<script>
+(function(){
+  const N=400, K=40, PER=N/K;           // 400 sampled clauses in 40 sub-clusters
+  const LOWCOH=[3,9,14,21,27,31,35,38]; // the 8 clusters the gate flags (20% of items)
+  const grid=document.getElementById('grid');
+  const cells=[];
+  for(let i=0;i<N;i++){const d=document.createElement('div');d.className='cell';grid.appendChild(d);cells.push(d);}
+
+  const S=[
+    {calls:'400', acc:'96.5%', rel:'baseline',
+     note:'Every clause read individually. Maximum accuracy, maximum spend — and ~90% of those calls land on clauses the clustering already had right.',
+     mode:'all'},
+    {calls:'40', acc:'92.2%', rel:'10× fewer',
+     note:'One call per sub-cluster, propagated to every member. Cheapest possible, and 4 points behind — the errors concentrate in the clusters that were never coherent.',
+     mode:'none'},
+    {calls:'80', acc:'96.2%', rel:'5× fewer',
+     note:'Cohesion flags the 8 least-coherent clusters; only those get read per item. Matches the exhaustive read — the paired bootstrap puts the difference at −0.2 points, 95% CI [−2.5, +2.0], not significant.',
+     mode:'gate'}
+  ];
+  const btns=[document.getElementById('b0'),document.getElementById('b1'),document.getElementById('b2')];
+
+  function apply(k){
+    btns.forEach((b,i)=>b.setAttribute('aria-pressed', i===k?'true':'false'));
+    const s=S[k];
+    cells.forEach((c,i)=>{
+      const cl=Math.floor(i/PER);
+      c.className='cell';
+      if(s.mode==='all') c.classList.add('read');
+      else if(s.mode==='none') c.classList.add('trust');
+      else c.classList.add(LOWCOH.includes(cl)?'read':'trust');
+    });
+    document.getElementById('sCalls').textContent=s.calls;
+    document.getElementById('sAcc').textContent=s.acc;
+    document.getElementById('sRel').textContent=s.rel;
+    document.getElementById('sNote').textContent=s.note;
+  }
+  btns.forEach((b,i)=>b.addEventListener('click',()=>apply(i)));
+  apply(2);
+})();
+</script>
+
+</body></html>

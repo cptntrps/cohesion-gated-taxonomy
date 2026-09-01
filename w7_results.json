@@ -1,0 +1,13 @@
+{
+ "n_found": 3715,
+ "recall": 0.882,
+ "precision": 0.752,
+ "g9": "FAIL",
+ "acc_found_pct": 97.9,
+ "false_assert_pct": 88.9,
+ "g10": "FAIL",
+ "end_to_end": 0.864,
+ "g11": "PASS",
+ "sample_calls": 192,
+ "read_frac": 0.4
+}

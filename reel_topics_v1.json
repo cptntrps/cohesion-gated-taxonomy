@@ -1,0 +1,204 @@
+{
+ "version": "reel-topics-v1.2",
+ "date": "2026-10-05",
+ "source": "merged from topic clusters A (ad770524), B (73f973db) and the direct LLM baseline (934bb987); subject only, form lives in kind; v1.1: add sports and unknown, mind_self names philosophy and Stoicism (7 unlabelled reels in run 2936af40); v1.2: add crime_odd_news, relationships_life covers dating and sex, unknown valid only alone (21 unknown labels in run d80a463e, about 10 with real content)",
+ "topics": [
+  {
+   "topic": "ai_software",
+   "label": "AI & software",
+   "description": "Artificial intelligence, software engineering and developer tools.",
+   "sub": [
+    {
+     "topic": "ai_agents",
+     "label": "AI agents & LLM use",
+     "description": "How to build, prompt and use LLMs and AI agents."
+    },
+    {
+     "topic": "coding_repos",
+     "label": "Coding & repos",
+     "description": "Programming, GitHub repositories, developer tools and computer science."
+    },
+    {
+     "topic": "ai_business",
+     "label": "AI-run business",
+     "description": "Using AI and automation to run or start a business, side hustle or lead machine."
+    },
+    {
+     "topic": "web_design_tech",
+     "label": "Web & design tech",
+     "description": "Web animation, front-end libraries and tools to build websites or apps."
+    }
+   ]
+  },
+  {
+   "topic": "business_career",
+   "label": "Business & career",
+   "description": "Work, careers, companies, marketing and entrepreneurship.",
+   "sub": [
+    {
+     "topic": "corporate_life",
+     "label": "Consulting & corporate life",
+     "description": "Consulting, MBA, finance-job and office culture."
+    },
+    {
+     "topic": "marketing_growth",
+     "label": "Marketing & growth",
+     "description": "Marketing, sales, audience growth and creator business."
+    }
+   ]
+  },
+  {
+   "topic": "money_investing",
+   "label": "Money & investing",
+   "description": "Personal finance, investing, markets and economics of money.",
+   "sub": []
+  },
+  {
+   "topic": "politics_society",
+   "label": "Politics & society",
+   "description": "Politics, news, ideology and social issues.",
+   "sub": [
+    {
+     "topic": "brazil_politics",
+     "label": "Brazilian politics",
+     "description": "Brazilian politics, taxes, the state and libertarian argument about Brazil."
+    },
+    {
+     "topic": "world_news",
+     "label": "World & US news",
+     "description": "Current events, news and politics outside Brazil."
+    },
+    {
+     "topic": "political_economy",
+     "label": "Political economy",
+     "description": "Ideas about the state, markets, liberty and economic systems in general."
+    }
+   ]
+  },
+  {
+   "topic": "brazil_culture",
+   "label": "Brazilian culture",
+   "description": "Brazilian everyday life, language, humor and pop culture (not politics).",
+   "sub": []
+  },
+  {
+   "topic": "photo_visual",
+   "label": "Photography & visual art",
+   "description": "Photography, models, art, illustration and visual references.",
+   "sub": [
+    {
+     "topic": "photo_reference",
+     "label": "Photo & visual reference",
+     "description": "Photography technique, photo studios and visual inspiration."
+    },
+    {
+     "topic": "fashion_models",
+     "label": "Fashion & models",
+     "description": "Fashion, models, portraits and beauty."
+    },
+    {
+     "topic": "art_illustration",
+     "label": "Art & illustration",
+     "description": "Painting, drawing, illustration, comics art and design."
+    }
+   ]
+  },
+  {
+   "topic": "places_travel",
+   "label": "Places & travel",
+   "description": "Cities, travel destinations, architecture and places to visit.",
+   "sub": [
+    {
+     "topic": "new_york",
+     "label": "New York",
+     "description": "New York City places, streets and life."
+    },
+    {
+     "topic": "travel_destinations",
+     "label": "Travel destinations",
+     "description": "Destinations, trips and places to visit outside New York."
+    },
+    {
+     "topic": "architecture_interiors",
+     "label": "Architecture & interiors",
+     "description": "Buildings, interiors, home design and smart home."
+    }
+   ]
+  },
+  {
+   "topic": "entertainment",
+   "label": "Entertainment",
+   "description": "Films, TV, music, books, games and anime.",
+   "sub": [
+    {
+     "topic": "film_tv",
+     "label": "Film & TV",
+     "description": "Films, TV shows and actors."
+    },
+    {
+     "topic": "music",
+     "label": "Music",
+     "description": "Music, musicians and performances."
+    },
+    {
+     "topic": "books_fiction",
+     "label": "Books & fiction",
+     "description": "Books, authors, fiction and horror stories."
+    },
+    {
+     "topic": "games_anime",
+     "label": "Games & anime",
+     "description": "Video games, tabletop games and anime."
+    }
+   ]
+  },
+  {
+   "topic": "science_learning",
+   "label": "Science & learning",
+   "description": "Science, mathematics, history and how to learn.",
+   "sub": []
+  },
+  {
+   "topic": "mind_self",
+   "label": "Mind & self",
+   "description": "Self-improvement, goal setting, psychology, philosophy, Stoicism and productivity.",
+   "sub": []
+  },
+  {
+   "topic": "health_fitness",
+   "label": "Health & fitness",
+   "description": "Exercise, health, medicine, sleep and the body.",
+   "sub": []
+  },
+  {
+   "topic": "sports",
+   "label": "Sports",
+   "description": "Football, athletes, matches and other sports.",
+   "sub": []
+  },
+  {
+   "topic": "food_drink",
+   "label": "Food & drink",
+   "description": "Cooking, recipes, restaurants and drinks.",
+   "sub": []
+  },
+  {
+   "topic": "relationships_life",
+   "label": "Relationships & everyday life",
+   "description": "Dating, sex, relationships, family and everyday situations.",
+   "sub": []
+  },
+  {
+   "topic": "crime_odd_news",
+   "label": "Crime & odd news",
+   "description": "Crime, true crime, accidents, piracy and odd or viral news stories.",
+   "sub": []
+  },
+  {
+   "topic": "unknown",
+   "label": "Unknown content",
+   "description": "Use ONLY when the summary says the reel's content cannot be determined.",
+   "sub": []
+  }
+ ]
+}

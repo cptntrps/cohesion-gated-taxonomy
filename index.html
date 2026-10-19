@@ -281,6 +281,7 @@ function App(){
       .nodeLabel(n=>`<div style="font-size:.8rem"><b>${n.name}</b><br><span style="color:#9aa0aa">${fmt(n.count)} clauses${n.cohesion!=null?' · coherence '+n.cohesion:''}</span></div>`)
       .linkColor(()=> '#4a9eff55').linkWidth(.8).linkOpacity(.35).onNodeClick(n=>setSel(data.nodes.find(x=>x.id===n.id)||n));
     g.d3Force('charge').strength(-120); fg.current=g;
+    setTimeout(()=>{ if(fg.current===g) g.zoomToFit(800, 40); }, 1200);   // once the burst has spread, fit the camera so no branch sits outside the view
     const rz=()=>g.width(mount.current.clientWidth).height(mount.current.clientHeight); rz(); window.addEventListener('resize',rz); return ()=>window.removeEventListener('resize',rz);
   },[view,data]);
   const action = async (route, body) => { setBusy(true); setErr(null); try { applyTree(await post(route,body)); setSel(null); } catch(e){ setErr(e.message); } finally { setBusy(false); } };

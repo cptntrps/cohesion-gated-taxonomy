@@ -33,13 +33,16 @@ def load_corpus():
     STATE.update(V=V[:n], texts=texts[:n], labels=labels[:n], gold_names=gold_names)
     tree = json.load(open(HERE / "tree.json"))
     STATE["anchors"] = tree.get("anchors", [])
+    STATE["prev_anchors"] = list(STATE["anchors"])
     STATE["lower"] = [t.lower() for t in STATE["texts"]]
     load_leaves(tree)
     print(f"loaded {n} provisions, {len(STATE['anchors'])} anchors", flush=True)
 
 def load_leaves(tree):
     """idx -> name of the leaf that holds the clause (members.json is written by every rebuild)."""
-    members = json.load(open(HERE / "members.json"))
+    load_leaves_from(json.load(open(HERE / "members.json")), tree)
+
+def load_leaves_from(members, tree):
     names = {x["id"]: x["name"] for x in tree["nodes"]}
     has_child = {l["source"] for l in tree["links"]}
     leaf_of = np.full(len(STATE["texts"]), -1, dtype=np.int64)
@@ -88,7 +91,7 @@ def score(q, top=25, recall=0.90):
         hit = np.cumsum(gold[order]); k90 = int(np.searchsorted(hit, need) + 1) if need and hit[-1] >= need else None
         kw_hits = int((km & gold).sum()); kw_rec = round(100 * kw_hits / max(G, 1), 1)
         kw_to_90 = int(km.sum()) if kw_rec >= 100 * recall else N
-        out.update(gold_label=STATE["gold_names"][gi], gold_count=G, semantic_to_90=k90,
+        out.update(gold_label=STATE["gold_names"][gi], gold_count=G, semantic_to_90=k90, semantic_found_at_90=need, keyword_hits=kw_hits,
                    semantic_precision_at_90=round(100 * need / k90, 1) if k90 else None,
                    keyword_recall=kw_rec, keyword_precision=round(100 * kw_hits / max(int(km.sum()), 1), 1),
                    keyword_to_90=kw_to_90, times_fewer=round(kw_to_90 / k90, 1) if k90 else None)
@@ -108,15 +111,40 @@ def score(q, top=25, recall=0.90):
 def rebuild():
     from cluster import build_taxonomy
     anchors = STATE["anchors"]
+    old_of, old_names = STATE.get("leaf_of"), list(STATE.get("leaf_names", []))
+    old_anchors = list(STATE.get("prev_anchors", []))
     nodes, links, members, report, anomalies = build_taxonomy(
         STATE["V"], STATE["texts"], STATE["labels"], STATE["gold_names"],
         anchors=anchors, log=lambda m: print(m, flush=True))
     tree = {"nodes": nodes, "links": links, "report": report,
             "anchors": anchors, "anomalies": anomalies}
+    load_leaves_from(members, tree)
+    tree["change"] = change_summary(old_of, old_names, old_anchors, anchors, nodes, members)
+    STATE["prev_anchors"] = list(anchors)
     json.dump(tree, open(HERE / "tree.json", "w"), indent=1)
     json.dump(members, open(HERE / "members.json", "w"))
-    load_leaves(tree)
     return tree
+
+def change_summary(old_of, old_names, old_anchors, anchors, nodes, members, top=5):
+    """What one correction moved: for a new concept, the old groups its clauses came from; for a removed one, where they went."""
+    if old_of is None:
+        return None
+    def named(of, names, idx):
+        c = {}
+        for i in idx:
+            li = int(of[i]); nm = names[li] if li >= 0 else "(no group)"; c[nm] = c.get(nm, 0) + 1
+        return sorted(c.items(), key=lambda kv: -kv[1])[:top]
+    added = [a for a in anchors if a not in old_anchors]; removed = [a for a in old_anchors if a not in anchors]
+    if added:
+        name = added[-1]; node = next((n for n in nodes if n["name"] == name and n.get("human_named")), None)
+        if node is None:
+            return {"kind": "added", "concept": name, "clauses": 0, "from": []}
+        idx = np.asarray(members[node["id"]], dtype=np.int64)
+        return {"kind": "added", "concept": name, "clauses": int(len(idx)), "from": named(old_of, old_names, idx)}
+    if removed and removed[-1] in old_names:
+        name = removed[-1]; idx = np.nonzero(old_of == old_names.index(name))[0]
+        return {"kind": "removed", "concept": name, "clauses": int(len(idx)), "to": named(STATE["leaf_of"], STATE["leaf_names"], idx)}
+    return None
 
 class H(SimpleHTTPRequestHandler):
     def __init__(self, *a, **k):

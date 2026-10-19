@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LEDGAR Taxonomy</title>
+<title>Nomen</title>
 <style>
 :root { color-scheme: dark; --bg:#0e1116; --panel:#141821; --line:#232935; --text:#e8eaef; --muted:#8b93a3; --dim:#5b6372;
   --blue:#4a9eff; --green:#3ecf8e; --amber:#f5b641; --red:#f87171; --gold:#e9c46a; }
@@ -15,7 +15,10 @@ header { display:flex; align-items:center; gap:1.2rem; padding:.8rem 1.4rem; bor
 header .brand { display:flex; align-items:baseline; gap:.7rem; }
 header .brand h1 { font-size:1.15rem; font-weight:700; letter-spacing:-.01em; }
 header .brand .tag { color:var(--muted); font-size:.86rem; }
-.kpis { margin-left:auto; display:flex; gap:.6rem; }
+.kpis { margin-left:auto; display:flex; gap:.6rem; flex-wrap:wrap; }
+.change { margin:.9rem 1.4rem 0; padding:.6rem .9rem; border:1px solid #6b5a1f; background:#2b2510; color:#f1e3b0; border-radius:9px; font-size:.86rem; line-height:1.5; }
+.change b { color:var(--gold); } .change .x { float:right; cursor:pointer; color:var(--muted); margin-left:.8rem; }
+@media (max-width:700px){ header { flex-wrap:wrap; } .kpi { min-width:0; } table.tax th, table.tax td { padding-left:.6rem !important; padding-right:.6rem !important; } .toolrow { flex-wrap:wrap; } }
 .kpi { background:#0f1319; border:1px solid var(--line); border-radius:10px; padding:.45rem .8rem; min-width:118px; }
 .kpi .n { font-size:1.15rem; font-weight:700; font-variant-numeric:tabular-nums; }
 .kpi .l { font-size:.68rem; color:var(--muted); text-transform:uppercase; letter-spacing:.05em; margin-top:.1rem; }
@@ -114,7 +117,7 @@ details.bench { margin-top:.6rem; } details.bench summary { cursor:pointer; colo
 <script>
 const { useState, useEffect, useRef, useMemo } = React;
 const html = htm.bind(React.createElement);
-const BRANCH = ['#4a9eff','#f472b6','#3ecf8e','#fb923c','#a78bfa','#2dd4bf','#e9c46a','#f87171','#38bdf8','#fb7185'];
+const BRANCH = ['#4a9eff','#f472b6','#3ecf8e','#fb923c','#a78bfa','#2dd4bf','#a3e635','#f87171','#38bdf8','#fb7185'];   // no gold: gold = named by you
 const EXAMPLES = ['governing law','indemnification','confidentiality','notices','severability','base salary','counterparts'];
 const branchIndex = id => { const m=String(id).match(/[_](\d+)/); return m?(+m[1])%BRANCH.length:0; };
 const colorFor = n => n.depth===0 ? '#e8eaef' : (n.human_named ? '#e9c46a' : BRANCH[branchIndex(n.id)]);
@@ -183,7 +186,7 @@ function Discover({data, sel, onSelect, showBench, setShowBench, view, setView, 
   }
   const rep = data.report;
   return html`<${React.Fragment}>
-    <div class="lede">${fmt(rep.n_provisions)} contract clauses, nobody labelled them. The machine grouped them by meaning into <b>${rep.n_leaves} concepts</b> and a language model named each one from a few representative clauses. <b>Coherence</b> says how much to trust a group before anyone reads it.</div>
+    <div class="lede">Nobody labelled these ${fmt(rep.n_provisions)} clauses. Nomen grouped them by meaning into <b>${rep.n_leaves} concepts</b> and named each one. <b>Coherence</b> says how far to trust a name.</div>
     <div class="toolrow">
       <div class="seg"><button class=${view==='table'?'on':''} onClick=${()=>setView('table')}>Tree</button><button class=${view==='graph'?'on':''} onClick=${()=>setView('graph')}>Map</button></div>
       <input class="tin" style=${{width:'220px'}} placeholder="filter concepts…" value=${q} onInput=${e=>setQ(e.target.value)}/>
@@ -211,7 +214,7 @@ function Correct({data, action, busy}){
   const [name,setName] = useState('');
   const anchors = data.anchors||[];
   return html`<${React.Fragment}>
-    <div class="lede">Corrections are structural. Name a concept and the whole corpus re-clusters around it; rename a group and that name becomes an anchor. Clauses that fit no group are listed below: name one to seed a new concept.</div>
+    <div class="lede">Name a concept and the whole corpus regroups around it. Clauses that fit no group are listed below: name one to start a new concept.</div>
     <div class="toolrow">
       <input class="tin" style=${{width:'260px'}} placeholder="name a concept you know is in there…" value=${name} onInput=${e=>setName(e.target.value)} onKeyDown=${e=>{ if(e.key==='Enter'&&name.trim()){ action('/anchor',{name:name.trim()}); setName(''); } }}/>
       <button class="btn primary" disabled=${busy||!name.trim()} onClick=${()=>{ action('/anchor',{name:name.trim()}); setName(''); }}>Add concept and re-run</button>
@@ -243,7 +246,7 @@ function Find({onOpenLeaf}){
     catch(e){ setErr(e.message); } finally { setBusy(false); } };
   const hl = (t, kw) => { if(!kw) return t; const i=t.toLowerCase().indexOf(kw.toLowerCase()); if(i<0) return t; return html`${t.slice(0,i)}<mark>${t.slice(i,i+kw.length)}</mark>${t.slice(i+kw.length)}`; };
   return html`<${React.Fragment}>
-    <div class="lede">Type what you are looking for. The clauses are ranked by meaning, not by the words they use, so paraphrases count. The scorecard says how many clauses a reviewer must read to find 90% of them this way versus by keyword search.</div>
+    <div class="lede">Type what you are looking for. Clauses are ranked by meaning, so paraphrases count. The cards compare that with a search for the same words.</div>
     <div class="toolrow">
       <input class="tin" style=${{width:'340px'}} placeholder="a concept, e.g. governing law" value=${q} onInput=${e=>setQ(e.target.value)} onKeyDown=${e=>{ if(e.key==='Enter') run(); }}/>
       <button class="btn primary" disabled=${busy||!q.trim()} onClick=${()=>run()}>Find</button>
@@ -252,10 +255,10 @@ function Find({onOpenLeaf}){
     ${err && html`<div class="hint err">${err}</div>`}
     ${busy && html`<div class="hint">ranking ${fmt(60000)} clauses…</div>`}
     ${res && res.gold_label && html`<div class="cards">
-      <div class="card good"><div class="n">${fmt(res.semantic_to_90)}</div><div class="l">clauses to read to find 90% of all <b>${res.gold_label}</b> clauses, ranked by meaning (precision ${res.semantic_precision_at_90}%)</div></div>
-      <div class="card bad"><div class="n">${res.keyword_recall>=90?fmt(res.keyword_to_90):fmt(res.n)}</div><div class="l">${res.keyword_recall>=90?'by keyword search: its matches already reach 90%':'by keyword search: the word only finds '+res.keyword_recall+'% of them, so the reviewer reads the whole corpus'}</div></div>
-      <div class=${'card '+(res.times_fewer>=3?'good':'')}><div class="n">${res.times_fewer!=null?res.times_fewer+'×':'—'}</div><div class="l">fewer clauses to read than keyword search</div></div>
-      <div class="card"><div class="n">${fmt(res.gold_count)}</div><div class="l">such clauses exist in the corpus (benchmark count, used only to score)</div></div>
+      <div class="card good"><div class="n">${fmt(res.semantic_found_at_90)}</div><div class="l">of the ${fmt(res.gold_count)} <b>${res.gold_label}</b> clauses found by meaning, all within the top ${fmt(res.semantic_to_90)} (precision ${res.semantic_precision_at_90}%)</div></div>
+      <div class="card bad"><div class="n">${fmt(res.keyword_hits)}</div><div class="l">found by searching the words “${res.query}”: ${res.keyword_recall}% of them, in ${fmt(res.keyword_matches)} matches</div></div>
+      ${res.keyword_recall>=90 && html`<div class=${'card '+(res.times_fewer>=3?'good':'')}><div class="n">${res.times_fewer}×</div><div class="l">fewer clauses to read than the word search, at 90% found</div></div>`}
+      <div class="card"><div class="n">${fmt(res.gold_count)}</div><div class="l">such clauses exist (benchmark count, used only to score)</div></div>
     </div>`}
     ${res && !res.gold_label && html`<div class="hint">no benchmark label matches "${res.query}", so recall cannot be scored; the ranking below still works.</div>`}
     ${res && html`<div class="toolrow" style=${{paddingTop:0}}><span style=${{color:'var(--muted)',fontSize:'.82rem'}}>where the top 200 live:</span>${res.leaves_in_top200.map(([n,c])=> html`<span class="chip" key=${n} onClick=${()=>onOpenLeaf(n)}>${n==='[naming failed]'?'unnamed group':n} · ${c}</span>`)}</div>`}
@@ -266,7 +269,7 @@ function Find({onOpenLeaf}){
 function App(){
   const [data,setData]=useState(null), [err,setErr]=useState(null), [sel,setSel]=useState(null);
   const [tab,setTabRaw]=useState('discover'), [busy,setBusy]=useState(false), [showBench,setShowBench]=useState(false);
-  const [view,setView]=useState('table'), [q,setQ]=useState('');
+  const [view,setView]=useState('table'), [q,setQ]=useState(''), [change,setChange]=useState(null);
   const mount=useRef(null), fg=useRef(null);
   const setTab = t => { setTabRaw(t); setSel(null); };
   const applyTree = d => { const childIds=new Set(d.links.map(l=>l.source)); d.nodes.forEach(n=> n._hasChildren=childIds.has(n.id));
@@ -277,21 +280,22 @@ function App(){
   useEffect(()=>{ if(view!=='graph'||!data||!mount.current||fg.current) return;
     const g=ForceGraph3D()(mount.current).backgroundColor('rgba(0,0,0,0)')
       .graphData({nodes:data.nodes.map(n=>({...n})),links:data.links.map(l=>({...l}))})
-      .nodeId('id').nodeVal(n=>Math.max(1,Math.sqrt(n.count||1))).nodeRelSize(4).nodeColor(colorFor).nodeOpacity(.95)
+      .nodeId('id').nodeVal(n=>n.human_named?Math.max(60,3*Math.sqrt(n.count||1)):Math.max(1,Math.sqrt(n.count||1))).nodeRelSize(4).nodeColor(colorFor).nodeOpacity(.95)
       .nodeLabel(n=>`<div style="font-size:.8rem"><b>${n.name}</b><br><span style="color:#9aa0aa">${fmt(n.count)} clauses${n.cohesion!=null?' · coherence '+n.cohesion:''}</span></div>`)
       .linkColor(()=> '#4a9eff55').linkWidth(.8).linkOpacity(.35).onNodeClick(n=>setSel(data.nodes.find(x=>x.id===n.id)||n));
-    g.d3Force('charge').strength(-120); fg.current=g;
+    g.d3Force('charge').strength(-120); g.d3Force('link').distance(l=>((l.target&&l.target.human_named)||(l.target&&data.nodes.find(x=>x.id===l.target)?.human_named))?90:30); fg.current=g;
     setTimeout(()=>{ if(fg.current===g) g.zoomToFit(800, 40); }, 1200);   // once the burst has spread, fit the camera so no branch sits outside the view
     const rz=()=>g.width(mount.current.clientWidth).height(mount.current.clientHeight); rz(); window.addEventListener('resize',rz); return ()=>window.removeEventListener('resize',rz);
   },[view,data]);
-  const action = async (route, body) => { setBusy(true); setErr(null); try { applyTree(await post(route,body)); setSel(null); } catch(e){ setErr(e.message); } finally { setBusy(false); } };
+  const action = async (route, body) => { setBusy(true); setErr(null); try { const t=await post(route,body); applyTree(t); setSel(null); setChange(t.change||null);
+      if(t.change && t.change.kind==='added'){ const n=t.nodes.find(x=>x.name===t.change.concept && x.human_named); if(n){ setTabRaw('discover'); setView('table'); setSel(n); } } } catch(e){ setErr(e.message); } finally { setBusy(false); } };
   const openLeaf = name => { const n=data.nodes.find(x=>x.name===name); if(n){ setTab('discover'); setView('table'); setQ(name); setSel(n); } };
   if(err && !data) return html`<div class="hint err" style=${{padding:'2rem'}}>Failed to load: ${err}. Start server.py, then open this page.</div>`;
   if(!data) return html`<div class="hint" style=${{padding:'2rem'}}>loading…</div>`;
   const rep=data.report; const times = Math.round(rep.leaf_weighted_purity_pct/rep.baseline_majority_pct*10)/10;
   return html`<${React.Fragment}>
     <header>
-      <div class="brand"><h1>LEDGAR Taxonomy</h1><span class="tag">${fmt(rep.n_provisions)} contract clauses, organized and searchable without a single label</span></div>
+      <div class="brand"><h1>Nomen</h1><span class="tag">finds and names the concepts in ${fmt(rep.n_provisions)} clauses nobody has labelled</span></div>
       <div class="kpis">
         <div class="kpi"><div class="n">${rep.n_leaves}</div><div class="l">concepts found</div></div>
         <div class="kpi"><div class="n">${times}×</div><div class="l">better than guessing</div></div>
@@ -307,12 +311,15 @@ function App(){
     </nav>
     <div class="main">
       <div class="content">
+        ${change && (tab==='discover'||tab==='correct') && html`<div class="change"><span class="x" onClick=${()=>setChange(null)}>×</span>${change.kind==='added'
+          ? html`<b>“${change.concept}”</b> now holds ${fmt(change.clauses)} clauses, taken from ${change.from.map(([n,c],i)=>html`<span key=${i}>${i?' · ':''}${n} <b>${fmt(c)}</b></span>`)}`
+          : html`<b>“${change.concept}”</b> is gone; its ${fmt(change.clauses)} clauses went to ${change.to.map(([n,c],i)=>html`<span key=${i}>${i?' · ':''}${n} <b>${fmt(c)}</b></span>`)}`}</div>`}
         ${tab==='discover' && html`<${Discover} data=${data} sel=${sel} onSelect=${setSel} showBench=${showBench} setShowBench=${setShowBench} view=${view} setView=${setView} mount=${mount} q=${q} setQ=${setQ}/>`}
         ${tab==='correct' && html`<${Correct} data=${data} action=${action} busy=${busy}/>`}
         ${tab==='find' && html`<${Find} onOpenLeaf=${openLeaf}/>`}
       </div>
       <${Panel} node=${sel} onClose=${()=>setSel(null)} onRename=${(id,name)=>action('/rename',{id,name})} busy=${busy} showBench=${showBench}/>
-      ${busy && html`<div class="busy"><div class="spinner"></div><div>re-clustering the corpus around your words and naming the groups…</div><div class="hint">30 to 60 s</div></div>`}
+      ${busy && html`<div class="busy"><div class="spinner"></div><div>regrouping the corpus around your words and naming the groups…</div><div class="hint">about 2 minutes</div></div>`}
     </div>
     ${err && html`<div class="hint err">error: ${err}</div>`}
   <//>`;

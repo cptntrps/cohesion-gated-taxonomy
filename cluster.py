@@ -129,7 +129,7 @@ def build_taxonomy(V, texts, labels, gold_names, anchors=None,
         if refine:
             lab = refine_partition(V[idx], lab, temp=refine_temp)   # cohesion-max, pre-LLM
         return lab
-    nodes = [{"id": "root", "name": "All LEDGAR clauses", "depth": 0, "count": N,
+    nodes = [{"id": "root", "name": "All clauses", "depth": 0, "count": N,
               "size": N, "parent": None, "samples": [], "human_named": False}]
     links, members, jobs = [], {"root": list(range(N))}, []
 

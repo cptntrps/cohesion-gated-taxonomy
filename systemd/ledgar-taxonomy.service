@@ -1,0 +1,14 @@
+[Unit]
+Description=LEDGAR cohesion-gated taxonomy UI (:8799)
+After=network.target
+
+[Service]
+WorkingDirectory=/home/gui/projects/ledgar-taxonomy-mvp
+Environment=PORT=8799
+Environment=LEDGAR_EMB=/home/gui/projects/hyperbolic-experiments/crossover/ledgar_emb.npz
+ExecStart=/bin/bash -lc 'export DEEPSEEK_API_KEY="$(sops -d ~/src/infrastructure-secrets/services/litellm.enc.env | grep "^DEEPSEEK_API_KEY=" | cut -d= -f2-)"; exec python3 server.py'
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

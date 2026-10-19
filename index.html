@@ -100,7 +100,9 @@ details.bench { margin-top:.6rem; } details.bench summary { cursor:pointer; colo
 .hint { font-size:.8rem; color:var(--dim); padding:.6rem 1.4rem; }
 .err { color:var(--red); }
 #graph { position:absolute; inset:0; }
-.graphwrap { position:relative; height:100%; }
+/* the Map fills what is left under the lede and the toolbar (height:100% overflowed the pane by their height and hid the bottom of the graph) */
+.content:has(> .graphwrap) { display:flex; flex-direction:column; overflow:hidden; }
+.graphwrap { position:relative; flex:1; min-height:0; }
 </style>
 </head>
 <body>

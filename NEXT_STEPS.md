@@ -10,6 +10,14 @@ Ordered by value to the competition entry. Owner: this repo.
   (Governing Law 1.3%, Confidentiality 89.5%, Severability 13.5%), semantic retrieval reaches 90%
   recall at 3/3 pass >=3x, median 7.7x fewer clauses. Keyword-literal concepts: keyword already works.
 
+## Measured state (2026-10-19, investor-demo fixes)
+- Naming failures 6 -> 0: empty reasoning-model replies are retried with a larger token budget, then with
+  the non-reasoning `deepseek-chat`, then a deterministic heading-based name marked "(auto)" (none needed).
+- Top-level imbalance: size-aware k (about n/1500 children, 2..12) and a 12-way root split. Largest branch
+  28,261 -> 16,655 clauses; leaf purity 40.0% -> 41.2% (flat 45.4%). Duplicate sibling names are re-asked
+  with the taken names listed (1 remains: two "Term" branches).
+- Live scorecard in the UI (item 1 below) is DONE: `GET /api/score?q=` and the Find tab.
+
 ## Deferred (do in this order)
 
 1. **Live scorecard in the UI.** `/score {name}` endpoint (semantic rank -> clauses-to-90%-recall +

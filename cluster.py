@@ -19,6 +19,8 @@ from naming import name_cluster, MODEL
 MAX_DEPTH = 3
 KROOT, KSUB = 8, 5
 MIN_SPLIT = 1200
+TARGET_LEAF = 1500   # size-aware k: a node of n clauses splits into about n/TARGET_LEAF children (2..KMAX)
+KMAX = 12
 N_REPR = 10
 SEED = 13
 NAME_WORKERS = 8
@@ -107,7 +109,7 @@ def refine_partition(Vsub, lab, temp=0.0, sweeps=8, frac=0.35, seed=13):
 def build_taxonomy(V, texts, labels, gold_names, anchors=None,
                    geometry="hyperbolic", do_naming=True,
                    refine=False, refine_temp=0.0, mode="map", mm_split=0.10,
-                   log=print):
+                   balanced=True, log=print):
     """anchors: list of human anchor names (strings) or None. geometry:
     'hyperbolic' (Poincare-ball k-means, owner directive) or 'flat' (KMeans).
     do_naming=False builds structure only (for flat-vs-hyperbolic purity compare).
@@ -154,13 +156,13 @@ def build_taxonomy(V, texts, labels, gold_names, anchors=None,
     max_d = 6 if emerge else MAX_DEPTH
 
     def divide(idx, parent_id, depth, path):
-        if depth >= max_d or len(idx) < min_sz:
+        if len(idx) < min_sz or (depth >= max_d and not (balanced and len(idx) > 4 * TARGET_LEAF and depth < max_d + 1)):
             return
         # EMERGE: split only where there is a real seam (multimodal); stop when
         # unimodal even if coarse. MAP: always split to depth (maximize purity).
         if emerge and multimodality(V[idx]) < mm_split:
             return
-        k = min(KSUB, len(idx))
+        k = min(max(2, min(KMAX, int(round(len(idx) / TARGET_LEAF)))) if balanced else KSUB, len(idx))
         if k < 2:
             return
         lab = clus(idx, k)
@@ -200,7 +202,7 @@ def build_taxonomy(V, texts, labels, gold_names, anchors=None,
                 divide(sub, nid, 1, [100 + c])
     else:
         log(f"discovery rebuild: no anchors, geometry={geometry}")
-        lab = clus(all_idx, KROOT)
+        lab = clus(all_idx, KMAX if balanced else KROOT)
         for c in range(int(lab.max()) + 1):
             sub = all_idx[lab == c]
             if len(sub) == 0:
@@ -225,6 +227,27 @@ def build_taxonomy(V, texts, labels, gold_names, anchors=None,
         with ThreadPoolExecutor(max_workers=NAME_WORKERS) as ex:
             for nid, name, ok in ex.map(do, jobs):
                 by_id[nid]["name"] = name; fails += not ok
+        # siblings with the same name: ask again with the taken names listed (two rounds)
+        for _round in range(2):
+            dup_jobs = []
+            for parent in {by_id[j]["parent"] for j in jobs}:
+                sibs = [j for j in jobs if by_id[j]["parent"] == parent]
+                seen = {}
+                for j in sibs:
+                    seen.setdefault(by_id[j]["name"].lower(), []).append(j)
+                for nm, group in seen.items():
+                    for j in group[1:]:
+                        dup_jobs.append((j, [by_id[x]["name"] for x in sibs if x != j]))
+            if not dup_jobs:
+                break
+            log(f"renaming {len(dup_jobs)} duplicate sibling names")
+            def redo(job):
+                j, avoid = job
+                name, ok = name_cluster(by_id[j]["samples"], anc(j), avoid=avoid)
+                return j, name, ok
+            with ThreadPoolExecutor(max_workers=NAME_WORKERS) as ex:
+                for j, name, ok in ex.map(redo, dup_jobs):
+                    if ok: by_id[j]["name"] = name
 
     child_ids = {l["source"] for l in links}
     leaves = [nd for nd in nodes if nd["depth"] > 0 and nd["id"] not in child_ids and nd["count"] > 0]

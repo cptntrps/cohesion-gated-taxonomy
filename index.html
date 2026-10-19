@@ -194,7 +194,7 @@ function Discover({data, sel, onSelect, showBench, setShowBench, view, setView, 
       <tr key=${n.id} class=${sel&&sel.id===n.id?'sel':''} onClick=${()=>onSelect(n)}>
         <td class="name" style=${{paddingLeft:(1.4+indent*1.3)+'rem'}}>
           <span class="tw" onClick=${e=>{ if(!isLeaf){ e.stopPropagation(); toggle(n.id);} }}>${isLeaf?'':(open.has(n.id)||s?'▾':'▸')}</span>
-          <span class="dot" style=${{background:colorFor(n)}}></span>${n.name==='[naming failed]'?html`<span class="fail">unnamed (model failed)</span>`:n.name}
+          <span class="dot" style=${{background:colorFor(n)}}></span>${n.name==='[naming failed]'?html`<span class="fail">unnamed (model failed)</span>`:(n.name.endsWith(' (auto)')?html`${n.name.slice(0,-7)}<span class="hbadge" style=${{color:'var(--amber)',borderColor:'#6b4f1f'}}>auto-named</span>`:n.name)}
           ${n.human_named && html`<span class="hbadge">yours</span>`}
         </td>
         <td class="num">${fmt(n.count)}</td>
@@ -293,7 +293,7 @@ function App(){
         <div class="kpi"><div class="n">${rep.n_leaves}</div><div class="l">concepts found</div></div>
         <div class="kpi"><div class="n">${times}×</div><div class="l">better than guessing</div></div>
         <div class="kpi"><div class="n">${rep.n_anchors}</div><div class="l">human decisions</div></div>
-        ${rep.naming_failures>0 && html`<div class="kpi warn"><div class="n">${rep.naming_failures}</div><div class="l">unnamed groups</div></div>`}
+        ${rep.naming_failures>0 && html`<div class="kpi warn"><div class="n">${rep.naming_failures}</div><div class="l">auto-named groups</div></div>`}
       </div>
     </header>
     <nav class="tabs">

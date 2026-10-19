@@ -12,7 +12,7 @@ Endpoints (POST, JSON):
   /rerun   {}          -> rebuild with current anchors, return tree
   /reset   {}          -> clear anchors, rebuild discovery, return tree
 """
-import json, os, sys, threading, pathlib
+import json, os, sys, threading, pathlib, urllib.request, urllib.parse
 import numpy as np
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 
@@ -33,7 +33,77 @@ def load_corpus():
     STATE.update(V=V[:n], texts=texts[:n], labels=labels[:n], gold_names=gold_names)
     tree = json.load(open(HERE / "tree.json"))
     STATE["anchors"] = tree.get("anchors", [])
+    STATE["lower"] = [t.lower() for t in STATE["texts"]]
+    load_leaves(tree)
     print(f"loaded {n} provisions, {len(STATE['anchors'])} anchors", flush=True)
+
+def load_leaves(tree):
+    """idx -> name of the leaf that holds the clause (members.json is written by every rebuild)."""
+    members = json.load(open(HERE / "members.json"))
+    names = {x["id"]: x["name"] for x in tree["nodes"]}
+    has_child = {l["source"] for l in tree["links"]}
+    leaf_of = np.full(len(STATE["texts"]), -1, dtype=np.int64)
+    leaf_names = []
+    for nid, idxs in members.items():
+        if nid in has_child or nid not in names:
+            continue
+        leaf_names.append(names[nid])
+        li = len(leaf_names) - 1
+        arr = np.asarray(idxs, dtype=np.int64)
+        arr = arr[arr < len(leaf_of)]
+        leaf_of[arr] = li
+    STATE["leaf_of"], STATE["leaf_names"] = leaf_of, leaf_names
+
+def embed_query(text):
+    req = urllib.request.Request("http://localhost:11434/api/embed", data=json.dumps(
+        {"model": "nomic-embed-text", "input": text.lower()}).encode(), headers={"Content-Type": "application/json"})
+    a = np.array(json.load(urllib.request.urlopen(req, timeout=60))["embeddings"][0], dtype=np.float32)
+    return a / (np.linalg.norm(a) + 1e-9)
+
+def gold_match(q):
+    """The benchmark label that names this concept, if one does (used only to score recall; never to rank)."""
+    ql = q.lower().strip()
+    names = STATE["gold_names"]
+    for i, g in enumerate(names):
+        if g.lower() == ql or g.lower() == ql + "s" or g.lower().rstrip("s") == ql.rstrip("s"):
+            return i
+    for i, g in enumerate(names):
+        if ql in g.lower() or g.lower() in ql:
+            return i
+    return None
+
+def score(q, top=25, recall=0.90):
+    """Find a concept three ways: semantic ranking (the product), keyword, read everything."""
+    V, lower, labels = STATE["V"], STATE["lower"], STATE["labels"]
+    N = len(lower)
+    sims = V @ embed_query(q)
+    order = np.argsort(-sims)
+    kw = q.lower().strip()
+    km = np.fromiter((kw in t for t in lower), dtype=bool, count=N)
+    out = {"query": q, "n": N, "keyword_matches": int(km.sum()), "recall_target": recall}
+    gi = gold_match(q)
+    if gi is not None:
+        gold = labels == gi
+        G = int(gold.sum()); need = int(np.ceil(recall * G))
+        hit = np.cumsum(gold[order]); k90 = int(np.searchsorted(hit, need) + 1) if need and hit[-1] >= need else None
+        kw_hits = int((km & gold).sum()); kw_rec = round(100 * kw_hits / max(G, 1), 1)
+        kw_to_90 = int(km.sum()) if kw_rec >= 100 * recall else N
+        out.update(gold_label=STATE["gold_names"][gi], gold_count=G, semantic_to_90=k90,
+                   semantic_precision_at_90=round(100 * need / k90, 1) if k90 else None,
+                   keyword_recall=kw_rec, keyword_precision=round(100 * kw_hits / max(int(km.sum()), 1), 1),
+                   keyword_to_90=kw_to_90, times_fewer=round(kw_to_90 / k90, 1) if k90 else None)
+    leaf_of, leaf_names = STATE["leaf_of"], STATE["leaf_names"]
+    rows = []
+    for i in order[:top]:
+        li = int(leaf_of[i]); rows.append({"idx": int(i), "score": round(float(sims[i]), 3),
+            "leaf": leaf_names[li] if li >= 0 else None, "text": STATE["texts"][i][:320],
+            "keyword_hit": bool(km[i]), "gold": STATE["gold_names"][int(labels[i])]})
+    counts = {}
+    for i in order[:200]:
+        li = int(leaf_of[i]); nm = leaf_names[li] if li >= 0 else "(none)"; counts[nm] = counts.get(nm, 0) + 1
+    out["results"] = rows
+    out["leaves_in_top200"] = sorted(counts.items(), key=lambda kv: -kv[1])[:6]
+    return out
 
 def rebuild():
     from cluster import build_taxonomy
@@ -45,6 +115,7 @@ def rebuild():
             "anchors": anchors, "anomalies": anomalies}
     json.dump(tree, open(HERE / "tree.json", "w"), indent=1)
     json.dump(members, open(HERE / "members.json", "w"))
+    load_leaves(tree)
     return tree
 
 class H(SimpleHTTPRequestHandler):
@@ -58,6 +129,19 @@ class H(SimpleHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def do_GET(self):
+        if self.path.startswith("/api/score"):
+            qs = urllib.parse.parse_qs(urllib.parse.urlparse(self.path).query)
+            q = (qs.get("q") or [""])[0].strip()
+            if not q:
+                return self._json({"error": "empty query"}, 400)
+            try:
+                return self._json(score(q, top=int((qs.get("top") or ["25"])[0])))
+            except Exception as e:
+                import traceback; traceback.print_exc()
+                return self._json({"error": str(e)}, 500)
+        return super().do_GET()
 
     def do_POST(self):
         n = int(self.headers.get("Content-Length", 0))

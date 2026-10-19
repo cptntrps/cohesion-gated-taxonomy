@@ -143,8 +143,8 @@ function Panel({node, onClose, onRename, busy, showBench}){
       </div></div>`}
     <div class="row">
       <div class="kv"><span>clauses</span><span class="v">${fmt(node.count)}</span></div>
-      ${node.cohesion!=null && html`<div class="kv"><span>coherence</span><span class="v" style=${{color:lv[1]}}>${node.cohesion} · ${lv[0]}</span></div>`}
-      ${node.cohesion!=null && html`<div class="hint" style=${{padding:'.2rem 0 0'}}>coherence is measured before any model reads the text. Across the corpus, the tightest clusters are right 98% of the time, the loosest 79%; tight / mixed / loose are the top, middle and bottom third of the concepts.</div>`}
+      ${node.cohesion!=null && !node._hasChildren && html`<div class="kv"><span>coherence</span><span class="v" style=${{color:lv[1]}}>${node.cohesion} · ${lv[0]}</span></div>`}
+      ${node.cohesion!=null && !node._hasChildren && html`<div class="hint" style=${{padding:'.2rem 0 0'}}>coherence is measured before any model reads the text. Across the corpus, the tightest clusters are right 98% of the time, the loosest 79%; tight / mixed / loose are the top, middle and bottom third of the concepts.</div>`}
       ${node.count===0 && html`<div class="hint" style=${{padding:'.3rem 0 0'}}>empty: no clause is close enough to this word yet.</div>`}
     </div>
     ${node.samples && node.samples.length>0 && html`<div class="row">
@@ -198,7 +198,7 @@ function Discover({data, sel, onSelect, showBench, setShowBench, view, setView, 
           ${n.human_named && html`<span class="hbadge">yours</span>`}
         </td>
         <td class="num">${fmt(n.count)}</td>
-        <td>${n.cohesion!=null ? html`<div class="meter"><span class="bar"><span style=${{width:pct(n.cohesion)+'%', background:lv[1]}}></span></span><span class="v">${n.cohesion}</span><span class=${'lvl '+lv[0]}>${lv[0]}</span></div>` : '—'}</td>
+        <td>${n.cohesion==null ? '—' : isLeaf ? html`<div class="meter"><span class="bar"><span style=${{width:pct(n.cohesion)+'%', background:lv[1]}}></span></span><span class="v">${n.cohesion}</span><span class=${'lvl '+lv[0]}>${lv[0]}</span></div>` : html`<span style=${{color:'var(--dim)',fontSize:'.8rem'}}>${(kids[n.id]||[]).length} sub-concepts</span>`}</td>
         ${showBench && html`<td class="bench">${n.count?html`${n.gold_dominant} · ${n.purity}%`:'—'}</td>`}
       </tr>`; })}
     </tbody></table>`}

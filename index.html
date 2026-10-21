@@ -82,7 +82,7 @@ details.bench { margin-top:.6rem; } details.bench summary { cursor:pointer; colo
 .goldrow { display:flex; align-items:center; gap:.5rem; margin:.3rem 0; font-size:.8rem; }
 .goldrow .gbar { flex:1; height:6px; background:#1d222c; border-radius:3px; overflow:hidden; } .goldrow .gbar>span { display:block; height:100%; background:#e9c46aaa; }
 .goldrow .gname { width:140px; color:#c6cbd6; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .goldrow .gcount { color:var(--muted); width:44px; text-align:right; }
-.cards { display:grid; grid-template-columns:repeat(4, minmax(150px, 1fr)); gap:.7rem; padding:.2rem 1.4rem .6rem; max-width:1100px; }
+.cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:.7rem; padding:.2rem 1.4rem .6rem; max-width:1100px; }
 .card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:.8rem .95rem; }
 .card .n { font-size:1.6rem; font-weight:700; font-variant-numeric:tabular-nums; line-height:1.1; }
 .card .l { font-size:.74rem; color:var(--muted); margin-top:.3rem; line-height:1.35; }
@@ -106,6 +106,39 @@ details.bench { margin-top:.6rem; } details.bench summary { cursor:pointer; colo
 /* the Map fills what is left under the lede and the toolbar (height:100% overflowed the pane by their height and hid the bottom of the graph) */
 .content:has(> .graphwrap) { display:flex; flex-direction:column; overflow:hidden; }
 .graphwrap { position:relative; flex:1; min-height:0; }
+nav.tabs { overflow-x:auto; scrollbar-width:none; } nav.tabs button, nav.tabs a { white-space:nowrap; flex-shrink:0; }
+.how { padding:.4rem 1.4rem 2.4rem; max-width:900px; }
+.how .intro { font-size:1.02rem; line-height:1.55; color:var(--text); margin:.5rem 0 1rem; }
+.how section { border-top:1px solid var(--line); padding:1.05rem 0 .3rem; }
+.how h3 { font-size:.98rem; font-weight:650; margin-bottom:.45rem; display:flex; align-items:baseline; gap:.55rem; }
+.how h3 .k { color:var(--dim); font-weight:500; font-size:.8rem; font-variant-numeric:tabular-nums; }
+.how p { color:#c6cbd6; font-size:.9rem; line-height:1.6; margin:.35rem 0 .55rem; }
+.how p b { color:var(--text); } .how .note { color:var(--muted); font-size:.82rem; }
+.how .tv { color:var(--text); font-weight:600; font-variant-numeric:tabular-nums; }
+.how .eq { display:flex; flex-wrap:wrap; align-items:center; gap:.55rem; margin:.5rem 0 .7rem; font-size:.86rem; color:var(--muted); }
+.how .eq .term { background:#0f1319; border:1px solid var(--line); border-radius:9px; padding:.4rem .7rem; }
+.how .eq .term b { display:block; color:var(--text); font-size:1.05rem; font-variant-numeric:tabular-nums; }
+.how .eq .term.good b { color:var(--green); }
+.how .levels { display:flex; flex-wrap:wrap; gap:.4rem 1rem; margin:.4rem 0 .6rem; } .how .levels .li { display:inline-flex; align-items:center; gap:.4rem; white-space:nowrap; } .how .levels .lvl { margin-left:0; }
+.how .steps { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:.7rem; margin:.6rem 0; }
+.how .step-card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:.8rem .95rem; }
+.how .step-card h4 { font-size:.92rem; margin-bottom:.35rem; } .how .step-card h4 .k { color:var(--dim); font-weight:500; margin-right:.4rem; }
+.how .step-card p { font-size:.84rem; margin:.2rem 0; }
+.how .step-card a { color:var(--blue); font-size:.82rem; text-decoration:none; cursor:pointer; }
+.flow { width:100%; height:auto; display:block; margin:.4rem 0 .6rem; }
+.flow .box { fill:var(--panel); stroke:var(--line); stroke-width:1.2; }
+.flow .box.you { stroke:#6b5a1f; fill:#2b2510; }
+.flow .t { fill:var(--text); font:600 14px Inter, system-ui, sans-serif; }
+.flow .s { fill:var(--muted); font:12px Inter, system-ui, sans-serif; }
+.flow .n { fill:var(--blue); font:700 12px Inter, system-ui, sans-serif; }
+.flow .you .t, .flow text.you { fill:var(--gold); }
+.flow .arrow { stroke:var(--dim); stroke-width:1.6; fill:none; }
+.flow .loop { stroke:var(--gold); stroke-width:1.4; fill:none; stroke-dasharray:5 4; }
+.flow-v { display:none; }
+@media (max-width:700px){ nav.tabs { padding:.45rem .5rem 0; gap:0; flex-wrap:wrap; overflow-x:visible; } nav.tabs button { padding:.55rem .55rem; } nav.tabs a { padding:.5rem .5rem; }
+  .panel { position:absolute; inset:0; width:auto; z-index:30; border-left:none; }
+  td.name { white-space:normal; } td.num { width:auto; } .meter .bar { width:44px; } .meter .v { width:auto; } .lvl { margin-left:0; }
+  .flow-h { display:none; } .flow-v { display:block; max-width:360px; } .how .steps { grid-template-columns:1fr; } .how { padding-left:1rem; padding-right:1rem; } }
 </style>
 </head>
 <body>
@@ -118,6 +151,7 @@ details.bench { margin-top:.6rem; } details.bench summary { cursor:pointer; colo
 const { useState, useEffect, useRef, useMemo } = React;
 const html = htm.bind(React.createElement);
 const BRANCH = ['#4a9eff','#f472b6','#3ecf8e','#fb923c','#a78bfa','#2dd4bf','#a3e635','#f87171','#38bdf8','#fb7185'];   // no gold: gold = named by you
+const TABS = ['discover','correct','find','how'];
 const EXAMPLES = ['governing law','indemnification','confidentiality','notices','severability','base salary','counterparts'];
 const branchIndex = id => { const m=String(id).match(/[_](\d+)/); return m?(+m[1])%BRANCH.length:0; };
 const colorFor = n => n.depth===0 ? '#e8eaef' : (n.human_named ? '#e9c46a' : BRANCH[branchIndex(n.id)]);
@@ -266,12 +300,117 @@ function Find({onOpenLeaf}){
   <//>`;
 }
 
+// The mechanism as a diagram: same five stages, laid out across (wide) or down (phone).
+function Flow({stages, you, vertical}){
+  const W = vertical ? 250 : 150, Hh = vertical ? 66 : 92, gap = vertical ? 20 : 26, x0 = 10, y0 = 10;
+  const pos = i => vertical ? [x0, y0 + i*(Hh+gap)] : [x0 + i*(W+gap), y0];
+  const last = stages.length;
+  const youXY = vertical ? pos(last) : [pos(2)[0] - (W+gap)/2, y0 + Hh + 62];
+  const youW = vertical ? W : 2*W + gap, youH = vertical ? Hh : 58;
+  const vbW = vertical ? 330 : x0*2 + last*W + (last-1)*gap, vbH = youXY[1] + youH + 12;
+  const box = (x, y, w, h, lines, k, cls) => html`<g class=${cls||''} key=${k}>
+    <rect class=${'box '+(cls||'')} x=${x} y=${y} width=${w} height=${h} rx="10"/>
+    ${lines.map((l,j)=> html`<text key=${j} class=${j===0?'t':'s'} x=${x+12} y=${y + (vertical?24:28) + j*(vertical?17:19)}>${l}</text>`)}</g>`;
+  const [gx, gy] = pos(2), [cx, cy] = pos(4);
+  return html`<svg class=${'flow '+(vertical?'flow-v':'flow-h')} viewBox=${`0 0 ${vbW} ${vbH}`} role="img" aria-label="How Nomen works: clauses, meaning as numbers, groups, names, coherence; a name you give regroups every clause">
+    <defs><marker id=${'ah'+(vertical?'v':'h')} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--dim)"/></marker>
+      <marker id=${'ay'+(vertical?'v':'h')} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--gold)"/></marker></defs>
+    ${stages.map((s,i)=>{ const [x,y]=pos(i); return box(x, y, W, Hh, s, 'b'+i); })}
+    ${stages.slice(0,-1).map((_,i)=>{ const [x,y]=pos(i); return vertical
+      ? html`<line key=${'a'+i} class="arrow" x1=${x+W/2} y1=${y+Hh+2} x2=${x+W/2} y2=${y+Hh+gap-3} marker-end=${`url(#ahv)`}/>`
+      : html`<line key=${'a'+i} class="arrow" x1=${x+W+2} y1=${y+Hh/2} x2=${x+W+gap-3} y2=${y+Hh/2} marker-end=${`url(#ahh)`}/>`; })}
+    ${box(youXY[0], youXY[1], youW, youH, you, 'you', 'you')}
+    ${vertical
+      ? html`<${React.Fragment}>
+          <line class="loop" x1=${cx+W/2} y1=${cy+Hh+2} x2=${cx+W/2} y2=${youXY[1]-3} marker-end="url(#ayv)"/>
+          <path class="loop" d=${`M ${x0+W+2} ${youXY[1]+Hh/2} H ${x0+W+40} V ${gy+Hh/2} H ${x0+W+4}`} marker-end="url(#ayv)"/>
+          <text class="s you" x=${x0+W+46} y=${(gy+youXY[1]+Hh)/2} transform=${`rotate(90 ${x0+W+46} ${(gy+youXY[1]+Hh)/2})`} text-anchor="middle">regroups</text><//>`
+      : html`<${React.Fragment}>
+          <path class="loop" d=${`M ${cx+W/2} ${cy+Hh+2} V ${youXY[1]+youH/2} H ${youXY[0]+youW+3}`} marker-end="url(#ayh)"/>
+          <line class="loop" x1=${gx+W/2} y1=${youXY[1]-2} x2=${gx+W/2} y2=${gy+Hh+3} marker-end="url(#ayh)"/>
+          <text class="s you" text-anchor="end" x=${cx+W/2-8} y=${cy+Hh+24}>coherence shows</text><text class="s you" text-anchor="end" x=${cx+W/2-8} y=${cy+Hh+39}>where to look</text><//>`}
+  </svg>`;
+}
+
+function HowItWorks({data, go}){
+  const [ex,setEx] = useState(null);
+  useEffect(()=>{ fetch('extraction.json',{headers:{'ngrok-skip-browser-warning':'1'}}).then(r=>r.ok?r.json():null).then(setEx).catch(()=>setEx(null)); },[]);
+  const rep = data.report, N = rep.n_provisions;
+  const childIds = new Set(data.links.map(l=>l.source));
+  const top = data.nodes.filter(n=>n.depth===1).length;
+  const leaves = data.nodes.filter(n=>n.depth>0 && !childIds.has(n.id) && n.cohesion!=null && n.count>0);
+  const byCoh = [...leaves].sort((a,b)=>b.cohesion-a.cohesion);
+  const nLvl = k => leaves.filter(n=>level(n.cohesion)[0]===k).length;
+  const times = Math.round(rep.leaf_weighted_purity_pct/rep.baseline_majority_pct*10)/10;
+  const curved = rep.geometry==='hyperbolic';
+  const nm = s => s==='[naming failed]' ? 'an unnamed group' : '“'+s.replace(/ \(auto\)$/,'')+'”';
+  const stages = [
+    [`${fmt(N)} clauses`, 'no labels', 'contract text'],
+    ['Meaning as numbers', '768 numbers each', 'local model'],
+    ['Groups', `${top} branches, split`, `into ${rep.n_leaves} concepts`],
+    ['Names', 'a model reads 10', 'clauses per group'],
+    ['Coherence', 'how tight each', 'group is'],
+  ];
+  const you = ['You name a concept (step 2)', 'every clause regroups around your word'];
+  return html`<div class="how">
+    <p class="intro">Nomen takes <b>${fmt(N)} contract clauses</b> that nobody labelled, groups them by what they mean, and gives each group a short name. Nobody tells it which kinds of clause exist. It finds them.</p>
+    <${Flow} stages=${stages} you=${you}/>
+    <${Flow} stages=${stages} you=${you} vertical/>
+
+    <section><h3><span class="k">1</span>The input</h3>
+      <p>The clauses come from <b>LEDGAR</b>, a public collection of clauses taken from real contracts. People gave each clause one of <b>${rep.n_gold_types} types</b> (for example “Governing Laws” or “Notices”). Nomen never reads those types. The page uses them only after the fact, to score the result: that is the <b>show benchmark labels</b> switch in Discover.</p></section>
+
+    <section><h3><span class="k">2</span>Meaning as numbers</h3>
+      <p>A language model that runs on this machine (nomic-embed-text) turns each clause into a list of <b>768 numbers</b>. Clauses that say the same thing get similar numbers, even when they use different words. “Closeness” in the rest of this page means how similar two of these lists are. This step does not send clause text off the machine and it runs once.</p></section>
+
+    <section><h3><span class="k">3</span>How clauses are grouped</h3>
+      <p>Nomen splits the clauses from the top down. First all ${fmt(N)} go into <b>${top} branches</b>. Each large branch then splits again, about one sub-group for every 1,500 clauses, for up to 3 levels. Each split uses <b>k-means</b>, a standard method that puts every clause with the group centre nearest to it${curved?html`, on a compressed 48-number copy of each clause placed in a curved (hyperbolic) space`:''}.</p>
+      <p>The groups at the bottom of the tree are the <b>${rep.n_leaves} concepts</b>. The branches above them hold related concepts.</p>
+      ${curved && html`<p class="note">The project's own tests found that the same split in ordinary flat space gives slightly purer groups (45.4% against 41.2%, measured 2026-10-19). The curved space is the setting this tree was built with.</p>`}</section>
+
+    <section><h3><span class="k">4</span>How each concept gets its name</h3>
+      <p>For each group, Nomen takes the <b>10 clauses nearest its centre</b> and sends them to a language model (${rep.name_model}), together with the names of the groups above it. The model must reply with the shortest standard clause heading, 1 to 3 words. So the model reads about 10 clauses per group, ${fmt(rep.n_nodes)} groups in all, and never the whole collection.</p>
+      <p>If two groups side by side get the same name, the model is asked again with the taken names listed. If the model gives no answer, Nomen asks again, then asks a second model. As a last resort it makes a name from the clauses' own headings and marks it <b>auto-named</b>. Auto-named groups now: <span class="tv">${rep.naming_failures}</span>.</p>
+      <p>Click a concept in Discover to see “the clauses the name came from”.</p></section>
+
+    <section><h3><span class="k">5</span>What coherence measures, and how far to trust a name</h3>
+      <p><b>Coherence</b> is the average closeness of every clause in a concept to the concept's centre. A high value means the clauses say nearly the same thing. A low value means the group is a mix. It is measured before any model reads the text and it costs nothing.</p>
+      <div class="levels">
+        <span class="li"><span class="lvl tight">tight</span><span class="note">${nLvl('tight')} concepts, coherence ${TH.hi} or more</span></span>
+        <span class="li"><span class="lvl mixed">mixed</span><span class="note">${nLvl('mixed')} concepts</span></span>
+        <span class="li"><span class="lvl loose">loose</span><span class="note">${nLvl('loose')} concepts, below ${TH.lo}</span></span>
+      </div>
+      <p>The three levels are the top, middle and bottom third of the ${leaves.length} concepts in this tree. Here the tightest is ${nm(byCoh[0].name)} (${byCoh[0].cohesion}) and the loosest is ${nm(byCoh[byCoh.length-1].name)} (${byCoh[byCoh.length-1].cohesion}).</p>
+      <p>Coherence follows correctness. Against the benchmark types, the more coherent a concept, the purer it is (rank correlation +0.74 across 83 concepts, where 1 would be perfect).${ex && html` In the governing-law test (step 4 Extract), tight sub-groups gave the right answer <b>${ex.hi_coh_acc}%</b> of the time and loose ones <b>${ex.lo_coh_acc}%</b>.`}</p>
+      <p><b>Use it as an order of where to look, not as a probability that a name is right.</b> A tight concept: take the name. A loose one: read its sample clauses before you rely on it, or rename it in Correct.</p></section>
+
+    <section><h3><span class="k">6</span>“${times}× better than guessing”</h3>
+      <p>This number uses the benchmark types, only to score. For each concept, <b>purity</b> is the share of its clauses that carry the concept's most common type. Averaged over all clauses, purity is ${rep.leaf_weighted_purity_pct}%.</p>
+      <p>The guess to beat: put every clause under the single most common type. That is right for ${rep.baseline_majority_pct}% of clauses.</p>
+      <div class="eq"><span class="term good"><b>${rep.leaf_weighted_purity_pct}%</b>purity of Nomen's concepts</span>÷<span class="term"><b>${rep.baseline_majority_pct}%</b>right by guessing</span>=<span class="term good"><b>${times}×</b>better than guessing</span></div>
+      ${rep.n_leaves < rep.n_gold_types && html`<p class="note">There are ${rep.n_gold_types} types and ${rep.n_leaves} concepts, so some concepts hold several related types and 100% is not possible here.</p>`}</section>
+
+    <section><h3><span class="k">7</span>“Human decisions”</h3>
+      <p>This counts the concept names a person gave in step 2 Correct. Now: <span class="tv">${rep.n_anchors}</span>${(data.anchors||[]).length?html` (${data.anchors.join(', ')})`:''}.</p>
+      <p>A name is not a label pasted on a group. Nomen turns your word into numbers with the same model. Every clause that is close enough to your word (0.60 or more) joins the nearest name you gave. The clauses left over are grouped and named by the model again, as in steps 3 and 4. So <b>one word regroups the whole collection</b>, which takes about 2 minutes. You can remove a name (×) or start over at any time.</p></section>
+
+    <section><h3><span class="k">8</span>The four steps</h3>
+      <div class="steps">
+        <div class="step-card"><h4><span class="k">1</span>Discover</h4><p>The named tree. Open a branch, sort the concepts by coherence or size, and click one to see the clauses its name came from. <b>Map</b> shows the same tree in 3-D.</p><a onClick=${()=>go('discover')}>Open Discover →</a></div>
+        <div class="step-card"><h4><span class="k">2</span>Correct</h4><p>Name a concept you know is there, rename a group, or name one of the ${(data.anomalies||[]).length} clauses that fit no group (the clauses farthest from their group's centre). Each change regroups all clauses.</p><a onClick=${()=>go('correct')}>Open Correct →</a></div>
+        <div class="step-card"><h4><span class="k">3</span>Find</h4><p>Type a concept. Your words become numbers with the same model and all ${fmt(N)} clauses are ranked by closeness, so paraphrases count. The cards compare that with a plain search for the same words, scored against the benchmark.</p><a onClick=${()=>go('find')}>Open Find →</a></div>
+        <div class="step-card"><h4><span class="k">4</span>Extract</h4>${ex ? html`<p>Pull one fact out of the clauses: the US state in a governing-law clause. The ${fmt(ex.n_clauses)} governing-law clauses split into ${ex.k} sub-groups. The model reads one sub-group at a time and every clause in it gets the answer: <b>${ex.cluster_first_acc}%</b> right with ${ex.k} model calls, against <b>${ex.read_all_acc}%</b> when the model reads all ${fmt(ex.read_all_calls)} clauses one by one. Loose sub-groups hold most of the errors, so only those need a closer read.</p>` : html`<p>Pull one fact out of the clauses: the US state in a governing-law clause, one model call per sub-group.</p>`}<a href="extraction.html">Open Extract →</a></div>
+      </div>
+      <p class="note">Sources: cluster.py (grouping, coherence), naming.py (names), server.py (Find, Correct), docs/RESULTS.md and README.md (measured results).</p></section>
+  </div>`;
+}
+
 function App(){
   const [data,setData]=useState(null), [err,setErr]=useState(null), [sel,setSel]=useState(null);
-  const [tab,setTabRaw]=useState('discover'), [busy,setBusy]=useState(false), [showBench,setShowBench]=useState(false);
+  const [tab,setTabRaw]=useState(()=>{ const h=location.hash.slice(1); return TABS.includes(h)?h:'discover'; }), [busy,setBusy]=useState(false), [showBench,setShowBench]=useState(false);
   const [view,setView]=useState('table'), [q,setQ]=useState(''), [change,setChange]=useState(null);
   const mount=useRef(null), fg=useRef(null);
-  const setTab = t => { setTabRaw(t); setSel(null); };
+  const setTab = t => { setTabRaw(t); setSel(null); try { history.replaceState(null,'','#'+t); } catch(e){} };
   const applyTree = d => { const childIds=new Set(d.links.map(l=>l.source)); d.nodes.forEach(n=> n._hasChildren=childIds.has(n.id));
     const cs=d.nodes.filter(n=>n.depth>0&&!childIds.has(n.id)&&n.cohesion!=null).map(n=>n.cohesion).sort((a,b)=>a-b);
     if(cs.length>5){ TH={lo:cs[Math.floor(cs.length/3)], hi:cs[Math.floor(2*cs.length/3)]}; }
@@ -307,6 +446,7 @@ function App(){
       <button class=${tab==='discover'?'on':''} onClick=${()=>setTab('discover')}><span class="step">1</span>Discover</button>
       <button class=${tab==='correct'?'on':''} onClick=${()=>setTab('correct')}><span class="step">2</span>Correct</button>
       <button class=${tab==='find'?'on':''} onClick=${()=>setTab('find')}><span class="step">3</span>Find</button>
+      <button class=${tab==='how'?'on':''} onClick=${()=>setTab('how')}>How it works</button>
       <a href="extraction.html"><span class="step">4</span> Extract →</a>
     </nav>
     <div class="main">
@@ -317,6 +457,7 @@ function App(){
         ${tab==='discover' && html`<${Discover} data=${data} sel=${sel} onSelect=${setSel} showBench=${showBench} setShowBench=${setShowBench} view=${view} setView=${setView} mount=${mount} q=${q} setQ=${setQ}/>`}
         ${tab==='correct' && html`<${Correct} data=${data} action=${action} busy=${busy}/>`}
         ${tab==='find' && html`<${Find} onOpenLeaf=${openLeaf}/>`}
+        ${tab==='how' && html`<${HowItWorks} data=${data} go=${setTab}/>`}
       </div>
       <${Panel} node=${sel} onClose=${()=>setSel(null)} onRename=${(id,name)=>action('/rename',{id,name})} busy=${busy} showBench=${showBench}/>
       ${busy && html`<div class="busy"><div class="spinner"></div><div>regrouping the corpus around your words and naming the groups…</div><div class="hint">about 2 minutes</div></div>`}

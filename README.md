@@ -107,7 +107,7 @@ The UI (2026-10-18) follows [DISCOVERY_FLOW.md](DISCOVERY_FLOW.md): **1 Discover
 coherence meter per concept, benchmark labels hidden behind a toggle), **2 Correct** (name a concept, rename a
 group, seed one from a clause that fits nowhere; every change re-clusters the corpus), **3 Find** (type a concept,
 get the clauses ranked by meaning and the live scorecard: clauses to read to reach 90% recall by meaning vs by
-keyword, `GET /api/score?q=...`), **4 Extract** (the field-extraction demo). The previous research console is
+keyword, `GET /api/score?q=...`), **4 Extract** (the field-extraction demo). A **How it works** tab explains the mechanism in plain language for a non-technical reader, with its numbers read live from `tree.json` and `extraction.json`; `#how` (or `#discover`, `#correct`, `#find`) opens a tab directly. The previous research console is
 kept as `index_v1.html`.
 
 ## Layout

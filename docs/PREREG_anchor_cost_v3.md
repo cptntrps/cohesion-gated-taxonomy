@@ -45,3 +45,6 @@ Written below with reason and time, before scores are computed.
 - 2026-10-26, before any judgment: the LLM baseline ran as 8 Claude Sonnet batches of 250 (613 terms assigned, 1,387
   None). The pool has 785 pairs (705 pooled, 40 calibration positives drawn from them, 40 calibration negatives).
   Each Opus judge reads all 785 in 3 batches; batches are merged per judge before scoring.
+- 2026-10-26, after the judgments, before scoring: judge J1 batch 1 reported that a parallel judge overwrote its
+  scratch file, so it saw pair text (clause + term only, from the blind pairs file; no labels, no keys, no verdicts)
+  for p0654-p0686, which it did not judge, and re-printed its own range before judging. Blinding is unaffected.

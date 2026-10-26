@@ -1,0 +1,136 @@
+{
+ "calibration": {
+  "J1": {
+   "accept_pos": 0.9,
+   "reject_neg": 1.0
+  },
+  "J2": {
+   "accept_pos": 0.875,
+   "reject_neg": 0.975
+  }
+ },
+ "kappa": 0.814,
+ "metrics": {
+  "R20": {
+   "proposed": 281,
+   "valid": 263,
+   "precision": 0.9359430604982206,
+   "recall": 0.47387387387387386
+  },
+  "R40": {
+   "proposed": 312,
+   "valid": 293,
+   "precision": 0.9391025641025641,
+   "recall": 0.527927927927928
+  },
+  "R80": {
+   "proposed": 319,
+   "valid": 287,
+   "precision": 0.8996865203761756,
+   "recall": 0.5171171171171172
+  },
+  "U40": {
+   "proposed": 370,
+   "valid": 337,
+   "precision": 0.9108108108108108,
+   "recall": 0.6072072072072072
+  },
+  "U80": {
+   "proposed": 383,
+   "valid": 350,
+   "precision": 0.9138381201044387,
+   "recall": 0.6306306306306306
+  },
+  "LLM": {
+   "proposed": 613,
+   "valid": 515,
+   "precision": 0.8401305057096248,
+   "recall": 0.9279279279279279
+  }
+ },
+ "ci_vs_llm": {
+  "R20": {
+   "precision": [
+    0.058,
+    0.135
+   ],
+   "recall": [
+    -0.793,
+    -0.641
+   ]
+  },
+  "R40": {
+   "precision": [
+    0.064,
+    0.135
+   ],
+   "recall": [
+    -0.707,
+    -0.56
+   ]
+  },
+  "R80": {
+   "precision": [
+    0.02,
+    0.098
+   ],
+   "recall": [
+    -0.724,
+    -0.575
+   ]
+  },
+  "U40": {
+   "precision": [
+    0.034,
+    0.107
+   ],
+   "recall": [
+    -0.577,
+    -0.434
+   ]
+  },
+  "U80": {
+   "precision": [
+    0.04,
+    0.109
+   ],
+   "recall": [
+    -0.536,
+    -0.398
+   ]
+  }
+ },
+ "llm_none": 1387,
+ "valid_pairs_in_pool": 555,
+ "cost_per_60k": {
+  "R20": {
+   "llm_calls": 0,
+   "human_picks": 400
+  },
+  "R40": {
+   "llm_calls": 0,
+   "human_picks": 800
+  },
+  "R80": {
+   "llm_calls": 0,
+   "human_picks": 1600
+  },
+  "U40": {
+   "llm_calls": 0,
+   "human_picks": 800
+  },
+  "U80": {
+   "llm_calls": 0,
+   "human_picks": 1600
+  },
+  "LLM": {
+   "llm_calls": 60000,
+   "human_picks": 0
+  }
+ },
+ "hypotheses": {
+  "H7_judges": "FAIL",
+  "H5_precision_R20": "NOT ESTABLISHED",
+  "H6_recall": "NOT ESTABLISHED"
+ }
+}

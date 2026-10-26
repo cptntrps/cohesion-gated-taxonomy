@@ -472,3 +472,36 @@ at most 15%), so the judges are somewhat lenient on near misses; far-band non-me
   the term are valid uses of it at a median of about 99% (95% CI lower bound 91%), significantly better than the
   term alone (74%). It finds about 42% of the valid clauses (median); recall, not precision, is the open problem.
   Not tested: a real person instead of the label oracle; uncertainty sampling for recall; other corpora.
+
+## v3: anchor + picks at zero LLM calls vs an LLM reading every clause (2026-10-26, `docs/PREREG_anchor_cost_v3.md`, `anchor_cost_v3.py`, `anchor_cost_v3_results.json`)
+
+Pre-registered (9f65eb6) before any data; Nomen predictions (e5e1aff) and LLM outputs and pool (b7cc5fc) committed
+before any judgment. Held-out random test set of 2,000 clauses, the 20 v2 terms; LLM baseline = Claude Sonnet, one
+call per clause; 785 blind pooled pairs judged by two Opus judges; valid = both.
+
+| hypothesis | result | verdict |
+|---|---|---|
+| H7 judges reliable | J1 accepts 90.0% of label positives, rejects 100% of negatives; J2 87.5% / 97.5%; kappa 0.81 | FAIL (J2 accepted 35 of 40 positives; 36 needed) |
+| H5 Nomen precision not worse at 0 calls | (would pass: R20 - LLM = +9.6 points, 95% CI [+5.8, +13.5]) | NOT ESTABLISHED (H7) |
+| H6 some budget <= 80 picks matches LLM recall | (would fail: best is U80, recall 0.631 vs 0.928, difference CI [-53.6, -39.8] points) | NOT ESTABLISHED (H7) |
+
+| system | LLM calls / 60k | human picks | validity precision | pooled validity recall |
+|---|---|---|---|---|
+| Nomen R20 | 0 | 400 | 0.936 | 0.474 |
+| Nomen R40 | 0 | 800 | 0.939 | 0.528 |
+| Nomen R80 | 0 | 1,600 | 0.900 | 0.517 |
+| Nomen U40 (least sure first) | 0 | 800 | 0.911 | 0.607 |
+| Nomen U80 (least sure first) | 0 | 1,600 | 0.914 | 0.631 |
+| LLM reads every clause | 60,000 | 0 | 0.840 | 0.928 |
+
+- Formally, by the protocol, nothing is established: one judge fell 2.5 points under the calibration bar on
+  label positives (some LEDGAR heading labels are themselves debatable, e.g. Titles). The descriptive picture is not
+  close on either measure: Nomen is more precise than the LLM at zero calls (CI of the difference entirely above 0),
+  and far below it on recall at every budget tested.
+- "Least sure first" works as intended: recall 0.607 at 40 picks vs 0.528 ranked, at similar precision.
+- Standing: "cheaper at the same quality" is NOT supported for full coverage. What the data show: Nomen files
+  about half to two thirds of each concept's valid clauses, more precisely than an LLM, at zero LLM calls; the LLM
+  finds about 93% at one call per clause. Untested successor: a cascade where Nomen files its confident clauses at
+  zero calls and the LLM reads only the rest.
+- Limits: pooled recall assumes unproposed pairs are invalid; judges and baseline are both Claude models; simulated
+  human = label oracle.

@@ -41,3 +41,7 @@ If H7 fails, H5 and H6 are not established. Diagnostics: per-term table, either-
 ## Deviations
 
 Written below with reason and time, before scores are computed.
+
+- 2026-10-26, before any judgment: the LLM baseline ran as 8 Claude Sonnet batches of 250 (613 terms assigned, 1,387
+  None). The pool has 785 pairs (705 pooled, 40 calibration positives drawn from them, 40 calibration negatives).
+  Each Opus judge reads all 785 in 3 batches; batches are merged per judge before scoring.

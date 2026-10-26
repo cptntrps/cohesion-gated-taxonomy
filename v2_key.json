@@ -1,0 +1,4478 @@
+{
+ "anchors": [
+  "Anti-Corruption Laws",
+  "Assigns",
+  "Benefits",
+  "Binding Effects",
+  "Capitalization",
+  "Confidentiality",
+  "Construction",
+  "Defined Terms",
+  "Disability",
+  "Enforceability",
+  "Insurances",
+  "Litigations",
+  "Miscellaneous",
+  "Organizations",
+  "Releases",
+  "Titles",
+  "Vacations",
+  "Waiver Of Jury Trials",
+  "Waivers",
+  "Withholdings"
+ ],
+ "key": {
+  "w0000": {
+   "anchor": "Disability",
+   "kind": "near",
+   "gold": "Interests"
+  },
+  "w0001": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "near",
+   "gold": "Governing Laws"
+  },
+  "w0002": {
+   "anchor": "Confidentiality",
+   "kind": "near",
+   "gold": "Costs"
+  },
+  "w0003": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Taxes"
+  },
+  "w0004": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "A_disputed",
+   "gold": "Waivers"
+  },
+  "w0005": {
+   "anchor": "Litigations",
+   "kind": "A_disputed",
+   "gold": "Authorizations"
+  },
+  "w0006": {
+   "anchor": "Assigns",
+   "kind": "A_disputed",
+   "gold": "Payments"
+  },
+  "w0007": {
+   "anchor": "Waivers",
+   "kind": "A_disputed",
+   "gold": "Remedies"
+  },
+  "w0008": {
+   "anchor": "Enforceability",
+   "kind": "far",
+   "gold": "Notices"
+  },
+  "w0009": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Existence"
+  },
+  "w0010": {
+   "anchor": "Binding Effects",
+   "kind": "near",
+   "gold": "Successors"
+  },
+  "w0011": {
+   "anchor": "Vacations",
+   "kind": "gold",
+   "gold": "Vacations"
+  },
+  "w0012": {
+   "anchor": "Withholdings",
+   "kind": "A_disputed",
+   "gold": "Tax Withholdings"
+  },
+  "w0013": {
+   "anchor": "Organizations",
+   "kind": "hard",
+   "gold": "Qualifications"
+  },
+  "w0014": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0015": {
+   "anchor": "Disability",
+   "kind": "near",
+   "gold": "Payments"
+  },
+  "w0016": {
+   "anchor": "Enforceability",
+   "kind": "near",
+   "gold": "Governing Laws"
+  },
+  "w0017": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "near",
+   "gold": "Waivers"
+  },
+  "w0018": {
+   "anchor": "Litigations",
+   "kind": "A_disputed",
+   "gold": "Arbitration"
+  },
+  "w0019": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Death"
+  },
+  "w0020": {
+   "anchor": "Miscellaneous",
+   "kind": "hard",
+   "gold": "Modifications"
+  },
+  "w0021": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Waivers"
+  },
+  "w0022": {
+   "anchor": "Assigns",
+   "kind": "A_disputed",
+   "gold": "Assignments"
+  },
+  "w0023": {
+   "anchor": "Insurances",
+   "kind": "hard",
+   "gold": "Indemnifications"
+  },
+  "w0024": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "Applicable Laws"
+  },
+  "w0025": {
+   "anchor": "Enforceability",
+   "kind": "A_disputed",
+   "gold": "Severability"
+  },
+  "w0026": {
+   "anchor": "Withholdings",
+   "kind": "random",
+   "gold": "Counterparts"
+  },
+  "w0027": {
+   "anchor": "Assigns",
+   "kind": "A_disputed",
+   "gold": "Assignments"
+  },
+  "w0028": {
+   "anchor": "Confidentiality",
+   "kind": "near",
+   "gold": "Survival"
+  },
+  "w0029": {
+   "anchor": "Litigations",
+   "kind": "E_disputed",
+   "gold": "Intellectual Property"
+  },
+  "w0030": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Assignments"
+  },
+  "w0031": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Disclosures"
+  },
+  "w0032": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0033": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "General"
+  },
+  "w0034": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0035": {
+   "anchor": "Withholdings",
+   "kind": "near",
+   "gold": "Taxes"
+  },
+  "w0036": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0037": {
+   "anchor": "Construction",
+   "kind": "near",
+   "gold": "Agreements"
+  },
+  "w0038": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0039": {
+   "anchor": "Enforceability",
+   "kind": "far",
+   "gold": "Financial Statements"
+  },
+  "w0040": {
+   "anchor": "Vacations",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0041": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Insurances"
+  },
+  "w0042": {
+   "anchor": "Benefits",
+   "kind": "near",
+   "gold": "Terms"
+  },
+  "w0043": {
+   "anchor": "Defined Terms",
+   "kind": "near",
+   "gold": "Interpretations"
+  },
+  "w0044": {
+   "anchor": "Litigations",
+   "kind": "hard",
+   "gold": "Compliance With Laws"
+  },
+  "w0045": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Interpretations"
+  },
+  "w0046": {
+   "anchor": "Litigations",
+   "kind": "E_disputed",
+   "gold": "Subsidiaries"
+  },
+  "w0047": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "No Waivers"
+  },
+  "w0048": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Arbitration"
+  },
+  "w0049": {
+   "anchor": "Miscellaneous",
+   "kind": "gold",
+   "gold": "Miscellaneous"
+  },
+  "w0050": {
+   "anchor": "Waivers",
+   "kind": "near",
+   "gold": "Forfeitures"
+  },
+  "w0051": {
+   "anchor": "Litigations",
+   "kind": "E_disputed",
+   "gold": "Subsidiaries"
+  },
+  "w0052": {
+   "anchor": "Withholdings",
+   "kind": "A_disputed",
+   "gold": "Participations"
+  },
+  "w0053": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0054": {
+   "anchor": "Construction",
+   "kind": "A_disputed",
+   "gold": "Severability"
+  },
+  "w0055": {
+   "anchor": "Disability",
+   "kind": "gold",
+   "gold": "Disability"
+  },
+  "w0056": {
+   "anchor": "Miscellaneous",
+   "kind": "hard",
+   "gold": "Modifications"
+  },
+  "w0057": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "A_disputed",
+   "gold": "Waivers"
+  },
+  "w0058": {
+   "anchor": "Disability",
+   "kind": "near",
+   "gold": "Vacations"
+  },
+  "w0059": {
+   "anchor": "Capitalization",
+   "kind": "A_disputed",
+   "gold": "Defined Terms"
+  },
+  "w0060": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0061": {
+   "anchor": "Benefits",
+   "kind": "A_disputed",
+   "gold": "General"
+  },
+  "w0062": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Non-Disparagement"
+  },
+  "w0063": {
+   "anchor": "Capitalization",
+   "kind": "E_disputed",
+   "gold": "Adjustments"
+  },
+  "w0064": {
+   "anchor": "Confidentiality",
+   "kind": "near",
+   "gold": "Cooperation"
+  },
+  "w0065": {
+   "anchor": "Defined Terms",
+   "kind": "A_disputed",
+   "gold": "Definitions"
+  },
+  "w0066": {
+   "anchor": "Disability",
+   "kind": "near",
+   "gold": "Death"
+  },
+  "w0067": {
+   "anchor": "Titles",
+   "kind": "near",
+   "gold": "Construction"
+  },
+  "w0068": {
+   "anchor": "Construction",
+   "kind": "near",
+   "gold": "Amendments"
+  },
+  "w0069": {
+   "anchor": "Titles",
+   "kind": "gold",
+   "gold": "Titles"
+  },
+  "w0070": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Approvals"
+  },
+  "w0071": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "Participations"
+  },
+  "w0072": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0073": {
+   "anchor": "Enforceability",
+   "kind": "A_disputed",
+   "gold": "Severability"
+  },
+  "w0074": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "General"
+  },
+  "w0075": {
+   "anchor": "Enforceability",
+   "kind": "gold",
+   "gold": "Enforceability"
+  },
+  "w0076": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0077": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Entire Agreements"
+  },
+  "w0078": {
+   "anchor": "Withholdings",
+   "kind": "near",
+   "gold": "General"
+  },
+  "w0079": {
+   "anchor": "Confidentiality",
+   "kind": "near",
+   "gold": "Publicity"
+  },
+  "w0080": {
+   "anchor": "Organizations",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0081": {
+   "anchor": "Capitalization",
+   "kind": "random",
+   "gold": "Notices"
+  },
+  "w0082": {
+   "anchor": "Waivers",
+   "kind": "hard",
+   "gold": "Modifications"
+  },
+  "w0083": {
+   "anchor": "Vacations",
+   "kind": "random",
+   "gold": "Solvency"
+  },
+  "w0084": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Interpretations"
+  },
+  "w0085": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0086": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Amendments"
+  },
+  "w0087": {
+   "anchor": "Litigations",
+   "kind": "near",
+   "gold": "Subsidiaries"
+  },
+  "w0088": {
+   "anchor": "Vacations",
+   "kind": "far",
+   "gold": "Effectiveness"
+  },
+  "w0089": {
+   "anchor": "Benefits",
+   "kind": "A_disputed",
+   "gold": "Death"
+  },
+  "w0090": {
+   "anchor": "Disability",
+   "kind": "gold",
+   "gold": "Disability"
+  },
+  "w0091": {
+   "anchor": "Organizations",
+   "kind": "hard",
+   "gold": "Qualifications"
+  },
+  "w0092": {
+   "anchor": "Releases",
+   "kind": "near",
+   "gold": "Terminations"
+  },
+  "w0093": {
+   "anchor": "Waivers",
+   "kind": "A_disputed",
+   "gold": "No Waivers"
+  },
+  "w0094": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0095": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Terminations"
+  },
+  "w0096": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0097": {
+   "anchor": "Litigations",
+   "kind": "near",
+   "gold": "No Defaults"
+  },
+  "w0098": {
+   "anchor": "Insurances",
+   "kind": "near",
+   "gold": "Indemnifications"
+  },
+  "w0099": {
+   "anchor": "Litigations",
+   "kind": "near",
+   "gold": "Financial Statements"
+  },
+  "w0100": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Effective Dates"
+  },
+  "w0101": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "General"
+  },
+  "w0102": {
+   "anchor": "Waivers",
+   "kind": "near",
+   "gold": "Waiver Of Jury Trials"
+  },
+  "w0103": {
+   "anchor": "Confidentiality",
+   "kind": "near",
+   "gold": "No Conflicts"
+  },
+  "w0104": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "gold",
+   "gold": "Anti-Corruption Laws"
+  },
+  "w0105": {
+   "anchor": "Releases",
+   "kind": "near",
+   "gold": "Terms"
+  },
+  "w0106": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "near",
+   "gold": "Waivers"
+  },
+  "w0107": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Successors"
+  },
+  "w0108": {
+   "anchor": "Waivers",
+   "kind": "near",
+   "gold": "Waiver Of Jury Trials"
+  },
+  "w0109": {
+   "anchor": "Waivers",
+   "kind": "A_disputed",
+   "gold": "Fees"
+  },
+  "w0110": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "random",
+   "gold": "Counterparts"
+  },
+  "w0111": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Assignments"
+  },
+  "w0112": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "Amendments"
+  },
+  "w0113": {
+   "anchor": "Organizations",
+   "kind": "random",
+   "gold": "Payments"
+  },
+  "w0114": {
+   "anchor": "Organizations",
+   "kind": "A_disputed",
+   "gold": "Duties"
+  },
+  "w0115": {
+   "anchor": "Litigations",
+   "kind": "E_disputed",
+   "gold": "Releases"
+  },
+  "w0116": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "random",
+   "gold": "No Conflicts"
+  },
+  "w0117": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Assignments"
+  },
+  "w0118": {
+   "anchor": "Benefits",
+   "kind": "near",
+   "gold": "Releases"
+  },
+  "w0119": {
+   "anchor": "Assigns",
+   "kind": "random",
+   "gold": "Severability"
+  },
+  "w0120": {
+   "anchor": "Litigations",
+   "kind": "near",
+   "gold": "Insurances"
+  },
+  "w0121": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "General"
+  },
+  "w0122": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Arbitration"
+  },
+  "w0123": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Defined Terms"
+  },
+  "w0124": {
+   "anchor": "Withholdings",
+   "kind": "hard",
+   "gold": "General"
+  },
+  "w0125": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "Employment"
+  },
+  "w0126": {
+   "anchor": "Insurances",
+   "kind": "near",
+   "gold": "Titles"
+  },
+  "w0127": {
+   "anchor": "Litigations",
+   "kind": "gold",
+   "gold": "Litigations"
+  },
+  "w0128": {
+   "anchor": "Defined Terms",
+   "kind": "A_disputed",
+   "gold": "Terms"
+  },
+  "w0129": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "No Conflicts"
+  },
+  "w0130": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0131": {
+   "anchor": "Assigns",
+   "kind": "random",
+   "gold": "Tax Withholdings"
+  },
+  "w0132": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Existence"
+  },
+  "w0133": {
+   "anchor": "Binding Effects",
+   "kind": "near",
+   "gold": "Assignments"
+  },
+  "w0134": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Interpretations"
+  },
+  "w0135": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Authority"
+  },
+  "w0136": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Assignments"
+  },
+  "w0137": {
+   "anchor": "Litigations",
+   "kind": "near",
+   "gold": "Venues"
+  },
+  "w0138": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "A_disputed",
+   "gold": "No Waivers"
+  },
+  "w0139": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Modifications"
+  },
+  "w0140": {
+   "anchor": "Titles",
+   "kind": "A_disputed",
+   "gold": "Headings"
+  },
+  "w0141": {
+   "anchor": "Releases",
+   "kind": "gold",
+   "gold": "Releases"
+  },
+  "w0142": {
+   "anchor": "Organizations",
+   "kind": "A_disputed",
+   "gold": "Jurisdictions"
+  },
+  "w0143": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Miscellaneous"
+  },
+  "w0144": {
+   "anchor": "Miscellaneous",
+   "kind": "random",
+   "gold": "Interests"
+  },
+  "w0145": {
+   "anchor": "Titles",
+   "kind": "near",
+   "gold": "Severability"
+  },
+  "w0146": {
+   "anchor": "Defined Terms",
+   "kind": "random",
+   "gold": "Entire Agreements"
+  },
+  "w0147": {
+   "anchor": "Enforceability",
+   "kind": "A_disputed",
+   "gold": "Severability"
+  },
+  "w0148": {
+   "anchor": "Organizations",
+   "kind": "A_disputed",
+   "gold": "Existence"
+  },
+  "w0149": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0150": {
+   "anchor": "Disability",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0151": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Authority"
+  },
+  "w0152": {
+   "anchor": "Construction",
+   "kind": "far",
+   "gold": "Counterparts"
+  },
+  "w0153": {
+   "anchor": "Organizations",
+   "kind": "random",
+   "gold": "Specific Performance"
+  },
+  "w0154": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0155": {
+   "anchor": "Releases",
+   "kind": "A_disputed",
+   "gold": "Costs"
+  },
+  "w0156": {
+   "anchor": "Defined Terms",
+   "kind": "near",
+   "gold": "Definitions"
+  },
+  "w0157": {
+   "anchor": "Binding Effects",
+   "kind": "gold",
+   "gold": "Binding Effects"
+  },
+  "w0158": {
+   "anchor": "Construction",
+   "kind": "near",
+   "gold": "Defined Terms"
+  },
+  "w0159": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0160": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "near",
+   "gold": "Waivers"
+  },
+  "w0161": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "Amendments"
+  },
+  "w0162": {
+   "anchor": "Benefits",
+   "kind": "near",
+   "gold": "Insurances"
+  },
+  "w0163": {
+   "anchor": "Assigns",
+   "kind": "hard",
+   "gold": "Binding Effects"
+  },
+  "w0164": {
+   "anchor": "Releases",
+   "kind": "near",
+   "gold": "Non-Disparagement"
+  },
+  "w0165": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0166": {
+   "anchor": "Withholdings",
+   "kind": "near",
+   "gold": "Taxes"
+  },
+  "w0167": {
+   "anchor": "Enforceability",
+   "kind": "near",
+   "gold": "Governing Laws"
+  },
+  "w0168": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "Disclosures"
+  },
+  "w0169": {
+   "anchor": "Insurances",
+   "kind": "A_disputed",
+   "gold": "Litigations"
+  },
+  "w0170": {
+   "anchor": "Waivers",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0171": {
+   "anchor": "Capitalization",
+   "kind": "A_disputed",
+   "gold": "Definitions"
+  },
+  "w0172": {
+   "anchor": "Benefits",
+   "kind": "near",
+   "gold": "Disability"
+  },
+  "w0173": {
+   "anchor": "Disability",
+   "kind": "random",
+   "gold": "Change In Control"
+  },
+  "w0174": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0175": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Duties"
+  },
+  "w0176": {
+   "anchor": "Confidentiality",
+   "kind": "near",
+   "gold": "Intellectual Property"
+  },
+  "w0177": {
+   "anchor": "Waivers",
+   "kind": "A_disputed",
+   "gold": "No Waivers"
+  },
+  "w0178": {
+   "anchor": "Capitalization",
+   "kind": "A_disputed",
+   "gold": "Terms"
+  },
+  "w0179": {
+   "anchor": "Construction",
+   "kind": "gold",
+   "gold": "Construction"
+  },
+  "w0180": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "Insurances"
+  },
+  "w0181": {
+   "anchor": "Capitalization",
+   "kind": "near",
+   "gold": "Subsidiaries"
+  },
+  "w0182": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0183": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Qualifications"
+  },
+  "w0184": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "hard",
+   "gold": "Sanctions"
+  },
+  "w0185": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0186": {
+   "anchor": "Litigations",
+   "kind": "near",
+   "gold": "Notices"
+  },
+  "w0187": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Sanctions"
+  },
+  "w0188": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Duties"
+  },
+  "w0189": {
+   "anchor": "Defined Terms",
+   "kind": "A_disputed",
+   "gold": "Definitions"
+  },
+  "w0190": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "gold",
+   "gold": "Anti-Corruption Laws"
+  },
+  "w0191": {
+   "anchor": "Titles",
+   "kind": "near",
+   "gold": "Defined Terms"
+  },
+  "w0192": {
+   "anchor": "Titles",
+   "kind": "A_disputed",
+   "gold": "Headings"
+  },
+  "w0193": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "random",
+   "gold": "Interpretations"
+  },
+  "w0194": {
+   "anchor": "Miscellaneous",
+   "kind": "hard",
+   "gold": "Modifications"
+  },
+  "w0195": {
+   "anchor": "Organizations",
+   "kind": "gold",
+   "gold": "Organizations"
+  },
+  "w0196": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "gold",
+   "gold": "Waiver Of Jury Trials"
+  },
+  "w0197": {
+   "anchor": "Defined Terms",
+   "kind": "random",
+   "gold": "General"
+  },
+  "w0198": {
+   "anchor": "Waivers",
+   "kind": "A_disputed",
+   "gold": "Effectiveness"
+  },
+  "w0199": {
+   "anchor": "Insurances",
+   "kind": "near",
+   "gold": "Titles"
+  },
+  "w0200": {
+   "anchor": "Releases",
+   "kind": "near",
+   "gold": "Counterparts"
+  },
+  "w0201": {
+   "anchor": "Assigns",
+   "kind": "A_disputed",
+   "gold": "Assignments"
+  },
+  "w0202": {
+   "anchor": "Miscellaneous",
+   "kind": "near",
+   "gold": "Governing Laws"
+  },
+  "w0203": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Taxes"
+  },
+  "w0204": {
+   "anchor": "Vacations",
+   "kind": "hard",
+   "gold": "Benefits"
+  },
+  "w0205": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "No Waivers"
+  },
+  "w0206": {
+   "anchor": "Litigations",
+   "kind": "random",
+   "gold": "Specific Performance"
+  },
+  "w0207": {
+   "anchor": "Benefits",
+   "kind": "far",
+   "gold": "General"
+  },
+  "w0208": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0209": {
+   "anchor": "Insurances",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0210": {
+   "anchor": "Capitalization",
+   "kind": "A_disputed",
+   "gold": "Definitions"
+  },
+  "w0211": {
+   "anchor": "Binding Effects",
+   "kind": "far",
+   "gold": "Governing Laws"
+  },
+  "w0212": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "A_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0213": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Authorizations"
+  },
+  "w0214": {
+   "anchor": "Defined Terms",
+   "kind": "far",
+   "gold": "Cooperation"
+  },
+  "w0215": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0216": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Sanctions"
+  },
+  "w0217": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0218": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Waivers"
+  },
+  "w0219": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Binding Effects"
+  },
+  "w0220": {
+   "anchor": "Benefits",
+   "kind": "near",
+   "gold": "Disability"
+  },
+  "w0221": {
+   "anchor": "Vacations",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0222": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Disclosures"
+  },
+  "w0223": {
+   "anchor": "Assigns",
+   "kind": "A_disputed",
+   "gold": "Effective Dates"
+  },
+  "w0224": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0225": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0226": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0227": {
+   "anchor": "Titles",
+   "kind": "A_disputed",
+   "gold": "Subsidiaries"
+  },
+  "w0228": {
+   "anchor": "Waivers",
+   "kind": "random",
+   "gold": "Approvals"
+  },
+  "w0229": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0230": {
+   "anchor": "Disability",
+   "kind": "random",
+   "gold": "Governing Laws"
+  },
+  "w0231": {
+   "anchor": "Insurances",
+   "kind": "random",
+   "gold": "Modifications"
+  },
+  "w0232": {
+   "anchor": "Vacations",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0233": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Amendments"
+  },
+  "w0234": {
+   "anchor": "Insurances",
+   "kind": "near",
+   "gold": "Waivers"
+  },
+  "w0235": {
+   "anchor": "Assigns",
+   "kind": "A_disputed",
+   "gold": "Assignments"
+  },
+  "w0236": {
+   "anchor": "Enforceability",
+   "kind": "A_disputed",
+   "gold": "Authorizations"
+  },
+  "w0237": {
+   "anchor": "Litigations",
+   "kind": "near",
+   "gold": "Intellectual Property"
+  },
+  "w0238": {
+   "anchor": "Benefits",
+   "kind": "random",
+   "gold": "Cooperation"
+  },
+  "w0239": {
+   "anchor": "Confidentiality",
+   "kind": "random",
+   "gold": "Existence"
+  },
+  "w0240": {
+   "anchor": "Withholdings",
+   "kind": "hard",
+   "gold": "General"
+  },
+  "w0241": {
+   "anchor": "Capitalization",
+   "kind": "near",
+   "gold": "Adjustments"
+  },
+  "w0242": {
+   "anchor": "Disability",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0243": {
+   "anchor": "Confidentiality",
+   "kind": "A_disputed",
+   "gold": "Intellectual Property"
+  },
+  "w0244": {
+   "anchor": "Enforceability",
+   "kind": "near",
+   "gold": "Releases"
+  },
+  "w0245": {
+   "anchor": "Insurances",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0246": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "No Waivers"
+  },
+  "w0247": {
+   "anchor": "Defined Terms",
+   "kind": "A_disputed",
+   "gold": "Entire Agreements"
+  },
+  "w0248": {
+   "anchor": "Construction",
+   "kind": "near",
+   "gold": "Effective Dates"
+  },
+  "w0249": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0250": {
+   "anchor": "Miscellaneous",
+   "kind": "near",
+   "gold": "Entire Agreements"
+  },
+  "w0251": {
+   "anchor": "Construction",
+   "kind": "hard",
+   "gold": "Miscellaneous"
+  },
+  "w0252": {
+   "anchor": "Withholdings",
+   "kind": "near",
+   "gold": "Tax Withholdings"
+  },
+  "w0253": {
+   "anchor": "Construction",
+   "kind": "near",
+   "gold": "Costs"
+  },
+  "w0254": {
+   "anchor": "Defined Terms",
+   "kind": "gold",
+   "gold": "Defined Terms"
+  },
+  "w0255": {
+   "anchor": "Titles",
+   "kind": "hard",
+   "gold": "Liens"
+  },
+  "w0256": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "A_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0257": {
+   "anchor": "Benefits",
+   "kind": "A_disputed",
+   "gold": "Disclosures"
+  },
+  "w0258": {
+   "anchor": "Defined Terms",
+   "kind": "hard",
+   "gold": "Miscellaneous"
+  },
+  "w0259": {
+   "anchor": "Capitalization",
+   "kind": "far",
+   "gold": "Effective Dates"
+  },
+  "w0260": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "General"
+  },
+  "w0261": {
+   "anchor": "Binding Effects",
+   "kind": "gold",
+   "gold": "Binding Effects"
+  },
+  "w0262": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Defined Terms"
+  },
+  "w0263": {
+   "anchor": "Construction",
+   "kind": "far",
+   "gold": "Vesting"
+  },
+  "w0264": {
+   "anchor": "Organizations",
+   "kind": "far",
+   "gold": "Waiver Of Jury Trials"
+  },
+  "w0265": {
+   "anchor": "Releases",
+   "kind": "gold",
+   "gold": "Releases"
+  },
+  "w0266": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Powers"
+  },
+  "w0267": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "No Waivers"
+  },
+  "w0268": {
+   "anchor": "Waivers",
+   "kind": "near",
+   "gold": "Amendments"
+  },
+  "w0269": {
+   "anchor": "Enforceability",
+   "kind": "random",
+   "gold": "Notices"
+  },
+  "w0270": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "near",
+   "gold": "Use Of Proceeds"
+  },
+  "w0271": {
+   "anchor": "Releases",
+   "kind": "A_disputed",
+   "gold": "Entire Agreements"
+  },
+  "w0272": {
+   "anchor": "Enforceability",
+   "kind": "near",
+   "gold": "Entire Agreements"
+  },
+  "w0273": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0274": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "random",
+   "gold": "Subsidiaries"
+  },
+  "w0275": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Tax Withholdings"
+  },
+  "w0276": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "A_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0277": {
+   "anchor": "Disability",
+   "kind": "random",
+   "gold": "Subsidiaries"
+  },
+  "w0278": {
+   "anchor": "Miscellaneous",
+   "kind": "far",
+   "gold": "Fees"
+  },
+  "w0279": {
+   "anchor": "Assigns",
+   "kind": "A_disputed",
+   "gold": "Assignments"
+  },
+  "w0280": {
+   "anchor": "Insurances",
+   "kind": "A_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0281": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "No Waivers"
+  },
+  "w0282": {
+   "anchor": "Litigations",
+   "kind": "A_disputed",
+   "gold": "Arbitration"
+  },
+  "w0283": {
+   "anchor": "Defined Terms",
+   "kind": "near",
+   "gold": "Interpretations"
+  },
+  "w0284": {
+   "anchor": "Enforceability",
+   "kind": "hard",
+   "gold": "Authorizations"
+  },
+  "w0285": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "General"
+  },
+  "w0286": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Waivers"
+  },
+  "w0287": {
+   "anchor": "Waivers",
+   "kind": "hard",
+   "gold": "Modifications"
+  },
+  "w0288": {
+   "anchor": "Confidentiality",
+   "kind": "A_disputed",
+   "gold": "Publicity"
+  },
+  "w0289": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Authorizations"
+  },
+  "w0290": {
+   "anchor": "Construction",
+   "kind": "A_disputed",
+   "gold": "Cooperation"
+  },
+  "w0291": {
+   "anchor": "Insurances",
+   "kind": "A_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0292": {
+   "anchor": "Releases",
+   "kind": "random",
+   "gold": "Fees"
+  },
+  "w0293": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Organizations"
+  },
+  "w0294": {
+   "anchor": "Enforceability",
+   "kind": "hard",
+   "gold": "Authorizations"
+  },
+  "w0295": {
+   "anchor": "Defined Terms",
+   "kind": "near",
+   "gold": "Construction"
+  },
+  "w0296": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "near",
+   "gold": "Waivers"
+  },
+  "w0297": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Intellectual Property"
+  },
+  "w0298": {
+   "anchor": "Releases",
+   "kind": "near",
+   "gold": "Terms"
+  },
+  "w0299": {
+   "anchor": "Withholdings",
+   "kind": "A_disputed",
+   "gold": "Subsidiaries"
+  },
+  "w0300": {
+   "anchor": "Confidentiality",
+   "kind": "random",
+   "gold": "Survival"
+  },
+  "w0301": {
+   "anchor": "Capitalization",
+   "kind": "A_disputed",
+   "gold": "Definitions"
+  },
+  "w0302": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Assignments"
+  },
+  "w0303": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "far",
+   "gold": "Assignments"
+  },
+  "w0304": {
+   "anchor": "Titles",
+   "kind": "gold",
+   "gold": "Titles"
+  },
+  "w0305": {
+   "anchor": "Enforceability",
+   "kind": "near",
+   "gold": "Interpretations"
+  },
+  "w0306": {
+   "anchor": "Insurances",
+   "kind": "gold",
+   "gold": "Insurances"
+  },
+  "w0307": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0308": {
+   "anchor": "Organizations",
+   "kind": "hard",
+   "gold": "Qualifications"
+  },
+  "w0309": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0310": {
+   "anchor": "Capitalization",
+   "kind": "gold",
+   "gold": "Capitalization"
+  },
+  "w0311": {
+   "anchor": "Confidentiality",
+   "kind": "A_disputed",
+   "gold": "Entire Agreements"
+  },
+  "w0312": {
+   "anchor": "Releases",
+   "kind": "far",
+   "gold": "Entire Agreements"
+  },
+  "w0313": {
+   "anchor": "Organizations",
+   "kind": "far",
+   "gold": "Entire Agreements"
+  },
+  "w0314": {
+   "anchor": "Litigations",
+   "kind": "far",
+   "gold": "Entire Agreements"
+  },
+  "w0315": {
+   "anchor": "Waivers",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0316": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Waivers"
+  },
+  "w0317": {
+   "anchor": "Disability",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0318": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Tax Withholdings"
+  },
+  "w0319": {
+   "anchor": "Benefits",
+   "kind": "A_disputed",
+   "gold": "General"
+  },
+  "w0320": {
+   "anchor": "Titles",
+   "kind": "A_disputed",
+   "gold": "Headings"
+  },
+  "w0321": {
+   "anchor": "Releases",
+   "kind": "hard",
+   "gold": "General"
+  },
+  "w0322": {
+   "anchor": "Construction",
+   "kind": "A_disputed",
+   "gold": "Approvals"
+  },
+  "w0323": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Counterparts"
+  },
+  "w0324": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Authority"
+  },
+  "w0325": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Authorizations"
+  },
+  "w0326": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "A_disputed",
+   "gold": "Waivers"
+  },
+  "w0327": {
+   "anchor": "Enforceability",
+   "kind": "random",
+   "gold": "Compliance With Laws"
+  },
+  "w0328": {
+   "anchor": "Disability",
+   "kind": "A_disputed",
+   "gold": "Death"
+  },
+  "w0329": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "A_disputed",
+   "gold": "Use Of Proceeds"
+  },
+  "w0330": {
+   "anchor": "Capitalization",
+   "kind": "near",
+   "gold": "Defined Terms"
+  },
+  "w0331": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Assignments"
+  },
+  "w0332": {
+   "anchor": "Miscellaneous",
+   "kind": "near",
+   "gold": "Definitions"
+  },
+  "w0333": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Tax Withholdings"
+  },
+  "w0334": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Binding Effects"
+  },
+  "w0335": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0336": {
+   "anchor": "Organizations",
+   "kind": "near",
+   "gold": "Representations"
+  },
+  "w0337": {
+   "anchor": "Organizations",
+   "kind": "near",
+   "gold": "Jurisdictions"
+  },
+  "w0338": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0339": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0340": {
+   "anchor": "Confidentiality",
+   "kind": "A_disputed",
+   "gold": "Non-Disparagement"
+  },
+  "w0341": {
+   "anchor": "Enforceability",
+   "kind": "hard",
+   "gold": "Authorizations"
+  },
+  "w0342": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0343": {
+   "anchor": "Disability",
+   "kind": "near",
+   "gold": "Vacations"
+  },
+  "w0344": {
+   "anchor": "Titles",
+   "kind": "random",
+   "gold": "General"
+  },
+  "w0345": {
+   "anchor": "Insurances",
+   "kind": "gold",
+   "gold": "Insurances"
+  },
+  "w0346": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Remedies"
+  },
+  "w0347": {
+   "anchor": "Assigns",
+   "kind": "A_disputed",
+   "gold": "Further Assurances"
+  },
+  "w0348": {
+   "anchor": "Benefits",
+   "kind": "near",
+   "gold": "Approvals"
+  },
+  "w0349": {
+   "anchor": "Titles",
+   "kind": "near",
+   "gold": "Headings"
+  },
+  "w0350": {
+   "anchor": "Titles",
+   "kind": "far",
+   "gold": "Severability"
+  },
+  "w0351": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Entire Agreements"
+  },
+  "w0352": {
+   "anchor": "Miscellaneous",
+   "kind": "near",
+   "gold": "Applicable Laws"
+  },
+  "w0353": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Authorizations"
+  },
+  "w0354": {
+   "anchor": "Withholdings",
+   "kind": "near",
+   "gold": "Taxes"
+  },
+  "w0355": {
+   "anchor": "Binding Effects",
+   "kind": "hard",
+   "gold": "Assigns"
+  },
+  "w0356": {
+   "anchor": "Construction",
+   "kind": "near",
+   "gold": "Definitions"
+  },
+  "w0357": {
+   "anchor": "Organizations",
+   "kind": "gold",
+   "gold": "Organizations"
+  },
+  "w0358": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Integration"
+  },
+  "w0359": {
+   "anchor": "Waivers",
+   "kind": "A_disputed",
+   "gold": "Headings"
+  },
+  "w0360": {
+   "anchor": "Litigations",
+   "kind": "E_disputed",
+   "gold": "Intellectual Property"
+  },
+  "w0361": {
+   "anchor": "Organizations",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0362": {
+   "anchor": "Confidentiality",
+   "kind": "gold",
+   "gold": "Confidentiality"
+  },
+  "w0363": {
+   "anchor": "Benefits",
+   "kind": "A_disputed",
+   "gold": "Death"
+  },
+  "w0364": {
+   "anchor": "Titles",
+   "kind": "A_disputed",
+   "gold": "Construction"
+  },
+  "w0365": {
+   "anchor": "Waivers",
+   "kind": "gold",
+   "gold": "Waivers"
+  },
+  "w0366": {
+   "anchor": "Benefits",
+   "kind": "hard",
+   "gold": "Disability"
+  },
+  "w0367": {
+   "anchor": "Insurances",
+   "kind": "near",
+   "gold": "Erisa"
+  },
+  "w0368": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "near",
+   "gold": "Waivers"
+  },
+  "w0369": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "random",
+   "gold": "Disclosures"
+  },
+  "w0370": {
+   "anchor": "Binding Effects",
+   "kind": "near",
+   "gold": "Successors"
+  },
+  "w0371": {
+   "anchor": "Withholdings",
+   "kind": "hard",
+   "gold": "General"
+  },
+  "w0372": {
+   "anchor": "Waivers",
+   "kind": "near",
+   "gold": "Severability"
+  },
+  "w0373": {
+   "anchor": "Construction",
+   "kind": "near",
+   "gold": "Indemnity"
+  },
+  "w0374": {
+   "anchor": "Vacations",
+   "kind": "hard",
+   "gold": "Benefits"
+  },
+  "w0375": {
+   "anchor": "Disability",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0376": {
+   "anchor": "Releases",
+   "kind": "random",
+   "gold": "Severability"
+  },
+  "w0377": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0378": {
+   "anchor": "Insurances",
+   "kind": "far",
+   "gold": "Terms"
+  },
+  "w0379": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0380": {
+   "anchor": "Litigations",
+   "kind": "A_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0381": {
+   "anchor": "Defined Terms",
+   "kind": "A_disputed",
+   "gold": "Definitions"
+  },
+  "w0382": {
+   "anchor": "Waivers",
+   "kind": "near",
+   "gold": "Amendments"
+  },
+  "w0383": {
+   "anchor": "Titles",
+   "kind": "A_disputed",
+   "gold": "Positions"
+  },
+  "w0384": {
+   "anchor": "Miscellaneous",
+   "kind": "gold",
+   "gold": "Miscellaneous"
+  },
+  "w0385": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Publicity"
+  },
+  "w0386": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Tax Withholdings"
+  },
+  "w0387": {
+   "anchor": "Releases",
+   "kind": "near",
+   "gold": "Terminations"
+  },
+  "w0388": {
+   "anchor": "Vacations",
+   "kind": "near",
+   "gold": "Terms"
+  },
+  "w0389": {
+   "anchor": "Benefits",
+   "kind": "gold",
+   "gold": "Benefits"
+  },
+  "w0390": {
+   "anchor": "Defined Terms",
+   "kind": "near",
+   "gold": "Definitions"
+  },
+  "w0391": {
+   "anchor": "Capitalization",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0392": {
+   "anchor": "Capitalization",
+   "kind": "A_disputed",
+   "gold": "Definitions"
+  },
+  "w0393": {
+   "anchor": "Withholdings",
+   "kind": "gold",
+   "gold": "Withholdings"
+  },
+  "w0394": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Indemnity"
+  },
+  "w0395": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0396": {
+   "anchor": "Withholdings",
+   "kind": "near",
+   "gold": "Participations"
+  },
+  "w0397": {
+   "anchor": "Litigations",
+   "kind": "near",
+   "gold": "Subsidiaries"
+  },
+  "w0398": {
+   "anchor": "Benefits",
+   "kind": "A_disputed",
+   "gold": "Successors"
+  },
+  "w0399": {
+   "anchor": "Miscellaneous",
+   "kind": "near",
+   "gold": "Headings"
+  },
+  "w0400": {
+   "anchor": "Assigns",
+   "kind": "hard",
+   "gold": "Binding Effects"
+  },
+  "w0401": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0402": {
+   "anchor": "Releases",
+   "kind": "near",
+   "gold": "Notices"
+  },
+  "w0403": {
+   "anchor": "Insurances",
+   "kind": "A_disputed",
+   "gold": "Indemnity"
+  },
+  "w0404": {
+   "anchor": "Organizations",
+   "kind": "A_disputed",
+   "gold": "Solvency"
+  },
+  "w0405": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Authorizations"
+  },
+  "w0406": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0407": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "Participations"
+  },
+  "w0408": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "A_disputed",
+   "gold": "Sanctions"
+  },
+  "w0409": {
+   "anchor": "Defined Terms",
+   "kind": "A_disputed",
+   "gold": "Entire Agreements"
+  },
+  "w0410": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0411": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Waivers"
+  },
+  "w0412": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "near",
+   "gold": "Miscellaneous"
+  },
+  "w0413": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "Participations"
+  },
+  "w0414": {
+   "anchor": "Confidentiality",
+   "kind": "hard",
+   "gold": "Publicity"
+  },
+  "w0415": {
+   "anchor": "Binding Effects",
+   "kind": "hard",
+   "gold": "Assigns"
+  },
+  "w0416": {
+   "anchor": "Withholdings",
+   "kind": "random",
+   "gold": "Fees"
+  },
+  "w0417": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "Terminations"
+  },
+  "w0418": {
+   "anchor": "Insurances",
+   "kind": "hard",
+   "gold": "Indemnifications"
+  },
+  "w0419": {
+   "anchor": "Enforceability",
+   "kind": "near",
+   "gold": "Releases"
+  },
+  "w0420": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Authority"
+  },
+  "w0421": {
+   "anchor": "Titles",
+   "kind": "hard",
+   "gold": "Liens"
+  },
+  "w0422": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Authorizations"
+  },
+  "w0423": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0424": {
+   "anchor": "Vacations",
+   "kind": "near",
+   "gold": "Base Salary"
+  },
+  "w0425": {
+   "anchor": "Withholdings",
+   "kind": "near",
+   "gold": "Taxes"
+  },
+  "w0426": {
+   "anchor": "Capitalization",
+   "kind": "hard",
+   "gold": "Subsidiaries"
+  },
+  "w0427": {
+   "anchor": "Confidentiality",
+   "kind": "far",
+   "gold": "Remedies"
+  },
+  "w0428": {
+   "anchor": "Enforceability",
+   "kind": "A_disputed",
+   "gold": "Severability"
+  },
+  "w0429": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0430": {
+   "anchor": "Defined Terms",
+   "kind": "hard",
+   "gold": "Miscellaneous"
+  },
+  "w0431": {
+   "anchor": "Benefits",
+   "kind": "near",
+   "gold": "Confidentiality"
+  },
+  "w0432": {
+   "anchor": "Withholdings",
+   "kind": "A_disputed",
+   "gold": "Taxes"
+  },
+  "w0433": {
+   "anchor": "Insurances",
+   "kind": "A_disputed",
+   "gold": "Intellectual Property"
+  },
+  "w0434": {
+   "anchor": "Defined Terms",
+   "kind": "near",
+   "gold": "Interpretations"
+  },
+  "w0435": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Assignments"
+  },
+  "w0436": {
+   "anchor": "Waivers",
+   "kind": "near",
+   "gold": "Waiver Of Jury Trials"
+  },
+  "w0437": {
+   "anchor": "Titles",
+   "kind": "near",
+   "gold": "Definitions"
+  },
+  "w0438": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Interpretations"
+  },
+  "w0439": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Entire Agreements"
+  },
+  "w0440": {
+   "anchor": "Miscellaneous",
+   "kind": "near",
+   "gold": "Definitions"
+  },
+  "w0441": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "hard",
+   "gold": "Jurisdictions"
+  },
+  "w0442": {
+   "anchor": "Titles",
+   "kind": "A_disputed",
+   "gold": "Duties"
+  },
+  "w0443": {
+   "anchor": "Defined Terms",
+   "kind": "A_disputed",
+   "gold": "Construction"
+  },
+  "w0444": {
+   "anchor": "Titles",
+   "kind": "near",
+   "gold": "Miscellaneous"
+  },
+  "w0445": {
+   "anchor": "Miscellaneous",
+   "kind": "random",
+   "gold": "Closings"
+  },
+  "w0446": {
+   "anchor": "Binding Effects",
+   "kind": "near",
+   "gold": "Successors"
+  },
+  "w0447": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0448": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Erisa"
+  },
+  "w0449": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0450": {
+   "anchor": "Benefits",
+   "kind": "A_disputed",
+   "gold": "Successors"
+  },
+  "w0451": {
+   "anchor": "Vacations",
+   "kind": "near",
+   "gold": "Benefits"
+  },
+  "w0452": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "No Waivers"
+  },
+  "w0453": {
+   "anchor": "Defined Terms",
+   "kind": "random",
+   "gold": "Amendments"
+  },
+  "w0454": {
+   "anchor": "Waivers",
+   "kind": "random",
+   "gold": "Integration"
+  },
+  "w0455": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0456": {
+   "anchor": "Construction",
+   "kind": "random",
+   "gold": "Notices"
+  },
+  "w0457": {
+   "anchor": "Organizations",
+   "kind": "near",
+   "gold": "Authorizations"
+  },
+  "w0458": {
+   "anchor": "Confidentiality",
+   "kind": "gold",
+   "gold": "Confidentiality"
+  },
+  "w0459": {
+   "anchor": "Confidentiality",
+   "kind": "near",
+   "gold": "Cooperation"
+  },
+  "w0460": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Existence"
+  },
+  "w0461": {
+   "anchor": "Litigations",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0462": {
+   "anchor": "Releases",
+   "kind": "A_disputed",
+   "gold": "Counterparts"
+  },
+  "w0463": {
+   "anchor": "Capitalization",
+   "kind": "near",
+   "gold": "Defined Terms"
+  },
+  "w0464": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Litigations"
+  },
+  "w0465": {
+   "anchor": "Waivers",
+   "kind": "random",
+   "gold": "Consent To Jurisdiction"
+  },
+  "w0466": {
+   "anchor": "Vacations",
+   "kind": "near",
+   "gold": "Benefits"
+  },
+  "w0467": {
+   "anchor": "Construction",
+   "kind": "gold",
+   "gold": "Construction"
+  },
+  "w0468": {
+   "anchor": "Withholdings",
+   "kind": "gold",
+   "gold": "Withholdings"
+  },
+  "w0469": {
+   "anchor": "Litigations",
+   "kind": "A_disputed",
+   "gold": "Arbitration"
+  },
+  "w0470": {
+   "anchor": "Assigns",
+   "kind": "far",
+   "gold": "Survival"
+  },
+  "w0471": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "hard",
+   "gold": "Sanctions"
+  },
+  "w0472": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Tax Withholdings"
+  },
+  "w0473": {
+   "anchor": "Defined Terms",
+   "kind": "A_disputed",
+   "gold": "Miscellaneous"
+  },
+  "w0474": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "far",
+   "gold": "Notices"
+  },
+  "w0475": {
+   "anchor": "Benefits",
+   "kind": "hard",
+   "gold": "Disability"
+  },
+  "w0476": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0477": {
+   "anchor": "Confidentiality",
+   "kind": "far",
+   "gold": "Liens"
+  },
+  "w0478": {
+   "anchor": "Capitalization",
+   "kind": "hard",
+   "gold": "Subsidiaries"
+  },
+  "w0479": {
+   "anchor": "Enforceability",
+   "kind": "near",
+   "gold": "Binding Effects"
+  },
+  "w0480": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Existence"
+  },
+  "w0481": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0482": {
+   "anchor": "Benefits",
+   "kind": "near",
+   "gold": "Positions"
+  },
+  "w0483": {
+   "anchor": "Withholdings",
+   "kind": "gold",
+   "gold": "Withholdings"
+  },
+  "w0484": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Effective Dates"
+  },
+  "w0485": {
+   "anchor": "Miscellaneous",
+   "kind": "near",
+   "gold": "Headings"
+  },
+  "w0486": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0487": {
+   "anchor": "Capitalization",
+   "kind": "A_disputed",
+   "gold": "Defined Terms"
+  },
+  "w0488": {
+   "anchor": "Waivers",
+   "kind": "near",
+   "gold": "Waiver Of Jury Trials"
+  },
+  "w0489": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Binding Effects"
+  },
+  "w0490": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "hard",
+   "gold": "Jurisdictions"
+  },
+  "w0491": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "General"
+  },
+  "w0492": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Sanctions"
+  },
+  "w0493": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Interpretations"
+  },
+  "w0494": {
+   "anchor": "Titles",
+   "kind": "far",
+   "gold": "Terms"
+  },
+  "w0495": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Assignments"
+  },
+  "w0496": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Authorizations"
+  },
+  "w0497": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Arbitration"
+  },
+  "w0498": {
+   "anchor": "Titles",
+   "kind": "A_disputed",
+   "gold": "Waivers"
+  },
+  "w0499": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Disclosures"
+  },
+  "w0500": {
+   "anchor": "Miscellaneous",
+   "kind": "random",
+   "gold": "Disclosures"
+  },
+  "w0501": {
+   "anchor": "Benefits",
+   "kind": "hard",
+   "gold": "Disability"
+  },
+  "w0502": {
+   "anchor": "Construction",
+   "kind": "near",
+   "gold": "Binding Effects"
+  },
+  "w0503": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0504": {
+   "anchor": "Binding Effects",
+   "kind": "gold",
+   "gold": "Binding Effects"
+  },
+  "w0505": {
+   "anchor": "Vacations",
+   "kind": "near",
+   "gold": "Base Salary"
+  },
+  "w0506": {
+   "anchor": "Benefits",
+   "kind": "random",
+   "gold": "Indemnifications"
+  },
+  "w0507": {
+   "anchor": "Binding Effects",
+   "kind": "near",
+   "gold": "Assignments"
+  },
+  "w0508": {
+   "anchor": "Insurances",
+   "kind": "near",
+   "gold": "Existence"
+  },
+  "w0509": {
+   "anchor": "Binding Effects",
+   "kind": "random",
+   "gold": "Entire Agreements"
+  },
+  "w0510": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "A_disputed",
+   "gold": "Sanctions"
+  },
+  "w0511": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "gold",
+   "gold": "Anti-Corruption Laws"
+  },
+  "w0512": {
+   "anchor": "Withholdings",
+   "kind": "far",
+   "gold": "Governing Laws"
+  },
+  "w0513": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0514": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0515": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Authorizations"
+  },
+  "w0516": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Sanctions"
+  },
+  "w0517": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0518": {
+   "anchor": "Miscellaneous",
+   "kind": "near",
+   "gold": "Expenses"
+  },
+  "w0519": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Waivers"
+  },
+  "w0520": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0521": {
+   "anchor": "Disability",
+   "kind": "hard",
+   "gold": "Benefits"
+  },
+  "w0522": {
+   "anchor": "Enforceability",
+   "kind": "gold",
+   "gold": "Enforceability"
+  },
+  "w0523": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0524": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0525": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0526": {
+   "anchor": "Benefits",
+   "kind": "near",
+   "gold": "Death"
+  },
+  "w0527": {
+   "anchor": "Binding Effects",
+   "kind": "near",
+   "gold": "Authority"
+  },
+  "w0528": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "gold",
+   "gold": "Waiver Of Jury Trials"
+  },
+  "w0529": {
+   "anchor": "Defined Terms",
+   "kind": "near",
+   "gold": "Headings"
+  },
+  "w0530": {
+   "anchor": "Releases",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0531": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0532": {
+   "anchor": "Insurances",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0533": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "Insurances"
+  },
+  "w0534": {
+   "anchor": "Confidentiality",
+   "kind": "hard",
+   "gold": "Publicity"
+  },
+  "w0535": {
+   "anchor": "Enforceability",
+   "kind": "A_disputed",
+   "gold": "Severability"
+  },
+  "w0536": {
+   "anchor": "Withholdings",
+   "kind": "far",
+   "gold": "Waiver Of Jury Trials"
+  },
+  "w0537": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "General"
+  },
+  "w0538": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Modifications"
+  },
+  "w0539": {
+   "anchor": "Releases",
+   "kind": "hard",
+   "gold": "General"
+  },
+  "w0540": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Taxes"
+  },
+  "w0541": {
+   "anchor": "Capitalization",
+   "kind": "gold",
+   "gold": "Capitalization"
+  },
+  "w0542": {
+   "anchor": "Disability",
+   "kind": "near",
+   "gold": "Terminations"
+  },
+  "w0543": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0544": {
+   "anchor": "Litigations",
+   "kind": "hard",
+   "gold": "Compliance With Laws"
+  },
+  "w0545": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0546": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0547": {
+   "anchor": "Construction",
+   "kind": "near",
+   "gold": "Releases"
+  },
+  "w0548": {
+   "anchor": "Confidentiality",
+   "kind": "near",
+   "gold": "Entire Agreements"
+  },
+  "w0549": {
+   "anchor": "Releases",
+   "kind": "A_disputed",
+   "gold": "Amendments"
+  },
+  "w0550": {
+   "anchor": "Releases",
+   "kind": "A_disputed",
+   "gold": "Counterparts"
+  },
+  "w0551": {
+   "anchor": "Construction",
+   "kind": "gold",
+   "gold": "Construction"
+  },
+  "w0552": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0553": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Authorizations"
+  },
+  "w0554": {
+   "anchor": "Insurances",
+   "kind": "near",
+   "gold": "Benefits"
+  },
+  "w0555": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0556": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Defined Terms"
+  },
+  "w0557": {
+   "anchor": "Benefits",
+   "kind": "far",
+   "gold": "Arbitration"
+  },
+  "w0558": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0559": {
+   "anchor": "Capitalization",
+   "kind": "random",
+   "gold": "No Waivers"
+  },
+  "w0560": {
+   "anchor": "Vacations",
+   "kind": "near",
+   "gold": "Base Salary"
+  },
+  "w0561": {
+   "anchor": "Waivers",
+   "kind": "near",
+   "gold": "Modifications"
+  },
+  "w0562": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0563": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0564": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Tax Withholdings"
+  },
+  "w0565": {
+   "anchor": "Litigations",
+   "kind": "A_disputed",
+   "gold": "Arbitration"
+  },
+  "w0566": {
+   "anchor": "Construction",
+   "kind": "near",
+   "gold": "Effectiveness"
+  },
+  "w0567": {
+   "anchor": "Disability",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0568": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Insurances"
+  },
+  "w0569": {
+   "anchor": "Defined Terms",
+   "kind": "near",
+   "gold": "Interpretations"
+  },
+  "w0570": {
+   "anchor": "Vacations",
+   "kind": "random",
+   "gold": "Specific Performance"
+  },
+  "w0571": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "near",
+   "gold": "No Waivers"
+  },
+  "w0572": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "Base Salary"
+  },
+  "w0573": {
+   "anchor": "Construction",
+   "kind": "A_disputed",
+   "gold": "Approvals"
+  },
+  "w0574": {
+   "anchor": "Binding Effects",
+   "kind": "near",
+   "gold": "Entire Agreements"
+  },
+  "w0575": {
+   "anchor": "Confidentiality",
+   "kind": "gold",
+   "gold": "Confidentiality"
+  },
+  "w0576": {
+   "anchor": "Defined Terms",
+   "kind": "A_disputed",
+   "gold": "Definitions"
+  },
+  "w0577": {
+   "anchor": "Insurances",
+   "kind": "hard",
+   "gold": "Indemnifications"
+  },
+  "w0578": {
+   "anchor": "Insurances",
+   "kind": "A_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0579": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Publicity"
+  },
+  "w0580": {
+   "anchor": "Titles",
+   "kind": "near",
+   "gold": "Construction"
+  },
+  "w0581": {
+   "anchor": "Litigations",
+   "kind": "random",
+   "gold": "Headings"
+  },
+  "w0582": {
+   "anchor": "Vacations",
+   "kind": "gold",
+   "gold": "Vacations"
+  },
+  "w0583": {
+   "anchor": "Waivers",
+   "kind": "far",
+   "gold": "Severability"
+  },
+  "w0584": {
+   "anchor": "Vacations",
+   "kind": "hard",
+   "gold": "Benefits"
+  },
+  "w0585": {
+   "anchor": "Construction",
+   "kind": "random",
+   "gold": "Use Of Proceeds"
+  },
+  "w0586": {
+   "anchor": "Capitalization",
+   "kind": "hard",
+   "gold": "Subsidiaries"
+  },
+  "w0587": {
+   "anchor": "Releases",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0588": {
+   "anchor": "Releases",
+   "kind": "far",
+   "gold": "Severability"
+  },
+  "w0589": {
+   "anchor": "Miscellaneous",
+   "kind": "near",
+   "gold": "Amendments"
+  },
+  "w0590": {
+   "anchor": "Titles",
+   "kind": "random",
+   "gold": "Terms"
+  },
+  "w0591": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0592": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Waivers"
+  },
+  "w0593": {
+   "anchor": "Disability",
+   "kind": "hard",
+   "gold": "Benefits"
+  },
+  "w0594": {
+   "anchor": "Vacations",
+   "kind": "far",
+   "gold": "Amendments"
+  },
+  "w0595": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Tax Withholdings"
+  },
+  "w0596": {
+   "anchor": "Withholdings",
+   "kind": "A_disputed",
+   "gold": "Taxes"
+  },
+  "w0597": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0598": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "near",
+   "gold": "Waivers"
+  },
+  "w0599": {
+   "anchor": "Withholdings",
+   "kind": "random",
+   "gold": "Costs"
+  },
+  "w0600": {
+   "anchor": "Binding Effects",
+   "kind": "far",
+   "gold": "Counterparts"
+  },
+  "w0601": {
+   "anchor": "Organizations",
+   "kind": "random",
+   "gold": "Amendments"
+  },
+  "w0602": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Consent To Jurisdiction"
+  },
+  "w0603": {
+   "anchor": "Defined Terms",
+   "kind": "far",
+   "gold": "Confidentiality"
+  },
+  "w0604": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Entire Agreements"
+  },
+  "w0605": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "No Waivers"
+  },
+  "w0606": {
+   "anchor": "Litigations",
+   "kind": "E_disputed",
+   "gold": "Insurances"
+  },
+  "w0607": {
+   "anchor": "Litigations",
+   "kind": "near",
+   "gold": "Insurances"
+  },
+  "w0608": {
+   "anchor": "Disability",
+   "kind": "near",
+   "gold": "Benefits"
+  },
+  "w0609": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Taxes"
+  },
+  "w0610": {
+   "anchor": "Disability",
+   "kind": "A_disputed",
+   "gold": "Base Salary"
+  },
+  "w0611": {
+   "anchor": "Disability",
+   "kind": "A_disputed",
+   "gold": "Terminations"
+  },
+  "w0612": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0613": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Entire Agreements"
+  },
+  "w0614": {
+   "anchor": "Titles",
+   "kind": "near",
+   "gold": "Interpretations"
+  },
+  "w0615": {
+   "anchor": "Releases",
+   "kind": "near",
+   "gold": "Entire Agreements"
+  },
+  "w0616": {
+   "anchor": "Waivers",
+   "kind": "hard",
+   "gold": "Modifications"
+  },
+  "w0617": {
+   "anchor": "Binding Effects",
+   "kind": "near",
+   "gold": "Assignments"
+  },
+  "w0618": {
+   "anchor": "Vacations",
+   "kind": "gold",
+   "gold": "Vacations"
+  },
+  "w0619": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0620": {
+   "anchor": "Litigations",
+   "kind": "far",
+   "gold": "Miscellaneous"
+  },
+  "w0621": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Withholdings"
+  },
+  "w0622": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "near",
+   "gold": "Use Of Proceeds"
+  },
+  "w0623": {
+   "anchor": "Confidentiality",
+   "kind": "A_disputed",
+   "gold": "Publicity"
+  },
+  "w0624": {
+   "anchor": "Capitalization",
+   "kind": "random",
+   "gold": "Effective Dates"
+  },
+  "w0625": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Approvals"
+  },
+  "w0626": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Waivers"
+  },
+  "w0627": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "No Waivers"
+  },
+  "w0628": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Defined Terms"
+  },
+  "w0629": {
+   "anchor": "Titles",
+   "kind": "A_disputed",
+   "gold": "Cooperation"
+  },
+  "w0630": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0631": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "A_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0632": {
+   "anchor": "Enforceability",
+   "kind": "near",
+   "gold": "Payments"
+  },
+  "w0633": {
+   "anchor": "Insurances",
+   "kind": "near",
+   "gold": "Benefits"
+  },
+  "w0634": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "Participations"
+  },
+  "w0635": {
+   "anchor": "Benefits",
+   "kind": "A_disputed",
+   "gold": "Death"
+  },
+  "w0636": {
+   "anchor": "Enforceability",
+   "kind": "gold",
+   "gold": "Enforceability"
+  },
+  "w0637": {
+   "anchor": "Titles",
+   "kind": "hard",
+   "gold": "Liens"
+  },
+  "w0638": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Confidentiality"
+  },
+  "w0639": {
+   "anchor": "Capitalization",
+   "kind": "A_disputed",
+   "gold": "Definitions"
+  },
+  "w0640": {
+   "anchor": "Capitalization",
+   "kind": "near",
+   "gold": "Defined Terms"
+  },
+  "w0641": {
+   "anchor": "Releases",
+   "kind": "A_disputed",
+   "gold": "Modifications"
+  },
+  "w0642": {
+   "anchor": "Benefits",
+   "kind": "random",
+   "gold": "Interests"
+  },
+  "w0643": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "No Waivers"
+  },
+  "w0644": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Death"
+  },
+  "w0645": {
+   "anchor": "Construction",
+   "kind": "A_disputed",
+   "gold": "Interpretations"
+  },
+  "w0646": {
+   "anchor": "Litigations",
+   "kind": "near",
+   "gold": "Survival"
+  },
+  "w0647": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Amendments"
+  },
+  "w0648": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0649": {
+   "anchor": "Disability",
+   "kind": "far",
+   "gold": "Forfeitures"
+  },
+  "w0650": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Survival"
+  },
+  "w0651": {
+   "anchor": "Waivers",
+   "kind": "far",
+   "gold": "Effectiveness"
+  },
+  "w0652": {
+   "anchor": "Binding Effects",
+   "kind": "random",
+   "gold": "Solvency"
+  },
+  "w0653": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0654": {
+   "anchor": "Capitalization",
+   "kind": "near",
+   "gold": "Sales"
+  },
+  "w0655": {
+   "anchor": "Benefits",
+   "kind": "gold",
+   "gold": "Benefits"
+  },
+  "w0656": {
+   "anchor": "Insurances",
+   "kind": "random",
+   "gold": "Solvency"
+  },
+  "w0657": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "A_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0658": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "General"
+  },
+  "w0659": {
+   "anchor": "Confidentiality",
+   "kind": "random",
+   "gold": "Entire Agreements"
+  },
+  "w0660": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0661": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Tax Withholdings"
+  },
+  "w0662": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Tax Withholdings"
+  },
+  "w0663": {
+   "anchor": "Confidentiality",
+   "kind": "A_disputed",
+   "gold": "General"
+  },
+  "w0664": {
+   "anchor": "Litigations",
+   "kind": "hard",
+   "gold": "Compliance With Laws"
+  },
+  "w0665": {
+   "anchor": "Vacations",
+   "kind": "near",
+   "gold": "Base Salary"
+  },
+  "w0666": {
+   "anchor": "Organizations",
+   "kind": "A_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0667": {
+   "anchor": "Insurances",
+   "kind": "gold",
+   "gold": "Insurances"
+  },
+  "w0668": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Existence"
+  },
+  "w0669": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0670": {
+   "anchor": "Defined Terms",
+   "kind": "near",
+   "gold": "Construction"
+  },
+  "w0671": {
+   "anchor": "Organizations",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0672": {
+   "anchor": "Disability",
+   "kind": "gold",
+   "gold": "Disability"
+  },
+  "w0673": {
+   "anchor": "Enforceability",
+   "kind": "A_disputed",
+   "gold": "Severability"
+  },
+  "w0674": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Successors"
+  },
+  "w0675": {
+   "anchor": "Construction",
+   "kind": "random",
+   "gold": "Compliance With Laws"
+  },
+  "w0676": {
+   "anchor": "Litigations",
+   "kind": "A_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0677": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0678": {
+   "anchor": "Benefits",
+   "kind": "gold",
+   "gold": "Benefits"
+  },
+  "w0679": {
+   "anchor": "Waivers",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0680": {
+   "anchor": "Releases",
+   "kind": "hard",
+   "gold": "General"
+  },
+  "w0681": {
+   "anchor": "Construction",
+   "kind": "A_disputed",
+   "gold": "Interpretations"
+  },
+  "w0682": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Existence"
+  },
+  "w0683": {
+   "anchor": "Assigns",
+   "kind": "hard",
+   "gold": "Binding Effects"
+  },
+  "w0684": {
+   "anchor": "Capitalization",
+   "kind": "near",
+   "gold": "Subsidiaries"
+  },
+  "w0685": {
+   "anchor": "Binding Effects",
+   "kind": "near",
+   "gold": "Assignments"
+  },
+  "w0686": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0687": {
+   "anchor": "Miscellaneous",
+   "kind": "near",
+   "gold": "Expenses"
+  },
+  "w0688": {
+   "anchor": "Releases",
+   "kind": "near",
+   "gold": "Confidentiality"
+  },
+  "w0689": {
+   "anchor": "Assigns",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0690": {
+   "anchor": "Benefits",
+   "kind": "near",
+   "gold": "Duties"
+  },
+  "w0691": {
+   "anchor": "Disability",
+   "kind": "A_disputed",
+   "gold": "Death"
+  },
+  "w0692": {
+   "anchor": "Defined Terms",
+   "kind": "near",
+   "gold": "Construction"
+  },
+  "w0693": {
+   "anchor": "Confidentiality",
+   "kind": "near",
+   "gold": "Consents"
+  },
+  "w0694": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "near",
+   "gold": "No Waivers"
+  },
+  "w0695": {
+   "anchor": "Vacations",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0696": {
+   "anchor": "Disability",
+   "kind": "A_disputed",
+   "gold": "Amendments"
+  },
+  "w0697": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "random",
+   "gold": "Vesting"
+  },
+  "w0698": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "General"
+  },
+  "w0699": {
+   "anchor": "Miscellaneous",
+   "kind": "gold",
+   "gold": "Miscellaneous"
+  },
+  "w0700": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "far",
+   "gold": "Survival"
+  },
+  "w0701": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Successors"
+  },
+  "w0702": {
+   "anchor": "Vacations",
+   "kind": "near",
+   "gold": "Base Salary"
+  },
+  "w0703": {
+   "anchor": "Vacations",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0704": {
+   "anchor": "Organizations",
+   "kind": "near",
+   "gold": "Authority"
+  },
+  "w0705": {
+   "anchor": "Litigations",
+   "kind": "A_disputed",
+   "gold": "Arbitration"
+  },
+  "w0706": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Publicity"
+  },
+  "w0707": {
+   "anchor": "Vacations",
+   "kind": "near",
+   "gold": "Base Salary"
+  },
+  "w0708": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "A_disputed",
+   "gold": "Sanctions"
+  },
+  "w0709": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0710": {
+   "anchor": "Insurances",
+   "kind": "random",
+   "gold": "Headings"
+  },
+  "w0711": {
+   "anchor": "Miscellaneous",
+   "kind": "far",
+   "gold": "Governing Laws"
+  },
+  "w0712": {
+   "anchor": "Withholdings",
+   "kind": "A_disputed",
+   "gold": "Taxes"
+  },
+  "w0713": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Tax Withholdings"
+  },
+  "w0714": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "Entire Agreements"
+  },
+  "w0715": {
+   "anchor": "Capitalization",
+   "kind": "near",
+   "gold": "Subsidiaries"
+  },
+  "w0716": {
+   "anchor": "Withholdings",
+   "kind": "A_disputed",
+   "gold": "Taxes"
+  },
+  "w0717": {
+   "anchor": "Binding Effects",
+   "kind": "near",
+   "gold": "Survival"
+  },
+  "w0718": {
+   "anchor": "Withholdings",
+   "kind": "near",
+   "gold": "General"
+  },
+  "w0719": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0720": {
+   "anchor": "Titles",
+   "kind": "random",
+   "gold": "Severability"
+  },
+  "w0721": {
+   "anchor": "Assigns",
+   "kind": "random",
+   "gold": "Solvency"
+  },
+  "w0722": {
+   "anchor": "Confidentiality",
+   "kind": "A_disputed",
+   "gold": "Publicity"
+  },
+  "w0723": {
+   "anchor": "Confidentiality",
+   "kind": "A_disputed",
+   "gold": "Publicity"
+  },
+  "w0724": {
+   "anchor": "Assigns",
+   "kind": "A_disputed",
+   "gold": "Assignments"
+  },
+  "w0725": {
+   "anchor": "Binding Effects",
+   "kind": "hard",
+   "gold": "Assigns"
+  },
+  "w0726": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Cooperation"
+  },
+  "w0727": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0728": {
+   "anchor": "Benefits",
+   "kind": "A_disputed",
+   "gold": "Withholdings"
+  },
+  "w0729": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "near",
+   "gold": "Agreements"
+  },
+  "w0730": {
+   "anchor": "Withholdings",
+   "kind": "E_disputed",
+   "gold": "Taxes"
+  },
+  "w0731": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0732": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0733": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Successors"
+  },
+  "w0734": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Terminations"
+  },
+  "w0735": {
+   "anchor": "Insurances",
+   "kind": "far",
+   "gold": "Assignments"
+  },
+  "w0736": {
+   "anchor": "Titles",
+   "kind": "near",
+   "gold": "Headings"
+  },
+  "w0737": {
+   "anchor": "Miscellaneous",
+   "kind": "E_disputed",
+   "gold": "Integration"
+  },
+  "w0738": {
+   "anchor": "Litigations",
+   "kind": "random",
+   "gold": "Expenses"
+  },
+  "w0739": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Existence"
+  },
+  "w0740": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "hard",
+   "gold": "Sanctions"
+  },
+  "w0741": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0742": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Existence"
+  },
+  "w0743": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0744": {
+   "anchor": "Releases",
+   "kind": "gold",
+   "gold": "Releases"
+  },
+  "w0745": {
+   "anchor": "Construction",
+   "kind": "hard",
+   "gold": "Miscellaneous"
+  },
+  "w0746": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Sanctions"
+  },
+  "w0747": {
+   "anchor": "Enforceability",
+   "kind": "A_disputed",
+   "gold": "Severability"
+  },
+  "w0748": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Releases"
+  },
+  "w0749": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "A_disputed",
+   "gold": "Waivers"
+  },
+  "w0750": {
+   "anchor": "Confidentiality",
+   "kind": "A_disputed",
+   "gold": "Publicity"
+  },
+  "w0751": {
+   "anchor": "Disability",
+   "kind": "far",
+   "gold": "Payments"
+  },
+  "w0752": {
+   "anchor": "Defined Terms",
+   "kind": "gold",
+   "gold": "Defined Terms"
+  },
+  "w0753": {
+   "anchor": "Organizations",
+   "kind": "near",
+   "gold": "Authority"
+  },
+  "w0754": {
+   "anchor": "Withholdings",
+   "kind": "near",
+   "gold": "Taxes"
+  },
+  "w0755": {
+   "anchor": "Disability",
+   "kind": "near",
+   "gold": "Participations"
+  },
+  "w0756": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0757": {
+   "anchor": "Disability",
+   "kind": "hard",
+   "gold": "Benefits"
+  },
+  "w0758": {
+   "anchor": "Insurances",
+   "kind": "E_disputed",
+   "gold": "Intellectual Property"
+  },
+  "w0759": {
+   "anchor": "Confidentiality",
+   "kind": "E_disputed",
+   "gold": "No Conflicts"
+  },
+  "w0760": {
+   "anchor": "Releases",
+   "kind": "near",
+   "gold": "Death"
+  },
+  "w0761": {
+   "anchor": "Construction",
+   "kind": "A_disputed",
+   "gold": "Costs"
+  },
+  "w0762": {
+   "anchor": "Benefits",
+   "kind": "A_disputed",
+   "gold": "General"
+  },
+  "w0763": {
+   "anchor": "Withholdings",
+   "kind": "A_disputed",
+   "gold": "Taxes"
+  },
+  "w0764": {
+   "anchor": "Capitalization",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0765": {
+   "anchor": "Titles",
+   "kind": "A_disputed",
+   "gold": "Headings"
+  },
+  "w0766": {
+   "anchor": "Defined Terms",
+   "kind": "gold",
+   "gold": "Defined Terms"
+  },
+  "w0767": {
+   "anchor": "Insurances",
+   "kind": "near",
+   "gold": "Indemnifications"
+  },
+  "w0768": {
+   "anchor": "Litigations",
+   "kind": "gold",
+   "gold": "Litigations"
+  },
+  "w0769": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Death"
+  },
+  "w0770": {
+   "anchor": "Enforceability",
+   "kind": "near",
+   "gold": "Authority"
+  },
+  "w0771": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Waivers"
+  },
+  "w0772": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Costs"
+  },
+  "w0773": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "hard",
+   "gold": "Jurisdictions"
+  },
+  "w0774": {
+   "anchor": "Vacations",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0775": {
+   "anchor": "Releases",
+   "kind": "E_disputed",
+   "gold": "Effective Dates"
+  },
+  "w0776": {
+   "anchor": "Construction",
+   "kind": "A_disputed",
+   "gold": "Interpretations"
+  },
+  "w0777": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "far",
+   "gold": "Assignments"
+  },
+  "w0778": {
+   "anchor": "Waivers",
+   "kind": "gold",
+   "gold": "Waivers"
+  },
+  "w0779": {
+   "anchor": "Litigations",
+   "kind": "A_disputed",
+   "gold": "Venues"
+  },
+  "w0780": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Authorizations"
+  },
+  "w0781": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Erisa"
+  },
+  "w0782": {
+   "anchor": "Withholdings",
+   "kind": "A_disputed",
+   "gold": "Taxes"
+  },
+  "w0783": {
+   "anchor": "Organizations",
+   "kind": "near",
+   "gold": "Existence"
+  },
+  "w0784": {
+   "anchor": "Defined Terms",
+   "kind": "hard",
+   "gold": "Miscellaneous"
+  },
+  "w0785": {
+   "anchor": "Titles",
+   "kind": "gold",
+   "gold": "Titles"
+  },
+  "w0786": {
+   "anchor": "Construction",
+   "kind": "A_disputed",
+   "gold": "Interpretations"
+  },
+  "w0787": {
+   "anchor": "Assigns",
+   "kind": "far",
+   "gold": "Further Assurances"
+  },
+  "w0788": {
+   "anchor": "Vacations",
+   "kind": "random",
+   "gold": "Intellectual Property"
+  },
+  "w0789": {
+   "anchor": "Construction",
+   "kind": "A_disputed",
+   "gold": "Interpretations"
+  },
+  "w0790": {
+   "anchor": "Binding Effects",
+   "kind": "random",
+   "gold": "Indemnifications"
+  },
+  "w0791": {
+   "anchor": "Insurances",
+   "kind": "A_disputed",
+   "gold": "Indemnifications"
+  },
+  "w0792": {
+   "anchor": "Confidentiality",
+   "kind": "near",
+   "gold": "Entire Agreements"
+  },
+  "w0793": {
+   "anchor": "Releases",
+   "kind": "random",
+   "gold": "Taxes"
+  },
+  "w0794": {
+   "anchor": "Waivers",
+   "kind": "A_disputed",
+   "gold": "Integration"
+  },
+  "w0795": {
+   "anchor": "Releases",
+   "kind": "A_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0796": {
+   "anchor": "Capitalization",
+   "kind": "far",
+   "gold": "Base Salary"
+  },
+  "w0797": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Assignments"
+  },
+  "w0798": {
+   "anchor": "Confidentiality",
+   "kind": "A_disputed",
+   "gold": "Disclosures"
+  },
+  "w0799": {
+   "anchor": "Capitalization",
+   "kind": "A_disputed",
+   "gold": "Defined Terms"
+  },
+  "w0800": {
+   "anchor": "Disability",
+   "kind": "A_disputed",
+   "gold": "Benefits"
+  },
+  "w0801": {
+   "anchor": "Vacations",
+   "kind": "near",
+   "gold": "Base Salary"
+  },
+  "w0802": {
+   "anchor": "Waivers",
+   "kind": "gold",
+   "gold": "Waivers"
+  },
+  "w0803": {
+   "anchor": "Construction",
+   "kind": "hard",
+   "gold": "Miscellaneous"
+  },
+  "w0804": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0805": {
+   "anchor": "Litigations",
+   "kind": "gold",
+   "gold": "Litigations"
+  },
+  "w0806": {
+   "anchor": "Waivers",
+   "kind": "E_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0807": {
+   "anchor": "Enforceability",
+   "kind": "random",
+   "gold": "Costs"
+  },
+  "w0808": {
+   "anchor": "Litigations",
+   "kind": "A_disputed",
+   "gold": "Binding Effects"
+  },
+  "w0809": {
+   "anchor": "Withholdings",
+   "kind": "near",
+   "gold": "Tax Withholdings"
+  },
+  "w0810": {
+   "anchor": "Vacations",
+   "kind": "E_disputed",
+   "gold": "Benefits"
+  },
+  "w0811": {
+   "anchor": "Capitalization",
+   "kind": "A_disputed",
+   "gold": "Defined Terms"
+  },
+  "w0812": {
+   "anchor": "Capitalization",
+   "kind": "near",
+   "gold": "Expenses"
+  },
+  "w0813": {
+   "anchor": "Disability",
+   "kind": "near",
+   "gold": "Base Salary"
+  },
+  "w0814": {
+   "anchor": "Defined Terms",
+   "kind": "E_disputed",
+   "gold": "Definitions"
+  },
+  "w0815": {
+   "anchor": "Withholdings",
+   "kind": "A_disputed",
+   "gold": "Taxes"
+  },
+  "w0816": {
+   "anchor": "Waivers",
+   "kind": "near",
+   "gold": "Amendments"
+  },
+  "w0817": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "A_disputed",
+   "gold": "Use Of Proceeds"
+  },
+  "w0818": {
+   "anchor": "Titles",
+   "kind": "near",
+   "gold": "Releases"
+  },
+  "w0819": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "gold",
+   "gold": "Waiver Of Jury Trials"
+  },
+  "w0820": {
+   "anchor": "Organizations",
+   "kind": "gold",
+   "gold": "Organizations"
+  },
+  "w0821": {
+   "anchor": "Waiver Of Jury Trials",
+   "kind": "E_disputed",
+   "gold": "Governing Laws"
+  },
+  "w0822": {
+   "anchor": "Organizations",
+   "kind": "near",
+   "gold": "Representations"
+  },
+  "w0823": {
+   "anchor": "Disability",
+   "kind": "E_disputed",
+   "gold": "Base Salary"
+  },
+  "w0824": {
+   "anchor": "Enforceability",
+   "kind": "A_disputed",
+   "gold": "Severability"
+  },
+  "w0825": {
+   "anchor": "Confidentiality",
+   "kind": "hard",
+   "gold": "Publicity"
+  },
+  "w0826": {
+   "anchor": "Enforceability",
+   "kind": "near",
+   "gold": "Governing Laws"
+  },
+  "w0827": {
+   "anchor": "Titles",
+   "kind": "E_disputed",
+   "gold": "Headings"
+  },
+  "w0828": {
+   "anchor": "Insurances",
+   "kind": "A_disputed",
+   "gold": "Notices"
+  },
+  "w0829": {
+   "anchor": "Capitalization",
+   "kind": "gold",
+   "gold": "Capitalization"
+  },
+  "w0830": {
+   "anchor": "Defined Terms",
+   "kind": "A_disputed",
+   "gold": "General"
+  },
+  "w0831": {
+   "anchor": "Binding Effects",
+   "kind": "E_disputed",
+   "gold": "Assignments"
+  },
+  "w0832": {
+   "anchor": "Organizations",
+   "kind": "E_disputed",
+   "gold": "Existence"
+  },
+  "w0833": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Payments"
+  },
+  "w0834": {
+   "anchor": "Construction",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0835": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0836": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "E_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0837": {
+   "anchor": "Enforceability",
+   "kind": "A_disputed",
+   "gold": "Compliance With Laws"
+  },
+  "w0838": {
+   "anchor": "Anti-Corruption Laws",
+   "kind": "near",
+   "gold": "Compliance With Laws"
+  },
+  "w0839": {
+   "anchor": "Benefits",
+   "kind": "E_disputed",
+   "gold": "General"
+  },
+  "w0840": {
+   "anchor": "Enforceability",
+   "kind": "E_disputed",
+   "gold": "Binding Effects"
+  },
+  "w0841": {
+   "anchor": "Releases",
+   "kind": "A_disputed",
+   "gold": "Counterparts"
+  }
+ },
+ "members": {
+  "Anti-Corruption Laws": {
+   "E_total": 165,
+   "E_gold": 96,
+   "E_disputed": 69,
+   "A_total": 257,
+   "A_gold": 100,
+   "A_disputed": 157,
+   "gold_nonmembers": 10,
+   "near_count": 473,
+   "far_count": 59352,
+   "hard_type": "Sanctions"
+  },
+  "Assigns": {
+   "E_total": 0,
+   "E_gold": 0,
+   "E_disputed": 0,
+   "A_total": 339,
+   "A_gold": 0,
+   "A_disputed": 339,
+   "gold_nonmembers": 31,
+   "near_count": 0,
+   "far_count": 59969,
+   "hard_type": "Binding Effects"
+  },
+  "Benefits": {
+   "E_total": 239,
+   "E_gold": 189,
+   "E_disputed": 50,
+   "A_total": 295,
+   "A_gold": 199,
+   "A_disputed": 96,
+   "gold_nonmembers": 208,
+   "near_count": 1398,
+   "far_count": 58115,
+   "hard_type": "Disability"
+  },
+  "Binding Effects": {
+   "E_total": 535,
+   "E_gold": 246,
+   "E_disputed": 289,
+   "A_total": 0,
+   "A_gold": 0,
+   "A_disputed": 0,
+   "gold_nonmembers": 342,
+   "near_count": 1141,
+   "far_count": 57981,
+   "hard_type": "Assigns"
+  },
+  "Capitalization": {
+   "E_total": 341,
+   "E_gold": 339,
+   "E_disputed": 2,
+   "A_total": 769,
+   "A_gold": 134,
+   "A_disputed": 635,
+   "gold_nonmembers": 95,
+   "near_count": 948,
+   "far_count": 58610,
+   "hard_type": "Subsidiaries"
+  },
+  "Confidentiality": {
+   "E_total": 811,
+   "E_gold": 662,
+   "E_disputed": 149,
+   "A_total": 1204,
+   "A_gold": 783,
+   "A_disputed": 421,
+   "gold_nonmembers": 350,
+   "near_count": 1275,
+   "far_count": 57564,
+   "hard_type": "Publicity"
+  },
+  "Construction": {
+   "E_total": 29,
+   "E_gold": 6,
+   "E_disputed": 23,
+   "A_total": 20,
+   "A_gold": 6,
+   "A_disputed": 14,
+   "gold_nonmembers": 400,
+   "near_count": 381,
+   "far_count": 59182,
+   "hard_type": "Miscellaneous"
+  },
+  "Defined Terms": {
+   "E_total": 561,
+   "E_gold": 227,
+   "E_disputed": 334,
+   "A_total": 287,
+   "A_gold": 48,
+   "A_disputed": 239,
+   "gold_nonmembers": 127,
+   "near_count": 812,
+   "far_count": 58462,
+   "hard_type": "Miscellaneous"
+  },
+  "Disability": {
+   "E_total": 236,
+   "E_gold": 204,
+   "E_disputed": 32,
+   "A_total": 191,
+   "A_gold": 179,
+   "A_disputed": 12,
+   "gold_nonmembers": 59,
+   "near_count": 1159,
+   "far_count": 58493,
+   "hard_type": "Benefits"
+  },
+  "Enforceability": {
+   "E_total": 263,
+   "E_gold": 108,
+   "E_disputed": 155,
+   "A_total": 2658,
+   "A_gold": 182,
+   "A_disputed": 2476,
+   "gold_nonmembers": 136,
+   "near_count": 1451,
+   "far_count": 58148,
+   "hard_type": "Authorizations"
+  },
+  "Insurances": {
+   "E_total": 904,
+   "E_gold": 882,
+   "E_disputed": 22,
+   "A_total": 1097,
+   "A_gold": 988,
+   "A_disputed": 109,
+   "gold_nonmembers": 222,
+   "near_count": 313,
+   "far_count": 58557,
+   "hard_type": "Indemnifications"
+  },
+  "Litigations": {
+   "E_total": 352,
+   "E_gold": 345,
+   "E_disputed": 7,
+   "A_total": 3904,
+   "A_gold": 287,
+   "A_disputed": 3617,
+   "gold_nonmembers": 689,
+   "near_count": 652,
+   "far_count": 58306,
+   "hard_type": "Compliance With Laws"
+  },
+  "Miscellaneous": {
+   "E_total": 374,
+   "E_gold": 30,
+   "E_disputed": 344,
+   "A_total": 0,
+   "A_gold": 0,
+   "A_disputed": 0,
+   "gold_nonmembers": 449,
+   "near_count": 3195,
+   "far_count": 55909,
+   "hard_type": "Modifications"
+  },
+  "Organizations": {
+   "E_total": 244,
+   "E_gold": 192,
+   "E_disputed": 52,
+   "A_total": 9,
+   "A_gold": 4,
+   "A_disputed": 5,
+   "gold_nonmembers": 217,
+   "near_count": 479,
+   "far_count": 59060,
+   "hard_type": "Qualifications"
+  },
+  "Releases": {
+   "E_total": 153,
+   "E_gold": 93,
+   "E_disputed": 60,
+   "A_total": 108,
+   "A_gold": 29,
+   "A_disputed": 79,
+   "gold_nonmembers": 528,
+   "near_count": 1264,
+   "far_count": 58050,
+   "hard_type": "General"
+  },
+  "Titles": {
+   "E_total": 531,
+   "E_gold": 28,
+   "E_disputed": 503,
+   "A_total": 75,
+   "A_gold": 33,
+   "A_disputed": 42,
+   "gold_nonmembers": 289,
+   "near_count": 1035,
+   "far_count": 58123,
+   "hard_type": "Liens"
+  },
+  "Vacations": {
+   "E_total": 342,
+   "E_gold": 324,
+   "E_disputed": 18,
+   "A_total": 321,
+   "A_gold": 315,
+   "A_disputed": 6,
+   "gold_nonmembers": 17,
+   "near_count": 888,
+   "far_count": 58741,
+   "hard_type": "Benefits"
+  },
+  "Waiver Of Jury Trials": {
+   "E_total": 738,
+   "E_gold": 699,
+   "E_disputed": 39,
+   "A_total": 767,
+   "A_gold": 693,
+   "A_disputed": 74,
+   "gold_nonmembers": 69,
+   "near_count": 586,
+   "far_count": 58605,
+   "hard_type": "Jurisdictions"
+  },
+  "Waivers": {
+   "E_total": 724,
+   "E_gold": 379,
+   "E_disputed": 345,
+   "A_total": 98,
+   "A_gold": 50,
+   "A_disputed": 48,
+   "gold_nonmembers": 499,
+   "near_count": 1180,
+   "far_count": 57459,
+   "hard_type": "Modifications"
+  },
+  "Withholdings": {
+   "E_total": 940,
+   "E_gold": 440,
+   "E_disputed": 500,
+   "A_total": 2134,
+   "A_gold": 493,
+   "A_disputed": 1641,
+   "gold_nonmembers": 77,
+   "near_count": 617,
+   "far_count": 58366,
+   "hard_type": "General"
+  }
+ }
+}

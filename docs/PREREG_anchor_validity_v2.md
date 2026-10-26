@@ -60,3 +60,9 @@ decoy acceptance per judge, label precision and recall, per-anchor table, the ei
 ## Deviations
 
 Any deviation from this document is written below with its reason and time, before the scores are computed.
+
+- 2026-10-25, before any verdict was returned or any score computed: J1 runs on Claude Opus and J2 on Claude Sonnet
+  (the protocol said only "two Claude subagents"), so the two judges are different models and their agreement is a
+  stronger reliability check. Each judge reads all 842 items in 4 batches of about 210 (context size); batches are
+  merged per judge before scoring. Items: 842 (E disputed 264, A disputed 171, gold 57, random 60, hard 60, near
+  190, far 40; fewer than planned where an anchor had fewer candidates).

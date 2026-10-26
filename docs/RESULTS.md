@@ -390,3 +390,31 @@ what a sampled clause DOES; an anchor is kept if >= 70% of its 15 sampled member
   judge), none meets precision. Standing: anchors are safe to SUGGEST vocabulary and to find where a playbook term
   lands (D rejects fakes and keeps collateral at 2%), but they do not yet give a precise taxonomy in the company's
   own words. Untested knob, recorded not run: a stronger judge (27B or frontier) with a larger sample per anchor.
+
+### Condition E: anchor plus human picks (2026-10-25, `anchor_feedback_test.py`, `anchor_feedback_results.json`)
+
+Owner's correction after D: the anchor is not meant to work alone; once set, the human picks which clauses match it
+in the company's sense. Pre-registered: simulated human (yes iff exact hidden type), 10 candidates per round (first
+round by name similarity, later rounds by a logistic regression on the ticks), clause joins its best anchor at
+p >= 0.5. Same 20 random anchors.
+
+| picks per anchor | precision (median) | recall (median) | collateral | random-candidate control: recall |
+|---|---|---|---|---|
+| 10 | 0.49 | 0.27 | 3.8% | 0.00 (16 of 20 anchors never see a positive) |
+| **20 (gated)** | **0.54 FAIL** | **0.37 FAIL** | **3.4% PASS** | 0.00 |
+| 40 | 0.57 | 0.51 | 4.3% | 0.00 |
+
+F4 placebos end empty: PASS (2 of 2). Against the machine alone (A: 0.37 / 0.35 / 21%), every measure improves.
+
+- The anchor name is what makes the picks count: with random candidates, the same budget almost never shows the
+  human a single positive (recall 0 at every budget).
+- At 20 picks, 9 of 20 anchors reach precision >= 0.70 (Notices 0.99, Disclosures 0.96, Terms 0.94, Survival 0.92,
+  Subsidiaries 0.85, Change In Control 0.83, IP 0.82, Arbitration 0.78, Liens 0.70); IP, Arbitration, Notices and
+  Subsidiaries also reach recall >= 0.50.
+- Failures are rare types (Books 23 clauses, Qualifications 47, Existence 258) and overlapping types (No Waivers vs
+  Waivers, Duties vs Positions). The simulated human is strict (exact type); a real team that treats Waivers and No
+  Waivers as one concept would score higher, so this is a lower bound for overlapping vocabularies.
+- Standing: "set an anchor, then pick what matches it in your company's sense" is the right design and is safe
+  (collateral under 5%, fakes stay empty), but 20 picks per concept do not reach the pre-registered precision and
+  recall; 40 picks reach the recall bar, not the precision bar. Not yet tested: smarter candidate choice (show the
+  most uncertain clauses, not only the top-rated), and a real person instead of the label oracle.

@@ -1,0 +1,172 @@
+{
+ "judge_accepts_gold": 0.949,
+ "judge_rejects_random": 0.95,
+ "per_anchor": [
+  {
+   "anchor": "Amendments",
+   "members": 4,
+   "label_precision": 0.5,
+   "disputed_valid_rate": 0.0,
+   "disputed_judged": 2,
+   "validity_precision": 0.5
+  },
+  {
+   "anchor": "Arbitration",
+   "members": 456,
+   "label_precision": 0.783,
+   "disputed_valid_rate": 0.75,
+   "disputed_judged": 8,
+   "validity_precision": 0.946
+  },
+  {
+   "anchor": "Authority",
+   "members": 223,
+   "label_precision": 0.552,
+   "disputed_valid_rate": 0.625,
+   "disputed_judged": 8,
+   "validity_precision": 0.832
+  },
+  {
+   "anchor": "Books",
+   "members": 58,
+   "label_precision": 0.172,
+   "disputed_valid_rate": 0.5,
+   "disputed_judged": 8,
+   "validity_precision": 0.586
+  },
+  {
+   "anchor": "Change In Control",
+   "members": 172,
+   "label_precision": 0.831,
+   "disputed_valid_rate": 0.5,
+   "disputed_judged": 8,
+   "validity_precision": 0.916
+  },
+  {
+   "anchor": "Definitions",
+   "members": 302,
+   "label_precision": 0.44,
+   "disputed_valid_rate": 0.75,
+   "disputed_judged": 8,
+   "validity_precision": 0.86
+  },
+  {
+   "anchor": "Disclosures",
+   "members": 199,
+   "label_precision": 0.96,
+   "disputed_valid_rate": 0.5,
+   "disputed_judged": 8,
+   "validity_precision": 0.98
+  },
+  {
+   "anchor": "Duties",
+   "members": 575,
+   "label_precision": 0.398,
+   "disputed_valid_rate": 0.375,
+   "disputed_judged": 8,
+   "validity_precision": 0.624
+  },
+  {
+   "anchor": "Existence",
+   "members": 13,
+   "label_precision": 0.077,
+   "disputed_valid_rate": 1.0,
+   "disputed_judged": 8,
+   "validity_precision": 1.0
+  },
+  {
+   "anchor": "Intellectual Property",
+   "members": 501,
+   "label_precision": 0.824,
+   "disputed_valid_rate": 0.875,
+   "disputed_judged": 8,
+   "validity_precision": 0.978
+  },
+  {
+   "anchor": "Liens",
+   "members": 218,
+   "label_precision": 0.697,
+   "disputed_valid_rate": 0.75,
+   "disputed_judged": 8,
+   "validity_precision": 0.924
+  },
+  {
+   "anchor": "No Waivers",
+   "members": 487,
+   "label_precision": 0.339,
+   "disputed_valid_rate": 1.0,
+   "disputed_judged": 8,
+   "validity_precision": 1.0
+  },
+  {
+   "anchor": "Notices",
+   "members": 1607,
+   "label_precision": 0.986,
+   "disputed_valid_rate": 0.875,
+   "disputed_judged": 8,
+   "validity_precision": 0.998
+  },
+  {
+   "anchor": "Payments",
+   "members": 296,
+   "label_precision": 0.527,
+   "disputed_valid_rate": 0.5,
+   "disputed_judged": 8,
+   "validity_precision": 0.764
+  },
+  {
+   "anchor": "Positions",
+   "members": 280,
+   "label_precision": 0.25,
+   "disputed_valid_rate": 0.75,
+   "disputed_judged": 8,
+   "validity_precision": 0.812
+  },
+  {
+   "anchor": "Qualifications",
+   "members": 34,
+   "label_precision": 0.059,
+   "disputed_valid_rate": 0.375,
+   "disputed_judged": 8,
+   "validity_precision": 0.412
+  },
+  {
+   "anchor": "Remedies",
+   "members": 86,
+   "label_precision": 0.523,
+   "disputed_valid_rate": 1.0,
+   "disputed_judged": 8,
+   "validity_precision": 1.0
+  },
+  {
+   "anchor": "Subsidiaries",
+   "members": 335,
+   "label_precision": 0.851,
+   "disputed_valid_rate": 0.25,
+   "disputed_judged": 8,
+   "validity_precision": 0.888
+  },
+  {
+   "anchor": "Survival",
+   "members": 782,
+   "label_precision": 0.921,
+   "disputed_valid_rate": 0.875,
+   "disputed_judged": 8,
+   "validity_precision": 0.99
+  },
+  {
+   "anchor": "Terms",
+   "members": 463,
+   "label_precision": 0.942,
+   "disputed_valid_rate": 0.625,
+   "disputed_judged": 8,
+   "validity_precision": 0.978
+  }
+ ],
+ "median_validity_precision": 0.92,
+ "median_label_precision": 0.54,
+ "gates": {
+  "V0_judge_trust": "PASS",
+  "V1_validity_precision": "PASS"
+ }
+}

@@ -1,0 +1,1271 @@
+{
+ "key": {
+  "v000": {
+   "kind": "gold",
+   "gold": "Definitions",
+   "anchor": "Definitions"
+  },
+  "v001": {
+   "kind": "disputed",
+   "gold": "Disclosures",
+   "anchor": "Intellectual Property"
+  },
+  "v002": {
+   "kind": "gold",
+   "gold": "Intellectual Property",
+   "anchor": "Intellectual Property"
+  },
+  "v003": {
+   "kind": "disputed",
+   "gold": "Assignments",
+   "anchor": "Change In Control"
+  },
+  "v004": {
+   "kind": "random",
+   "gold": "Releases",
+   "anchor": "Amendments"
+  },
+  "v005": {
+   "kind": "disputed",
+   "gold": "General",
+   "anchor": "Positions"
+  },
+  "v006": {
+   "kind": "disputed",
+   "gold": "Specific Performance",
+   "anchor": "Remedies"
+  },
+  "v007": {
+   "kind": "disputed",
+   "gold": "No Waivers",
+   "anchor": "Remedies"
+  },
+  "v008": {
+   "kind": "disputed",
+   "gold": "Positions",
+   "anchor": "Duties"
+  },
+  "v009": {
+   "kind": "disputed",
+   "gold": "Warranties",
+   "anchor": "Intellectual Property"
+  },
+  "v010": {
+   "kind": "gold",
+   "gold": "Intellectual Property",
+   "anchor": "Intellectual Property"
+  },
+  "v011": {
+   "kind": "disputed",
+   "gold": "Assignments",
+   "anchor": "Intellectual Property"
+  },
+  "v012": {
+   "kind": "disputed",
+   "gold": "Governing Laws",
+   "anchor": "Arbitration"
+  },
+  "v013": {
+   "kind": "disputed",
+   "gold": "Warranties",
+   "anchor": "Disclosures"
+  },
+  "v014": {
+   "kind": "disputed",
+   "gold": "Representations",
+   "anchor": "Authority"
+  },
+  "v015": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Qualifications"
+  },
+  "v016": {
+   "kind": "random",
+   "gold": "Further Assurances",
+   "anchor": "Notices"
+  },
+  "v017": {
+   "kind": "disputed",
+   "gold": "Existence",
+   "anchor": "Qualifications"
+  },
+  "v018": {
+   "kind": "disputed",
+   "gold": "Employment",
+   "anchor": "Terms"
+  },
+  "v019": {
+   "kind": "random",
+   "gold": "Construction",
+   "anchor": "Intellectual Property"
+  },
+  "v020": {
+   "kind": "disputed",
+   "gold": "Interests",
+   "anchor": "Payments"
+  },
+  "v021": {
+   "kind": "random",
+   "gold": "Terminations",
+   "anchor": "Authority"
+  },
+  "v022": {
+   "kind": "disputed",
+   "gold": "Defined Terms",
+   "anchor": "Definitions"
+  },
+  "v023": {
+   "kind": "gold",
+   "gold": "Definitions",
+   "anchor": "Definitions"
+  },
+  "v024": {
+   "kind": "random",
+   "gold": "Counterparts",
+   "anchor": "Remedies"
+  },
+  "v025": {
+   "kind": "disputed",
+   "gold": "Representations",
+   "anchor": "Disclosures"
+  },
+  "v026": {
+   "kind": "disputed",
+   "gold": "Enforceability",
+   "anchor": "Authority"
+  },
+  "v027": {
+   "kind": "disputed",
+   "gold": "Powers",
+   "anchor": "Authority"
+  },
+  "v028": {
+   "kind": "gold",
+   "gold": "Terms",
+   "anchor": "Terms"
+  },
+  "v029": {
+   "kind": "random",
+   "gold": "Expenses",
+   "anchor": "Notices"
+  },
+  "v030": {
+   "kind": "random",
+   "gold": "Terminations",
+   "anchor": "Disclosures"
+  },
+  "v031": {
+   "kind": "random",
+   "gold": "Severability",
+   "anchor": "No Waivers"
+  },
+  "v032": {
+   "kind": "random",
+   "gold": "Entire Agreements",
+   "anchor": "Books"
+  },
+  "v033": {
+   "kind": "disputed",
+   "gold": "Defined Terms",
+   "anchor": "Definitions"
+  },
+  "v034": {
+   "kind": "disputed",
+   "gold": "Financial Statements",
+   "anchor": "Books"
+  },
+  "v035": {
+   "kind": "disputed",
+   "gold": "Vesting",
+   "anchor": "Change In Control"
+  },
+  "v036": {
+   "kind": "disputed",
+   "gold": "Titles",
+   "anchor": "Liens"
+  },
+  "v037": {
+   "kind": "disputed",
+   "gold": "Taxes",
+   "anchor": "Payments"
+  },
+  "v038": {
+   "kind": "disputed",
+   "gold": "Representations",
+   "anchor": "Disclosures"
+  },
+  "v039": {
+   "kind": "gold",
+   "gold": "Payments",
+   "anchor": "Payments"
+  },
+  "v040": {
+   "kind": "disputed",
+   "gold": "Positions",
+   "anchor": "Duties"
+  },
+  "v041": {
+   "kind": "gold",
+   "gold": "Subsidiaries",
+   "anchor": "Subsidiaries"
+  },
+  "v042": {
+   "kind": "random",
+   "gold": "Counterparts",
+   "anchor": "Payments"
+  },
+  "v043": {
+   "kind": "gold",
+   "gold": "Amendments",
+   "anchor": "Amendments"
+  },
+  "v044": {
+   "kind": "disputed",
+   "gold": "Titles",
+   "anchor": "Liens"
+  },
+  "v045": {
+   "kind": "gold",
+   "gold": "Survival",
+   "anchor": "Survival"
+  },
+  "v046": {
+   "kind": "disputed",
+   "gold": "Assignments",
+   "anchor": "Intellectual Property"
+  },
+  "v047": {
+   "kind": "disputed",
+   "gold": "Financial Statements",
+   "anchor": "Books"
+  },
+  "v048": {
+   "kind": "disputed",
+   "gold": "Representations",
+   "anchor": "Survival"
+  },
+  "v049": {
+   "kind": "disputed",
+   "gold": "Taxes",
+   "anchor": "Payments"
+  },
+  "v050": {
+   "kind": "random",
+   "gold": "Litigations",
+   "anchor": "Change In Control"
+  },
+  "v051": {
+   "kind": "disputed",
+   "gold": "Effective Dates",
+   "anchor": "Terms"
+  },
+  "v052": {
+   "kind": "disputed",
+   "gold": "Titles",
+   "anchor": "Positions"
+  },
+  "v053": {
+   "kind": "disputed",
+   "gold": "Representations",
+   "anchor": "Disclosures"
+  },
+  "v054": {
+   "kind": "random",
+   "gold": "Assignments",
+   "anchor": "Positions"
+  },
+  "v055": {
+   "kind": "disputed",
+   "gold": "Titles",
+   "anchor": "Liens"
+  },
+  "v056": {
+   "kind": "disputed",
+   "gold": "Fees",
+   "anchor": "Remedies"
+  },
+  "v057": {
+   "kind": "gold",
+   "gold": "Change In Control",
+   "anchor": "Change In Control"
+  },
+  "v058": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Subsidiaries"
+  },
+  "v059": {
+   "kind": "disputed",
+   "gold": "Records",
+   "anchor": "Books"
+  },
+  "v060": {
+   "kind": "disputed",
+   "gold": "General",
+   "anchor": "Notices"
+  },
+  "v061": {
+   "kind": "disputed",
+   "gold": "Authorizations",
+   "anchor": "Authority"
+  },
+  "v062": {
+   "kind": "random",
+   "gold": "Governing Laws",
+   "anchor": "Subsidiaries"
+  },
+  "v063": {
+   "kind": "random",
+   "gold": "Counterparts",
+   "anchor": "Liens"
+  },
+  "v064": {
+   "kind": "disputed",
+   "gold": "Warranties",
+   "anchor": "Survival"
+  },
+  "v065": {
+   "kind": "gold",
+   "gold": "Qualifications",
+   "anchor": "Qualifications"
+  },
+  "v066": {
+   "kind": "disputed",
+   "gold": "Amendments",
+   "anchor": "Change In Control"
+  },
+  "v067": {
+   "kind": "random",
+   "gold": "Construction",
+   "anchor": "Liens"
+  },
+  "v068": {
+   "kind": "disputed",
+   "gold": "Warranties",
+   "anchor": "Disclosures"
+  },
+  "v069": {
+   "kind": "disputed",
+   "gold": "Effective Dates",
+   "anchor": "Definitions"
+  },
+  "v070": {
+   "kind": "random",
+   "gold": "Representations",
+   "anchor": "Existence"
+  },
+  "v071": {
+   "kind": "gold",
+   "gold": "Positions",
+   "anchor": "Positions"
+  },
+  "v072": {
+   "kind": "disputed",
+   "gold": "Representations",
+   "anchor": "Survival"
+  },
+  "v073": {
+   "kind": "disputed",
+   "gold": "Subsidiaries",
+   "anchor": "Liens"
+  },
+  "v074": {
+   "kind": "disputed",
+   "gold": "Publicity",
+   "anchor": "Disclosures"
+  },
+  "v075": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Existence"
+  },
+  "v076": {
+   "kind": "disputed",
+   "gold": "General",
+   "anchor": "Positions"
+  },
+  "v077": {
+   "kind": "disputed",
+   "gold": "Transactions With Affiliates",
+   "anchor": "Subsidiaries"
+  },
+  "v078": {
+   "kind": "disputed",
+   "gold": "Fees",
+   "anchor": "Payments"
+  },
+  "v079": {
+   "kind": "disputed",
+   "gold": "Waivers",
+   "anchor": "No Waivers"
+  },
+  "v080": {
+   "kind": "disputed",
+   "gold": "Confidentiality",
+   "anchor": "Arbitration"
+  },
+  "v081": {
+   "kind": "disputed",
+   "gold": "Titles",
+   "anchor": "Liens"
+  },
+  "v082": {
+   "kind": "gold",
+   "gold": "Notices",
+   "anchor": "Notices"
+  },
+  "v083": {
+   "kind": "random",
+   "gold": "Enforceability",
+   "anchor": "Positions"
+  },
+  "v084": {
+   "kind": "disputed",
+   "gold": "Waivers",
+   "anchor": "No Waivers"
+  },
+  "v085": {
+   "kind": "disputed",
+   "gold": "Waivers",
+   "anchor": "No Waivers"
+  },
+  "v086": {
+   "kind": "random",
+   "gold": "Insurances",
+   "anchor": "Arbitration"
+  },
+  "v087": {
+   "kind": "disputed",
+   "gold": "Representations",
+   "anchor": "Disclosures"
+  },
+  "v088": {
+   "kind": "disputed",
+   "gold": "Terms",
+   "anchor": "Survival"
+  },
+  "v089": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Subsidiaries"
+  },
+  "v090": {
+   "kind": "disputed",
+   "gold": "General",
+   "anchor": "Notices"
+  },
+  "v091": {
+   "kind": "random",
+   "gold": "Governing Laws",
+   "anchor": "Disclosures"
+  },
+  "v092": {
+   "kind": "disputed",
+   "gold": "Assignments",
+   "anchor": "Intellectual Property"
+  },
+  "v093": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Existence"
+  },
+  "v094": {
+   "kind": "disputed",
+   "gold": "Survival",
+   "anchor": "Terms"
+  },
+  "v095": {
+   "kind": "random",
+   "gold": "Insurances",
+   "anchor": "Amendments"
+  },
+  "v096": {
+   "kind": "gold",
+   "gold": "Existence",
+   "anchor": "Existence"
+  },
+  "v097": {
+   "kind": "disputed",
+   "gold": "No Waivers",
+   "anchor": "Remedies"
+  },
+  "v098": {
+   "kind": "disputed",
+   "gold": "Interests",
+   "anchor": "Arbitration"
+  },
+  "v099": {
+   "kind": "disputed",
+   "gold": "Employment",
+   "anchor": "Positions"
+  },
+  "v100": {
+   "kind": "gold",
+   "gold": "Payments",
+   "anchor": "Payments"
+  },
+  "v101": {
+   "kind": "disputed",
+   "gold": "Assignments",
+   "anchor": "Authority"
+  },
+  "v102": {
+   "kind": "disputed",
+   "gold": "Records",
+   "anchor": "Books"
+  },
+  "v103": {
+   "kind": "disputed",
+   "gold": "Amendments",
+   "anchor": "Change In Control"
+  },
+  "v104": {
+   "kind": "gold",
+   "gold": "Amendments",
+   "anchor": "Amendments"
+  },
+  "v105": {
+   "kind": "disputed",
+   "gold": "Waivers",
+   "anchor": "No Waivers"
+  },
+  "v106": {
+   "kind": "disputed",
+   "gold": "Base Salary",
+   "anchor": "Duties"
+  },
+  "v107": {
+   "kind": "disputed",
+   "gold": "Severability",
+   "anchor": "Remedies"
+  },
+  "v108": {
+   "kind": "gold",
+   "gold": "Remedies",
+   "anchor": "Remedies"
+  },
+  "v109": {
+   "kind": "gold",
+   "gold": "Duties",
+   "anchor": "Duties"
+  },
+  "v110": {
+   "kind": "disputed",
+   "gold": "Interests",
+   "anchor": "Payments"
+  },
+  "v111": {
+   "kind": "random",
+   "gold": "Assignments",
+   "anchor": "Duties"
+  },
+  "v112": {
+   "kind": "gold",
+   "gold": "Arbitration",
+   "anchor": "Arbitration"
+  },
+  "v113": {
+   "kind": "disputed",
+   "gold": "Financial Statements",
+   "anchor": "Books"
+  },
+  "v114": {
+   "kind": "disputed",
+   "gold": "General",
+   "anchor": "Terms"
+  },
+  "v115": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Qualifications"
+  },
+  "v116": {
+   "kind": "gold",
+   "gold": "Notices",
+   "anchor": "Notices"
+  },
+  "v117": {
+   "kind": "disputed",
+   "gold": "Defined Terms",
+   "anchor": "Definitions"
+  },
+  "v118": {
+   "kind": "random",
+   "gold": "Adjustments",
+   "anchor": "Definitions"
+  },
+  "v119": {
+   "kind": "disputed",
+   "gold": "Warranties",
+   "anchor": "Survival"
+  },
+  "v120": {
+   "kind": "disputed",
+   "gold": "Representations",
+   "anchor": "Disclosures"
+  },
+  "v121": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Qualifications"
+  },
+  "v122": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Qualifications"
+  },
+  "v123": {
+   "kind": "random",
+   "gold": "Waivers",
+   "anchor": "Definitions"
+  },
+  "v124": {
+   "kind": "gold",
+   "gold": "Books",
+   "anchor": "Books"
+  },
+  "v125": {
+   "kind": "disputed",
+   "gold": "Compliance With Laws",
+   "anchor": "Subsidiaries"
+  },
+  "v126": {
+   "kind": "disputed",
+   "gold": "Fees",
+   "anchor": "Remedies"
+  },
+  "v127": {
+   "kind": "disputed",
+   "gold": "Expenses",
+   "anchor": "Duties"
+  },
+  "v128": {
+   "kind": "gold",
+   "gold": "Arbitration",
+   "anchor": "Arbitration"
+  },
+  "v129": {
+   "kind": "disputed",
+   "gold": "Consent To Jurisdiction",
+   "anchor": "Arbitration"
+  },
+  "v130": {
+   "kind": "disputed",
+   "gold": "Titles",
+   "anchor": "Liens"
+  },
+  "v131": {
+   "kind": "gold",
+   "gold": "Disclosures",
+   "anchor": "Disclosures"
+  },
+  "v132": {
+   "kind": "random",
+   "gold": "Vacations",
+   "anchor": "Books"
+  },
+  "v133": {
+   "kind": "disputed",
+   "gold": "Effective Dates",
+   "anchor": "Terms"
+  },
+  "v134": {
+   "kind": "disputed",
+   "gold": "Waivers",
+   "anchor": "No Waivers"
+  },
+  "v135": {
+   "kind": "disputed",
+   "gold": "Base Salary",
+   "anchor": "Duties"
+  },
+  "v136": {
+   "kind": "disputed",
+   "gold": "Employment",
+   "anchor": "Positions"
+  },
+  "v137": {
+   "kind": "gold",
+   "gold": "Survival",
+   "anchor": "Survival"
+  },
+  "v138": {
+   "kind": "gold",
+   "gold": "Liens",
+   "anchor": "Liens"
+  },
+  "v139": {
+   "kind": "random",
+   "gold": "Taxes",
+   "anchor": "Authority"
+  },
+  "v140": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Qualifications"
+  },
+  "v141": {
+   "kind": "disputed",
+   "gold": "Waivers",
+   "anchor": "Notices"
+  },
+  "v142": {
+   "kind": "random",
+   "gold": "Consents",
+   "anchor": "Terms"
+  },
+  "v143": {
+   "kind": "gold",
+   "gold": "Disclosures",
+   "anchor": "Disclosures"
+  },
+  "v144": {
+   "kind": "disputed",
+   "gold": "Confidentiality",
+   "anchor": "Intellectual Property"
+  },
+  "v145": {
+   "kind": "random",
+   "gold": "Integration",
+   "anchor": "Qualifications"
+  },
+  "v146": {
+   "kind": "disputed",
+   "gold": "Sales",
+   "anchor": "Liens"
+  },
+  "v147": {
+   "kind": "random",
+   "gold": "Representations",
+   "anchor": "Duties"
+  },
+  "v148": {
+   "kind": "disputed",
+   "gold": "Financial Statements",
+   "anchor": "Books"
+  },
+  "v149": {
+   "kind": "disputed",
+   "gold": "Taxes",
+   "anchor": "Subsidiaries"
+  },
+  "v150": {
+   "kind": "gold",
+   "gold": "Qualifications",
+   "anchor": "Qualifications"
+  },
+  "v151": {
+   "kind": "disputed",
+   "gold": "Employment",
+   "anchor": "Positions"
+  },
+  "v152": {
+   "kind": "gold",
+   "gold": "No Waivers",
+   "anchor": "No Waivers"
+  },
+  "v153": {
+   "kind": "disputed",
+   "gold": "Applicable Laws",
+   "anchor": "Change In Control"
+  },
+  "v154": {
+   "kind": "disputed",
+   "gold": "Employment",
+   "anchor": "Terms"
+  },
+  "v155": {
+   "kind": "disputed",
+   "gold": "Terms",
+   "anchor": "Payments"
+  },
+  "v156": {
+   "kind": "disputed",
+   "gold": "Construction",
+   "anchor": "Definitions"
+  },
+  "v157": {
+   "kind": "disputed",
+   "gold": "Authorizations",
+   "anchor": "Authority"
+  },
+  "v158": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Existence"
+  },
+  "v159": {
+   "kind": "gold",
+   "gold": "Authority",
+   "anchor": "Authority"
+  },
+  "v160": {
+   "kind": "disputed",
+   "gold": "Waivers",
+   "anchor": "Remedies"
+  },
+  "v161": {
+   "kind": "disputed",
+   "gold": "Effectiveness",
+   "anchor": "Survival"
+  },
+  "v162": {
+   "kind": "gold",
+   "gold": "No Waivers",
+   "anchor": "No Waivers"
+  },
+  "v163": {
+   "kind": "disputed",
+   "gold": "Financial Statements",
+   "anchor": "Books"
+  },
+  "v164": {
+   "kind": "gold",
+   "gold": "Authority",
+   "anchor": "Authority"
+  },
+  "v165": {
+   "kind": "disputed",
+   "gold": "Waiver Of Jury Trials",
+   "anchor": "Arbitration"
+  },
+  "v166": {
+   "kind": "disputed",
+   "gold": "Costs",
+   "anchor": "Arbitration"
+  },
+  "v167": {
+   "kind": "gold",
+   "gold": "Terms",
+   "anchor": "Terms"
+  },
+  "v168": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Existence"
+  },
+  "v169": {
+   "kind": "random",
+   "gold": "Successors",
+   "anchor": "Qualifications"
+  },
+  "v170": {
+   "kind": "disputed",
+   "gold": "Fees",
+   "anchor": "Payments"
+  },
+  "v171": {
+   "kind": "disputed",
+   "gold": "Interpretations",
+   "anchor": "Definitions"
+  },
+  "v172": {
+   "kind": "disputed",
+   "gold": "General",
+   "anchor": "Notices"
+  },
+  "v173": {
+   "kind": "gold",
+   "gold": "Change In Control",
+   "anchor": "Change In Control"
+  },
+  "v174": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Subsidiaries"
+  },
+  "v175": {
+   "kind": "disputed",
+   "gold": "Definitions",
+   "anchor": "Change In Control"
+  },
+  "v176": {
+   "kind": "gold",
+   "gold": "Remedies",
+   "anchor": "Remedies"
+  },
+  "v177": {
+   "kind": "disputed",
+   "gold": "Interpretations",
+   "anchor": "Definitions"
+  },
+  "v178": {
+   "kind": "random",
+   "gold": "Compliance With Laws",
+   "anchor": "Terms"
+  },
+  "v179": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Existence"
+  },
+  "v180": {
+   "kind": "random",
+   "gold": "Base Salary",
+   "anchor": "Arbitration"
+  },
+  "v181": {
+   "kind": "disputed",
+   "gold": "Miscellaneous",
+   "anchor": "Notices"
+  },
+  "v182": {
+   "kind": "gold",
+   "gold": "Liens",
+   "anchor": "Liens"
+  },
+  "v183": {
+   "kind": "random",
+   "gold": "Entire Agreements",
+   "anchor": "Subsidiaries"
+  },
+  "v184": {
+   "kind": "disputed",
+   "gold": "Duties",
+   "anchor": "Positions"
+  },
+  "v185": {
+   "kind": "disputed",
+   "gold": "Amendments",
+   "anchor": "No Waivers"
+  },
+  "v186": {
+   "kind": "disputed",
+   "gold": "Terms",
+   "anchor": "Positions"
+  },
+  "v187": {
+   "kind": "disputed",
+   "gold": "Waivers",
+   "anchor": "Remedies"
+  },
+  "v188": {
+   "kind": "random",
+   "gold": "Counterparts",
+   "anchor": "Change In Control"
+  },
+  "v189": {
+   "kind": "disputed",
+   "gold": "General",
+   "anchor": "Payments"
+  },
+  "v190": {
+   "kind": "gold",
+   "gold": "Positions",
+   "anchor": "Positions"
+  },
+  "v191": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Existence"
+  },
+  "v192": {
+   "kind": "disputed",
+   "gold": "Interpretations",
+   "anchor": "Definitions"
+  },
+  "v193": {
+   "kind": "disputed",
+   "gold": "Taxes",
+   "anchor": "Liens"
+  },
+  "v194": {
+   "kind": "disputed",
+   "gold": "Authorizations",
+   "anchor": "Authority"
+  },
+  "v195": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Qualifications"
+  },
+  "v196": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Qualifications"
+  },
+  "v197": {
+   "kind": "disputed",
+   "gold": "General",
+   "anchor": "Notices"
+  },
+  "v198": {
+   "kind": "random",
+   "gold": "Compliance With Laws",
+   "anchor": "Survival"
+  },
+  "v199": {
+   "kind": "disputed",
+   "gold": "Cooperation",
+   "anchor": "Duties"
+  },
+  "v200": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Existence"
+  },
+  "v201": {
+   "kind": "random",
+   "gold": "Successors",
+   "anchor": "Survival"
+  },
+  "v202": {
+   "kind": "disputed",
+   "gold": "No Conflicts",
+   "anchor": "Authority"
+  },
+  "v203": {
+   "kind": "disputed",
+   "gold": "Adjustments",
+   "anchor": "Change In Control"
+  },
+  "v204": {
+   "kind": "disputed",
+   "gold": "Authority",
+   "anchor": "Existence"
+  },
+  "v205": {
+   "kind": "gold",
+   "gold": "Subsidiaries",
+   "anchor": "Subsidiaries"
+  },
+  "v206": {
+   "kind": "disputed",
+   "gold": "Amendments",
+   "anchor": "Change In Control"
+  },
+  "v207": {
+   "kind": "disputed",
+   "gold": "Terminations",
+   "anchor": "Survival"
+  },
+  "v208": {
+   "kind": "random",
+   "gold": "Binding Effects",
+   "anchor": "No Waivers"
+  },
+  "v209": {
+   "kind": "disputed",
+   "gold": "Positions",
+   "anchor": "Duties"
+  },
+  "v210": {
+   "kind": "random",
+   "gold": "Governing Laws",
+   "anchor": "Remedies"
+  },
+  "v211": {
+   "kind": "disputed",
+   "gold": "Counterparts",
+   "anchor": "Notices"
+  },
+  "v212": {
+   "kind": "disputed",
+   "gold": "Waivers",
+   "anchor": "No Waivers"
+  },
+  "v213": {
+   "kind": "random",
+   "gold": "Warranties",
+   "anchor": "Existence"
+  },
+  "v214": {
+   "kind": "disputed",
+   "gold": "Effectiveness",
+   "anchor": "Amendments"
+  },
+  "v215": {
+   "kind": "random",
+   "gold": "Fees",
+   "anchor": "Payments"
+  },
+  "v216": {
+   "kind": "disputed",
+   "gold": "Transactions With Affiliates",
+   "anchor": "Subsidiaries"
+  },
+  "v217": {
+   "kind": "disputed",
+   "gold": "Effective Dates",
+   "anchor": "Amendments"
+  },
+  "v218": {
+   "kind": "disputed",
+   "gold": "Terms",
+   "anchor": "Survival"
+  },
+  "v219": {
+   "kind": "disputed",
+   "gold": "Base Salary",
+   "anchor": "Duties"
+  },
+  "v220": {
+   "kind": "disputed",
+   "gold": "Organizations",
+   "anchor": "Subsidiaries"
+  },
+  "v221": {
+   "kind": "gold",
+   "gold": "Books",
+   "anchor": "Books"
+  },
+  "v222": {
+   "kind": "disputed",
+   "gold": "Effectiveness",
+   "anchor": "Terms"
+  },
+  "v223": {
+   "kind": "random",
+   "gold": "Binding Effects",
+   "anchor": "Intellectual Property"
+  },
+  "v224": {
+   "kind": "gold",
+   "gold": "Duties",
+   "anchor": "Duties"
+  },
+  "v225": {
+   "kind": "disputed",
+   "gold": "Miscellaneous",
+   "anchor": "Notices"
+  },
+  "v226": {
+   "kind": "disputed",
+   "gold": "Waivers",
+   "anchor": "No Waivers"
+  },
+  "v227": {
+   "kind": "disputed",
+   "gold": "Titles",
+   "anchor": "Intellectual Property"
+  },
+  "v228": {
+   "kind": "disputed",
+   "gold": "Records",
+   "anchor": "Books"
+  },
+  "v229": {
+   "kind": "disputed",
+   "gold": "Definitions",
+   "anchor": "Terms"
+  },
+  "v230": {
+   "kind": "disputed",
+   "gold": "Confidentiality",
+   "anchor": "Arbitration"
+  },
+  "v231": {
+   "kind": "disputed",
+   "gold": "Confidentiality",
+   "anchor": "Arbitration"
+  },
+  "v232": {
+   "kind": "disputed",
+   "gold": "Assignments",
+   "anchor": "Intellectual Property"
+  }
+ },
+ "members": {
+  "Amendments": {
+   "total": 4,
+   "gold_match": 2,
+   "disputed": 2
+  },
+  "Arbitration": {
+   "total": 456,
+   "gold_match": 357,
+   "disputed": 99
+  },
+  "Authority": {
+   "total": 223,
+   "gold_match": 123,
+   "disputed": 100
+  },
+  "Books": {
+   "total": 58,
+   "gold_match": 10,
+   "disputed": 48
+  },
+  "Change In Control": {
+   "total": 172,
+   "gold_match": 143,
+   "disputed": 29
+  },
+  "Definitions": {
+   "total": 302,
+   "gold_match": 133,
+   "disputed": 169
+  },
+  "Disclosures": {
+   "total": 199,
+   "gold_match": 191,
+   "disputed": 8
+  },
+  "Duties": {
+   "total": 575,
+   "gold_match": 229,
+   "disputed": 346
+  },
+  "Existence": {
+   "total": 13,
+   "gold_match": 1,
+   "disputed": 12
+  },
+  "Intellectual Property": {
+   "total": 501,
+   "gold_match": 413,
+   "disputed": 88
+  },
+  "Liens": {
+   "total": 218,
+   "gold_match": 152,
+   "disputed": 66
+  },
+  "No Waivers": {
+   "total": 487,
+   "gold_match": 165,
+   "disputed": 322
+  },
+  "Notices": {
+   "total": 1607,
+   "gold_match": 1584,
+   "disputed": 23
+  },
+  "Payments": {
+   "total": 296,
+   "gold_match": 156,
+   "disputed": 140
+  },
+  "Positions": {
+   "total": 280,
+   "gold_match": 70,
+   "disputed": 210
+  },
+  "Qualifications": {
+   "total": 34,
+   "gold_match": 2,
+   "disputed": 32
+  },
+  "Remedies": {
+   "total": 86,
+   "gold_match": 45,
+   "disputed": 41
+  },
+  "Subsidiaries": {
+   "total": 335,
+   "gold_match": 285,
+   "disputed": 50
+  },
+  "Survival": {
+   "total": 782,
+   "gold_match": 720,
+   "disputed": 62
+  },
+  "Terms": {
+   "total": 463,
+   "gold_match": 436,
+   "disputed": 27
+  }
+ }
+}

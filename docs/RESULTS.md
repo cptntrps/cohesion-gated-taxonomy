@@ -418,3 +418,27 @@ F4 placebos end empty: PASS (2 of 2). Against the machine alone (A: 0.37 / 0.35 
   (collateral under 5%, fakes stay empty), but 20 picks per concept do not reach the pre-registered precision and
   recall; 40 picks reach the recall bar, not the precision bar. Not yet tested: smarter candidate choice (show the
   most uncertain clauses, not only the top-rated), and a real person instead of the label oracle.
+
+### Condition E scored by validity, not label agreement (2026-10-25, `anchor_validity.py`, `anchor_validity_results.json`)
+
+Owner: "the question must not be if it found the same exact as the gold, but if it found valid ones." Pre-registered
+before judging: condition E at 20 picks; per anchor up to 8 disputed members (assigned, label differs), 2 label-matching
+members and 2 random clauses of unrelated types, 233 items shuffled and blind; two frontier-model judges (Claude
+subagents, half each) asked whether a legal team filing under the anchor would accept the clause there, by function,
+unclear = invalid; they were told not to open the key.
+
+| gate | result | pass |
+|---|---|---|
+| V0 judge trust: accepts label matches / rejects random | 94.9% / 95.0% | both >= 90% PASS |
+| V1 median validity precision | **0.92** (label precision 0.54) | >= 0.70 PASS |
+
+- 16 of 20 anchors reach >= 0.70 validity precision; No Waivers 0.34 by label is 1.00 valid (its "wrong" members are
+  Waivers clauses), Positions 0.25 -> 0.81, Definitions 0.44 -> 0.86, Authority 0.55 -> 0.83.
+- Still weak: Qualifications 0.41, Amendments 0.50 (4 members), Books 0.59, Duties 0.62.
+- Limits: 8 disputed items per anchor (each rate is +-~17 points); calibration negatives are easy (random unrelated
+  types), so the judge's leniency on near misses is not calibrated; the judges are the same model family as the
+  experimenter; recall is still measured against labels (0.37 median), and how many valid clauses each anchor missed
+  is unknown.
+- Standing: with an anchor plus 20 human picks per concept, about 9 in 10 of the clauses Nomen files under a
+  company's term are valid uses of that term (median, 16/20 concepts above 70%). The label-agreement scores of
+  conditions A-E understate validity because LEDGAR gives each clause one heading-derived type.

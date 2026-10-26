@@ -6,7 +6,7 @@
 pip install numpy scikit-learn scipy datasets torch geoopt
 ollama pull nomic-embed-text                  # local embeddings, $0
 export DEEPSEEK_API_KEY=...                   # any OpenAI-compatible chat endpoint
-export LEDGAR_EMB=/path/to/ledgar_emb.npz     # embeddings cache (built on first run)
+export COHESION_TAXONOMY_DATA=/path/to/data   # ledgar_emb.npz, tree.json, members.json live here (cohesion_taxonomy/paths.py); LEDGAR_EMB overrides the embedding file alone
 ```
 
 Datasets load from HuggingFace on first use: `MAdAiLab/lex_glue_ledgar`,
@@ -17,18 +17,18 @@ takes ~20–30 min once, then it is cached.
 
 | result | command | runtime |
 |---|---|---|
-| discovery tree + UI | `python3 build_tree.py && PORT=8799 python3 server.py` | ~3 min + serve |
-| headline extraction claim | `python3 hybrid_paired_test.py` | ~2 min (400 LLM calls) |
-| cluster-first vs read-all | `python3 extraction_validate.py` | ~3 min (190 calls) |
-| gold-free signal study | `python3 purity_probe.py` | ~1 min (no LLM) |
-| MAP vs EMERGE | `python3 compare_variants.py` | ~8 min (no LLM) |
-| naming conciseness | `python3 naming_conciseness.py` | ~2 min (160 calls) |
-| cross-domain: news | `python3 hier_validate.py` | ~4 min |
-| cross-domain: products | `python3 amazon_validate.py` | ~2 min |
-| geometry / anisotropy | `python3 amz_geometry.py` | ~1 min |
-| native hyperbolic | `python3 native_hyperbolic.py` | ~3 min (GPU) |
-| crystallization loop | `python3 crystallize_loop.py` | ~6 min (GPU) |
-| 600k-node storage test | `python3 tree_scale.py` | ~7 min (GPU) |
+| discovery tree + UI | `python -m cohesion_taxonomy.build_tree && python -m cohesion_taxonomy.server` | ~3 min + serve |
+| headline extraction claim | `python experiments/hybrid_paired_test.py` | ~2 min (400 LLM calls) |
+| cluster-first vs read-all | `python -m cohesion_taxonomy.extraction_validate` | ~3 min (190 calls) |
+| gold-free signal study | `python experiments/purity_probe.py` | ~1 min (no LLM) |
+| MAP vs EMERGE | `python experiments/compare_variants.py` | ~8 min (no LLM) |
+| naming conciseness | `python experiments/naming_conciseness.py` | ~2 min (160 calls) |
+| cross-domain: news | `python experiments/hier_validate.py` | ~4 min |
+| cross-domain: products | `python experiments/amazon_validate.py` | ~2 min |
+| geometry / anisotropy | `python experiments/amz_geometry.py` | ~1 min |
+| native hyperbolic | `python experiments/native_hyperbolic.py` | ~3 min (GPU) |
+| crystallization loop | `python experiments/crystallize_loop.py` | ~6 min (GPU) |
+| 600k-node storage test | `python experiments/tree_scale.py` | ~7 min (GPU) |
 
 Seeds are fixed (`random_state=13`) throughout, so runs are deterministic apart from
 LLM sampling (temperature 0, but the provider is not bit-deterministic).

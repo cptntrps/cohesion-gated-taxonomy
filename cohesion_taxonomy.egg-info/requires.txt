@@ -1,0 +1,12 @@
+numpy<3,>=2
+scikit-learn<2,>=1.5
+datasets<5,>=3
+
+[research]
+scipy<2,>=1.14
+nltk>=3.9
+geoopt>=0.5
+torch
+
+[test]
+pytest>=8

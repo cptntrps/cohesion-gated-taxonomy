@@ -4,7 +4,7 @@ Cluster a corpus, let an LLM name only the clusters, and use a **label-free geom
 confidence score to decide where to spend per-item LLM calls**. Measured on legal
 clauses, news posts and e-commerce products.
 
-📄 [PRD](PRD.md) · 🏗 [Architecture](docs/ARCHITECTURE.md) · 📊 [Results](docs/RESULTS.md) · 🔬 [Methods / reproduce](docs/METHODS.md) · 🗺 [Next steps](NEXT_STEPS.md)
+📄 [PRD](docs/PRD.md) · 🏗 [Architecture](docs/ARCHITECTURE.md) · 📊 [Results](docs/RESULTS.md) · 🔬 [Methods / reproduce](docs/METHODS.md) · 🗺 [Next steps](docs/NEXT_STEPS.md)
 
 **Prior art, named up front.** Embed → cluster → LLM-names-each-cluster is
 [BERTopic](https://arxiv.org/abs/2203.05794) (2022),
@@ -93,31 +93,44 @@ e-commerce (Amazon products). Same map-strong pattern in all three.
 ## Run
 
 ```bash
-export DEEPSEEK_API_KEY=...       # any OpenAI-compatible chat endpoint; see naming.py
-ollama pull nomic-embed-text      # local embeddings, $0, nothing leaves the host
-python3 build_tree.py             # discovery tree -> tree.json + members.json
-PORT=8799 python3 server.py       # interactive UI
-# open http://127.0.0.1:8799
+python3 -m venv .venv && .venv/bin/pip install -r requirements.txt -e .
+export NAMING_API_KEY=...            # any OpenAI-compatible chat endpoint; NAMING_API_BASE defaults to DeepSeek (see cohesion_taxonomy/naming.py)
+ollama pull nomic-embed-text         # local embeddings, $0, nothing leaves the host
+.venv/bin/python -m cohesion_taxonomy.build_tree    # discovery tree -> <data dir>/tree.json + members.json
+.venv/bin/python -m cohesion_taxonomy.server        # interactive UI on http://127.0.0.1:8580
+.venv/bin/python -m pytest -q                       # hermetic suite: no model, no corpus
 ```
 
-On aurora the app runs as the user unit `ledgar-taxonomy.service` (key read from sops at start,
-`LEDGAR_EMB` points at the 60k-clause embedding file): `systemctl --user status ledgar-taxonomy`.
+Runtime state never lives in the repo: `cohesion_taxonomy/paths.py` resolves the data
+directory (`COHESION_TAXONOMY_DATA`, default `./data`, gitignored) for the embeddings, the
+built tree and the extraction result. `GET /healthz` reports what the server loaded and
+whether the served tree covers the corpus; it is the deploy gate (`deploy.sh`).
 
-The UI (2026-10-18) follows [DISCOVERY_FLOW.md](DISCOVERY_FLOW.md): **1 Discover** (the named tree with a
+On aurora the app runs as the user unit `cohesion-gated-taxonomy.service` (loopback :8580,
+data in `~/data/cohesion-gated-taxonomy`, naming through the livingos-api gateway's
+neutral DeepSeek lane with its own scoped key from the sops store
+`services/cohesion-gated-taxonomy.enc.env`): `systemctl --user status cohesion-gated-taxonomy`.
+Product register: `registry.product` slug `cohesion-gated-taxonomy`, steward double_gui.
+
+The UI (2026-10-18) follows [DISCOVERY_FLOW.md](docs/DISCOVERY_FLOW.md): **1 Discover** (the named tree with a
 coherence meter per concept, benchmark labels hidden behind a toggle), **2 Correct** (name a concept, rename a
 group, seed one from a clause that fits nowhere; every change re-clusters the corpus), **3 Find** (type a concept,
 get the clauses ranked by meaning and the live scorecard: clauses to read to reach 90% recall by meaning vs by
 keyword, `GET /api/score?q=...`), **4 Extract** (the field-extraction demo). A **How it works** tab explains the mechanism in plain language for a non-technical reader, with its numbers read live from `tree.json` and `extraction.json`; `#how` (or `#discover`, `#correct`, `#find`) opens a tab directly. The previous research console is
-kept as `index_v1.html`.
+kept as `web/index_v1.html`.
 
 ## Layout
 
-`cluster.py` shared builder (map/emerge modes, cohesion, refine) · `naming.py` LLM
-naming · `hyperbolic.py` Poincaré ball · `build_tree.py` batch build · `server.py` +
-`index.html` interactive UI · `extraction*.py` field extraction · `hybrid_paired_test.py`
-the paired significance test · `purity_probe.py` gold-free signal study ·
-`hier_validate.py` / `amazon_validate.py` cross-domain validation ·
-`tree_scale.py` 600k-node hyperbolic storage test.
+`cohesion_taxonomy/` is the product: `cluster.py` shared builder (map/emerge modes,
+cohesion, refine, anchored rebuild) · `naming.py` LLM naming · `hyperbolic.py` Poincaré
+ball · `build_tree.py` batch build · `build_extraction.py` + `extraction_validate.py` +
+`extraction_ground.py` field extraction · `server.py` the interactive server · `paths.py`
+where state lives. `web/` is the UI (`index.html`, `extraction.html`, the earlier research
+console `index_v1.html`). `experiments/` holds every research script and its result file
+(`hybrid_paired_test.py` is the paired significance test, `purity_probe.py` the gold-free
+signal study, `hier_validate.py` / `amazon_validate.py` the cross-domain validation,
+`tree_scale.py` the 600k-node hyperbolic storage test; see `experiments/README.md`).
+`tests/` is the hermetic suite. `paper/` the write-up.
 
-Every script is one committed experiment; the commit message states its finding,
+Every experiment script is one committed experiment; the commit message states its finding,
 including the ones that failed.

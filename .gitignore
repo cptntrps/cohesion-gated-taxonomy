@@ -1,17 +1,9 @@
 __pycache__/
 *.pyc
-tree.json
-members.json
-*.log
-scorecard.json
-purity_probe.json
-extraction.json
-extraction_validate.json
-naming_conciseness.json
-extraction_semantic.json
-ng_emb.npz
-amz_emb.npz
-amz_big_emb.npz
-amazon_scale*.json
-amazon_scale.log
+.venv/
+.pytest_cache/
+.deploy-last-good
+# runtime state and embedding caches live in the data directory (cohesion_taxonomy/paths.py)
+data/
 *.npz
+*.log

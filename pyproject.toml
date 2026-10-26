@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cohesion-taxonomy"
+version = "0.1.0"
+description = "Cohesion-gated taxonomy discovery and extraction: cluster a corpus, let an LLM name only the clusters, spend per-item LLM calls only where label-free cohesion says the cluster cannot be trusted."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+  "numpy>=2,<3",
+  "scikit-learn>=1.5,<2",
+  "datasets>=3,<5",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8"]
+research = ["scipy>=1.14,<2", "nltk>=3.9", "geoopt>=0.5", "torch"]
+
+[project.scripts]
+cohesion-taxonomy-serve = "cohesion_taxonomy.server:main"
+cohesion-taxonomy-build = "cohesion_taxonomy.build_tree:main"
+
+[tool.setuptools]
+packages = ["cohesion_taxonomy"]

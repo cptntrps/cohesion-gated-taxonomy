@@ -1,0 +1,28 @@
+# Installed as a symlink: ln -s ~/src/products/cohesion-gated-taxonomy/systemd/cohesion-gated-taxonomy.service ~/.config/systemd/user/
+# Secrets: sops principal cohesion-gated-taxonomy (~/.keys/cohesion-gated-taxonomy.age) decrypts
+# infrastructure-secrets/services/cohesion-gated-taxonomy.enc.env into the unit's tmpfs runtime dir:
+#   NAMING_API_BASE  the livingos-api gateway (neutral DeepSeek lane dg-chat), NAMING_API_KEY its scoped key,
+#   NAMING_MODEL / NAMING_FALLBACK_MODEL  the gateway model names.
+[Unit]
+Description=Cohesion-Gated Taxonomy UI (loopback :8580)
+After=network-online.target
+StartLimitIntervalSec=600
+StartLimitBurst=5
+
+[Service]
+Type=simple
+WorkingDirectory=%h/src/products/cohesion-gated-taxonomy
+RuntimeDirectory=cohesion-gated-taxonomy
+ExecStartPre=/usr/bin/env SOPS_AGE_KEY_FILE=%h/.keys/cohesion-gated-taxonomy.age %h/.local/bin/sops -d --output %t/cohesion-gated-taxonomy/secrets.env %h/src/infrastructure-secrets/services/cohesion-gated-taxonomy.enc.env
+ExecStartPre=/usr/bin/chmod 0600 %t/cohesion-gated-taxonomy/secrets.env
+EnvironmentFile=-%t/cohesion-gated-taxonomy/secrets.env
+Environment=PORT=8580
+Environment=HOST=127.0.0.1
+Environment=COHESION_TAXONOMY_DATA=%h/data/cohesion-gated-taxonomy
+Environment=HF_DATASETS_OFFLINE=1
+ExecStart=%h/src/products/cohesion-gated-taxonomy/.venv/bin/python -m cohesion_taxonomy.server
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=default.target

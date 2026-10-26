@@ -1,0 +1,96 @@
+{
+ "rows": [
+  {
+   "concept": "Indemnification",
+   "gold": 936,
+   "tax_k90": 3897,
+   "tax_prec90": 21.6,
+   "kw_matches": 2305,
+   "kw_recall": 96.0,
+   "kw_prec": 39.0,
+   "kw_to_90": 2305,
+   "ratio": 0.6,
+   "kw_ok": true,
+   "pass_3x": false
+  },
+  {
+   "concept": "Governing Law",
+   "gold": 3167,
+   "tax_k90": 7796,
+   "tax_prec90": 36.6,
+   "kw_matches": 81,
+   "kw_recall": 1.3,
+   "kw_prec": 50.6,
+   "kw_to_90": 60000,
+   "ratio": 7.7,
+   "kw_ok": false,
+   "pass_3x": true
+  },
+  {
+   "concept": "Notices",
+   "gold": 2493,
+   "tax_k90": 3138,
+   "tax_prec90": 71.5,
+   "kw_matches": 7835,
+   "kw_recall": 96.6,
+   "kw_prec": 30.7,
+   "kw_to_90": 7835,
+   "ratio": 2.5,
+   "kw_ok": true,
+   "pass_3x": false
+  },
+  {
+   "concept": "Base Salary",
+   "gold": 656,
+   "tax_k90": 601,
+   "tax_prec90": 98.3,
+   "kw_matches": 866,
+   "kw_recall": 96.8,
+   "kw_prec": 73.3,
+   "kw_to_90": 866,
+   "ratio": 1.4,
+   "kw_ok": true,
+   "pass_3x": false
+  },
+  {
+   "concept": "Counterparts",
+   "gold": 2427,
+   "tax_k90": 2541,
+   "tax_prec90": 86.0,
+   "kw_matches": 2934,
+   "kw_recall": 99.2,
+   "kw_prec": 82.0,
+   "kw_to_90": 2934,
+   "ratio": 1.2,
+   "kw_ok": true,
+   "pass_3x": false
+  },
+  {
+   "concept": "Confidentiality",
+   "gold": 1012,
+   "tax_k90": 2492,
+   "tax_prec90": 36.6,
+   "kw_matches": 1795,
+   "kw_recall": 89.5,
+   "kw_prec": 50.5,
+   "kw_to_90": 60000,
+   "ratio": 24.1,
+   "kw_ok": false,
+   "pass_3x": true
+  },
+  {
+   "concept": "Severability",
+   "gold": 1808,
+   "tax_k90": 18135,
+   "tax_prec90": 9.0,
+   "kw_matches": 296,
+   "kw_recall": 13.5,
+   "kw_prec": 82.4,
+   "kw_to_90": 60000,
+   "ratio": 3.3,
+   "kw_ok": false,
+   "pass_3x": true
+  }
+ ],
+ "recall_target": 0.9
+}

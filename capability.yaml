@@ -1,0 +1,40 @@
+# Product-incubated capability (ADR-0095). Code stays in this repo (canonical home:
+# ~/src/products/cohesion-gated-taxonomy); owner-of-record: double_gui (product steward).
+entries:
+  - id: cap.cohesion-gated-taxonomy
+    kind: capability
+    statement: >-
+      Label-free taxonomy discovery and gated extraction over a text corpus: embed
+      locally (Ollama nomic-embed-text), cluster top-down (cohesion_taxonomy/cluster.py,
+      map and emerge modes, human anchors re-cluster the whole corpus), let an LLM name
+      only the clusters (cohesion_taxonomy/naming.py, any OpenAI-compatible endpoint; on
+      aurora the gateway's neutral dg-chat lane), and use whole-cluster cohesion computed
+      before any item-level call to decide which clusters get one propagated extraction
+      and which get per-item reads (cohesion_taxonomy/build_extraction.py). The reusable
+      seam is the HTTP surface of cohesion_taxonomy/server.py: tree.json, POST
+      /rename /anchor /unanchor /rerun /reset, GET /api/score?q= (semantic recall
+      scorecard), GET /healthz. Measured on LEDGAR, 20 Newsgroups and Amazon products;
+      the headline claim is "matches read-everything at 5x fewer calls" (paired
+      bootstrap, not significant), never "beats it". Consumers: the LAN demo UI on
+      aurora :8580, the app-films LEDGAR explainer, the epistemic-gate corpus inventory.
+    interfaces:
+      - type: service
+        path: cohesion_taxonomy/server.py
+        invoke: python -m cohesion_taxonomy.server
+    owner: double_gui
+    maturity: exercised
+    proof:
+      - type: test
+        ref: tests/test_cluster.py
+        note: >-
+          Hermetic suite (cluster cohesion/multimodality/refine, naming parse and
+          fallback, paths, server routes on a synthetic corpus). Live demo runs as the
+          aurora user unit cohesion-gated-taxonomy.service since 2026-10-26; research
+          evidence in docs/RESULTS.md and experiments/.
+    affordances:
+      mcp_servers: []
+      env: [COHESION_TAXONOMY_DATA, NAMING_API_BASE, NAMING_API_KEY, NAMING_MODEL, PORT]
+      live_deps: [ollama, livingos-api]
+      model_tier: cheap
+      hardware: none
+    dependencies: []

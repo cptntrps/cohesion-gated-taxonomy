@@ -29,14 +29,14 @@ The invariant: **nothing that scales with N is paid for by a human or an LLM.**
 
 | file | role |
 |---|---|
-| `cluster.py` | shared builder. Divisive clustering, MAP/EMERGE modes, `cohesion()`, `multimodality()`, `refine_partition()`, anchored rebuild |
-| `naming.py` | the LLM's only job: shortest canonical name for a cluster, given its ancestor chain |
-| `hyperbolic.py` | Poincaré ball: `make_ball`, `hyp_kmeans`, `poincare_dist_matrix` |
-| `build_tree.py` | batch build → `tree.json` + `members.json` |
-| `server.py` | stateful interactive server: `/rename`, `/anchor`, `/unanchor`, `/rerun`, `/reset` |
-| `index.html` | React (CDN) + 3d-force-graph UI: table view, graph view, novelty panel |
-| `extraction*.py` | cluster-first field extraction and its validation |
-| `hybrid_paired_test.py` | the paired bootstrap that governs the headline claim |
+| `cohesion_taxonomy/cluster.py` | shared builder. Divisive clustering, MAP/EMERGE modes, `cohesion()`, `multimodality()`, `refine_partition()`, anchored rebuild |
+| `cohesion_taxonomy/naming.py` | the LLM's only job: shortest canonical name for a cluster, given its ancestor chain |
+| `cohesion_taxonomy/hyperbolic.py` | Poincaré ball: `make_ball`, `hyp_kmeans`, `poincare_dist_matrix` |
+| `cohesion_taxonomy/build_tree.py` | batch build → `<data dir>/tree.json` + `members.json` (`paths.py` resolves the data dir) |
+| `cohesion_taxonomy/server.py` | stateful interactive server: `/rename`, `/anchor`, `/unanchor`, `/rerun`, `/reset`, `/api/score`, `/healthz` |
+| `web/index.html` | React (CDN) + 3d-force-graph UI: table view, graph view, novelty panel |
+| `cohesion_taxonomy/build_extraction.py`, `extraction_validate.py`, `extraction_ground.py` | cluster-first field extraction and its validation |
+| `experiments/hybrid_paired_test.py` | the paired bootstrap that governs the headline claim |
 
 ## Key design decisions and why
 
@@ -48,7 +48,7 @@ failed its positive control, so they are not evidence about the geometry (RESULT
 claim is retracted (degenerate pair sampling, RESULTS §11). Current standing: Sarkar
 combinatorial construction passes the WordNet control decisively (2-D beats our
 8-D Euclidean, RESULTS §13); integration into the product tree is pending. Do not
-gradient-train Poincaré embeddings here without first passing `wordnet_control.py`.
+gradient-train Poincaré embeddings here without first passing `experiments/wordnet_control.py`.
 
 ### Mean-centering, not whitening
 Raw embeddings are anisotropic (all category-pair cosines ≈0.91), which makes concept

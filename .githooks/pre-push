@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# pre-push test gate (ADR-0020 adopted standard): the full suite must be green before
+# anything leaves this repo. Exit code is pytest's; no soft-fail path.
+_gate_main() {
+set -euo pipefail
+cd "$(dirname "$0")/.."
+PY=.venv/bin/python; [ -x "$PY" ] || PY=python3
+echo "pre-push: running cohesion-gated-taxonomy test suite ($PY -m pytest -q)" >&2
+"$PY" -m pytest -q
+}
+if source /home/gui/src/infrastructure/bin/gate_capture.sh 2>/dev/null; then
+    gate_capture cohesion-gated-taxonomy pre-push _gate_main "$@"
+else
+    echo "gate_capture: recorder unavailable; verdict NOT recorded" >&2
+    ( _gate_main "$@" )
+fi

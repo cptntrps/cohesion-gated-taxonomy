@@ -310,3 +310,33 @@ by construction, so their result is explained by the broken optimizer alone (§1
 Any future storage test must first pass the target-distance validity gate (≥4 distinct
 values, std ≥0.5) AND establish that the tree reflects real structure, e.g. a
 gold-label hierarchy or WordNet, not a clustering artifact.
+
+## Anchors: is a taxonomy in the company's own words measured? (2026-10-25, `anchor_test.py`, `anchor_results.json`)
+
+Pre-registered before the run. LEDGAR's 100 clause-type names stand in for a legal team's playbook terms; 20 drawn at
+random (seed 2026); the hidden labels score them. Production path: `embed_names`, `TAU = 0.60`, nearest anchor.
+
+| gate | A: name only | B: name + 5 example clauses (pre-registered after A failed) | pass |
+|---|---|---|---|
+| A1 median precision | 0.37 FAIL | 0.25 FAIL | >= 0.70 |
+| A2 median recall | 0.35 FAIL | 0.81 PASS | >= 0.50 |
+| A3 off-domain placebos (10), total | 2 of 60,000 PASS | n/a | < 0.5% |
+| A3b legal-sounding placebos (5), max | 0.2% PASS ("crop insurance" took 130 Insurances clauses) | n/a | <= 1% |
+| A4 unanchored types still found in discovery | 10 of 14 FAIL | not re-run | >= 90% |
+| A5 other-type clauses pulled into anchors | 20.6% FAIL | 65% FAIL | <= 5% |
+
+- Anchors are not a confirmation machine here: fake names attract nothing (unlike the 2026-06-10 Egan experiment).
+- Name-only anchors split in two: distinctive names work (Notices 0.98 precision, Change In Control 0.83, Intellectual
+  Property 0.82, Liens 0.71); broad names vacuum their neighbours (Amendments took 3,301 clauses, 16% amendments, mostly
+  Counterparts; Disclosures swallowed Confidentiality; Payments swallowed Expenses); some attract nothing (Survival 6 of
+  1,469, Existence 2). No TAU fixes it: 0.70 gives 0.87 precision at 0.005 recall; 0.50 gives 0.71 recall at 0.11.
+- Exemplars lift recall but the leave-one-out threshold is too loose: broad anchors swallow whole neighbourhoods
+  (Payments 5,856, Authority 4,744). Distinctive concepts stay good (Arbitration 0.82 / 0.82, IP 0.81 / 0.83,
+  Subsidiaries 0.92 precision).
+- Caveats: LEDGAR types are heading-derived and overlap (Waivers / No Waivers / Waiver Of Jury Trials), so exact-type
+  precision is a lower bound (No Waivers family precision 0.93). A4 is weak: the unanchored baseline itself finds only
+  14 of the 80 types at purity >= 50%.
+- Standing: "a taxonomy from corporate knowledge" is NOT measured as working for arbitrary playbook terms. It works for
+  distinctive concepts and fails for broad or overlapping ones, with up to a fifth of the corpus moved as collateral.
+  Not tried (would be a new pre-registration): a per-anchor precision check by a blind judge before an anchor is
+  accepted, and competitive assignment that leaves contested clauses in discovery.

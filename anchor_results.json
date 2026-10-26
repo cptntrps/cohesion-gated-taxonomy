@@ -1,0 +1,1071 @@
+{
+ "seed": 2026,
+ "tau": 0.6,
+ "real_anchors": [
+  "Amendments",
+  "Arbitration",
+  "Authority",
+  "Books",
+  "Change In Control",
+  "Definitions",
+  "Disclosures",
+  "Duties",
+  "Existence",
+  "Intellectual Property",
+  "Liens",
+  "No Waivers",
+  "Notices",
+  "Payments",
+  "Positions",
+  "Qualifications",
+  "Remedies",
+  "Subsidiaries",
+  "Survival",
+  "Terms"
+ ],
+ "placebo_off": [
+  "fishing rights",
+  "recipe ingredients",
+  "volcanic eruptions",
+  "football tactics",
+  "wedding photography",
+  "space exploration",
+  "pet grooming",
+  "medieval castles",
+  "jazz improvisation",
+  "skin care routine"
+ ],
+ "placebo_legalish": [
+  "maritime salvage",
+  "patent prosecution",
+  "data residency",
+  "carbon credits",
+  "crop insurance"
+ ],
+ "real": {
+  "per_anchor": [
+   {
+    "anchor": "Amendments",
+    "joined": 3301,
+    "type_size": 1467,
+    "precision": 0.158,
+    "recall": 0.357,
+    "family_precision": 0.17,
+    "top3": [
+     [
+      "Counterparts",
+      573
+     ],
+     [
+      "Amendments",
+      523
+     ],
+     [
+      "Governing Laws",
+      406
+     ]
+    ]
+   },
+   {
+    "anchor": "Arbitration",
+    "joined": 742,
+    "type_size": 385,
+    "precision": 0.503,
+    "recall": 0.969,
+    "family_precision": 0.503,
+    "top3": [
+     [
+      "Arbitration",
+      373
+     ],
+     [
+      "Governing Laws",
+      60
+     ],
+     [
+      "Specific Performance",
+      29
+     ]
+    ]
+   },
+   {
+    "anchor": "Authority",
+    "joined": 501,
+    "type_size": 549,
+    "precision": 0.208,
+    "recall": 0.189,
+    "family_precision": 0.208,
+    "top3": [
+     [
+      "Authority",
+      104
+     ],
+     [
+      "Authorizations",
+      69
+     ],
+     [
+      "Assignments",
+      35
+     ]
+    ]
+   },
+   {
+    "anchor": "Books",
+    "joined": 5,
+    "type_size": 23,
+    "precision": 0.2,
+    "recall": 0.043,
+    "family_precision": 0.2,
+    "top3": [
+     [
+      "Records",
+      4
+     ],
+     [
+      "Books",
+      1
+     ]
+    ]
+   },
+   {
+    "anchor": "Change In Control",
+    "joined": 208,
+    "type_size": 349,
+    "precision": 0.832,
+    "recall": 0.496,
+    "family_precision": 0.832,
+    "top3": [
+     [
+      "Change In Control",
+      173
+     ],
+     [
+      "Effective Dates",
+      5
+     ],
+     [
+      "Amendments",
+      5
+     ]
+    ]
+   },
+   {
+    "anchor": "Definitions",
+    "joined": 24,
+    "type_size": 566,
+    "precision": 0.375,
+    "recall": 0.016,
+    "family_precision": 0.458,
+    "top3": [
+     [
+      "Definitions",
+      9
+     ],
+     [
+      "Financial Statements",
+      2
+     ],
+     [
+      "Applicable Laws",
+      2
+     ]
+    ]
+   },
+   {
+    "anchor": "Disclosures",
+    "joined": 2205,
+    "type_size": 590,
+    "precision": 0.15,
+    "recall": 0.561,
+    "family_precision": 0.15,
+    "top3": [
+     [
+      "Confidentiality",
+      854
+     ],
+     [
+      "Disclosures",
+      331
+     ],
+     [
+      "Publicity",
+      286
+     ]
+    ]
+   },
+   {
+    "anchor": "Duties",
+    "joined": 680,
+    "type_size": 354,
+    "precision": 0.366,
+    "recall": 0.703,
+    "family_precision": 0.366,
+    "top3": [
+     [
+      "Duties",
+      249
+     ],
+     [
+      "Positions",
+      113
+     ],
+     [
+      "Employment",
+      61
+     ]
+    ]
+   },
+   {
+    "anchor": "Existence",
+    "joined": 2,
+    "type_size": 258,
+    "precision": 0.5,
+    "recall": 0.004,
+    "family_precision": 0.5,
+    "top3": [
+     [
+      "Existence",
+      1
+     ],
+     [
+      "No Defaults",
+      1
+     ]
+    ]
+   },
+   {
+    "anchor": "Intellectual Property",
+    "joined": 408,
+    "type_size": 473,
+    "precision": 0.824,
+    "recall": 0.71,
+    "family_precision": 0.824,
+    "top3": [
+     [
+      "Intellectual Property",
+      336
+     ],
+     [
+      "Assignments",
+      16
+     ],
+     [
+      "Governing Laws",
+      9
+     ]
+    ]
+   },
+   {
+    "anchor": "Liens",
+    "joined": 149,
+    "type_size": 313,
+    "precision": 0.711,
+    "recall": 0.339,
+    "family_precision": 0.711,
+    "top3": [
+     [
+      "Liens",
+      106
+     ],
+     [
+      "Further Assurances",
+      17
+     ],
+     [
+      "Titles",
+      7
+     ]
+    ]
+   },
+   {
+    "anchor": "No Waivers",
+    "joined": 94,
+    "type_size": 445,
+    "precision": 0.255,
+    "recall": 0.054,
+    "family_precision": 0.926,
+    "top3": [
+     [
+      "Waivers",
+      63
+     ],
+     [
+      "No Waivers",
+      24
+     ],
+     [
+      "Governing Laws",
+      2
+     ]
+    ]
+   },
+   {
+    "anchor": "Notices",
+    "joined": 1259,
+    "type_size": 2493,
+    "precision": 0.977,
+    "recall": 0.493,
+    "family_precision": 0.977,
+    "top3": [
+     [
+      "Notices",
+      1230
+     ],
+     [
+      "General",
+      17
+     ],
+     [
+      "Miscellaneous",
+      4
+     ]
+    ]
+   },
+   {
+    "anchor": "Payments",
+    "joined": 2398,
+    "type_size": 856,
+    "precision": 0.206,
+    "recall": 0.578,
+    "family_precision": 0.206,
+    "top3": [
+     [
+      "Payments",
+      495
+     ],
+     [
+      "Expenses",
+      359
+     ],
+     [
+      "Fees",
+      327
+     ]
+    ]
+   },
+   {
+    "anchor": "Positions",
+    "joined": 8,
+    "type_size": 190,
+    "precision": 0.375,
+    "recall": 0.016,
+    "family_precision": 0.375,
+    "top3": [
+     [
+      "Effective Dates",
+      3
+     ],
+     [
+      "Positions",
+      3
+     ],
+     [
+      "Employment",
+      2
+     ]
+    ]
+   },
+   {
+    "anchor": "Qualifications",
+    "joined": 21,
+    "type_size": 47,
+    "precision": 0.238,
+    "recall": 0.106,
+    "family_precision": 0.238,
+    "top3": [
+     [
+      "Qualifications",
+      5
+     ],
+     [
+      "Organizations",
+      4
+     ],
+     [
+      "Authority",
+      2
+     ]
+    ]
+   },
+   {
+    "anchor": "Remedies",
+    "joined": 19,
+    "type_size": 664,
+    "precision": 0.684,
+    "recall": 0.02,
+    "family_precision": 0.684,
+    "top3": [
+     [
+      "Remedies",
+      13
+     ],
+     [
+      "Fees",
+      4
+     ],
+     [
+      "No Waivers",
+      1
+     ]
+    ]
+   },
+   {
+    "anchor": "Subsidiaries",
+    "joined": 1560,
+    "type_size": 563,
+    "precision": 0.297,
+    "recall": 0.824,
+    "family_precision": 0.297,
+    "top3": [
+     [
+      "Subsidiaries",
+      464
+     ],
+     [
+      "Transactions With Affiliates",
+      181
+     ],
+     [
+      "Insurances",
+      171
+     ]
+    ]
+   },
+   {
+    "anchor": "Survival",
+    "joined": 6,
+    "type_size": 1469,
+    "precision": 1.0,
+    "recall": 0.004,
+    "family_precision": 1.0,
+    "top3": [
+     [
+      "Survival",
+      6
+     ]
+    ]
+   },
+   {
+    "anchor": "Terms",
+    "joined": 2252,
+    "type_size": 1166,
+    "precision": 0.231,
+    "recall": 0.447,
+    "family_precision": 0.238,
+    "top3": [
+     [
+      "Terms",
+      521
+     ],
+     [
+      "Definitions",
+      409
+     ],
+     [
+      "Defined Terms",
+      272
+     ]
+    ]
+   }
+  ],
+  "median_precision": 0.3705,
+  "median_recall": 0.348,
+  "empty_anchors": 0,
+  "joined_total": 15842,
+  "collateral_frac": 0.2056,
+  "median_family_precision": 0.4165
+ },
+ "placebo": {
+  "capture": {
+   "fishing rights": 0,
+   "recipe ingredients": 0,
+   "volcanic eruptions": 0,
+   "football tactics": 0,
+   "wedding photography": 0,
+   "space exploration": 0,
+   "pet grooming": 1,
+   "medieval castles": 0,
+   "jazz improvisation": 0,
+   "skin care routine": 0,
+   "maritime salvage": 0,
+   "patent prosecution": 79,
+   "data residency": 0,
+   "carbon credits": 1,
+   "crop insurance": 130
+  },
+  "top_types": {
+   "fishing rights": [],
+   "recipe ingredients": [],
+   "volcanic eruptions": [],
+   "football tactics": [],
+   "wedding photography": [],
+   "space exploration": [],
+   "pet grooming": [
+    [
+     "Compliance With Laws",
+     1
+    ]
+   ],
+   "medieval castles": [],
+   "jazz improvisation": [],
+   "skin care routine": [],
+   "maritime salvage": [],
+   "patent prosecution": [
+    [
+     "Cooperation",
+     16
+    ],
+    [
+     "Notices",
+     15
+    ]
+   ],
+   "data residency": [],
+   "carbon credits": [
+    [
+     "Expenses",
+     1
+    ]
+   ],
+   "crop insurance": [
+    [
+     "Insurances",
+     130
+    ]
+   ]
+  },
+  "off_domain_total_frac": 2e-05,
+  "legalish_max_frac": 0.00217
+ },
+ "mixed": {
+  "placebo_capture": {
+   "fishing rights": 0,
+   "recipe ingredients": 0,
+   "volcanic eruptions": 0,
+   "football tactics": 0,
+   "wedding photography": 0,
+   "space exploration": 0,
+   "pet grooming": 1,
+   "medieval castles": 0,
+   "jazz improvisation": 0,
+   "skin care routine": 0,
+   "maritime salvage": 0,
+   "patent prosecution": 65,
+   "data residency": 0,
+   "carbon credits": 1,
+   "crop insurance": 118
+  }
+ },
+ "tau_sweep": [
+  {
+   "tau": 0.5,
+   "median_precision": 0.109,
+   "median_recall": 0.707,
+   "placebo_total_frac": 0.1622
+  },
+  {
+   "tau": 0.55,
+   "median_precision": 0.148,
+   "median_recall": 0.633,
+   "placebo_total_frac": 0.0238
+  },
+  {
+   "tau": 0.6,
+   "median_precision": 0.371,
+   "median_recall": 0.348,
+   "placebo_total_frac": 0.0035
+  },
+  {
+   "tau": 0.65,
+   "median_precision": 0.564,
+   "median_recall": 0.094,
+   "placebo_total_frac": 0.0003
+  },
+  {
+   "tau": 0.7,
+   "median_precision": 0.874,
+   "median_recall": 0.005,
+   "placebo_total_frac": 0.0001
+  }
+ ],
+ "discovery": {
+  "baseline_found": [
+   "Assignments",
+   "Base Salary",
+   "Capitalization",
+   "Counterparts",
+   "Entire Agreements",
+   "Erisa",
+   "Governing Laws",
+   "Headings",
+   "Insurances",
+   "Severability",
+   "Taxes",
+   "Terminations",
+   "Use Of Proceeds",
+   "Waiver Of Jury Trials"
+  ],
+  "anchored_found": [
+   "Assignments",
+   "Base Salary",
+   "Capitalization",
+   "Counterparts",
+   "Entire Agreements",
+   "Governing Laws",
+   "Insurances",
+   "Severability",
+   "Taxes",
+   "Waiver Of Jury Trials"
+  ],
+  "ratio": 0.714,
+  "lost": [
+   "Erisa",
+   "Headings",
+   "Terminations",
+   "Use Of Proceeds"
+  ],
+  "gained": []
+ },
+ "exemplar": {
+  "per_anchor": [
+   {
+    "anchor": "Amendments",
+    "threshold": 0.803,
+    "joined": 2614,
+    "precision": 0.263,
+    "recall": 0.47,
+    "top3": [
+     [
+      "Amendments",
+      687
+     ],
+     [
+      "Entire Agreements",
+      655
+     ],
+     [
+      "Severability",
+      289
+     ]
+    ]
+   },
+   {
+    "anchor": "Arbitration",
+    "threshold": 0.832,
+    "joined": 383,
+    "precision": 0.817,
+    "recall": 0.824,
+    "top3": [
+     [
+      "Arbitration",
+      313
+     ],
+     [
+      "Governing Laws",
+      19
+     ],
+     [
+      "General",
+      7
+     ]
+    ]
+   },
+   {
+    "anchor": "Authority",
+    "threshold": 0.68,
+    "joined": 4744,
+    "precision": 0.076,
+    "recall": 0.664,
+    "top3": [
+     [
+      "Further Assurances",
+      434
+     ],
+     [
+      "Assignments",
+      420
+     ],
+     [
+      "Governing Laws",
+      397
+     ]
+    ]
+   },
+   {
+    "anchor": "Books",
+    "threshold": 0.743,
+    "joined": 788,
+    "precision": 0.02,
+    "recall": 0.889,
+    "top3": [
+     [
+      "Records",
+      190
+     ],
+     [
+      "Financial Statements",
+      152
+     ],
+     [
+      "Taxes",
+      70
+     ]
+    ]
+   },
+   {
+    "anchor": "Change In Control",
+    "threshold": 0.738,
+    "joined": 1158,
+    "precision": 0.244,
+    "recall": 0.82,
+    "top3": [
+     [
+      "Vesting",
+      290
+     ],
+     [
+      "Change In Control",
+      282
+     ],
+     [
+      "Adjustments",
+      156
+     ]
+    ]
+   },
+   {
+    "anchor": "Definitions",
+    "threshold": 0.664,
+    "joined": 1740,
+    "precision": 0.299,
+    "recall": 0.929,
+    "top3": [
+     [
+      "Definitions",
+      521
+     ],
+     [
+      "Headings",
+      417
+     ],
+     [
+      "Defined Terms",
+      342
+     ]
+    ]
+   },
+   {
+    "anchor": "Disclosures",
+    "threshold": 0.627,
+    "joined": 3760,
+    "precision": 0.141,
+    "recall": 0.906,
+    "top3": [
+     [
+      "Confidentiality",
+      877
+     ],
+     [
+      "Disclosures",
+      530
+     ],
+     [
+      "Financial Statements",
+      307
+     ]
+    ]
+   },
+   {
+    "anchor": "Duties",
+    "threshold": 0.695,
+    "joined": 2032,
+    "precision": 0.108,
+    "recall": 0.628,
+    "top3": [
+     [
+      "Base Salary",
+      304
+     ],
+     [
+      "Duties",
+      219
+     ],
+     [
+      "Vacations",
+      192
+     ]
+    ]
+   },
+   {
+    "anchor": "Existence",
+    "threshold": 0.729,
+    "joined": 1617,
+    "precision": 0.127,
+    "recall": 0.814,
+    "top3": [
+     [
+      "Compliance With Laws",
+      367
+     ],
+     [
+      "Existence",
+      206
+     ],
+     [
+      "Litigations",
+      146
+     ]
+    ]
+   },
+   {
+    "anchor": "Intellectual Property",
+    "threshold": 0.773,
+    "joined": 480,
+    "precision": 0.81,
+    "recall": 0.831,
+    "top3": [
+     [
+      "Intellectual Property",
+      389
+     ],
+     [
+      "Assignments",
+      25
+     ],
+     [
+      "Notices",
+      8
+     ]
+    ]
+   },
+   {
+    "anchor": "Liens",
+    "threshold": 0.774,
+    "joined": 684,
+    "precision": 0.346,
+    "recall": 0.769,
+    "top3": [
+     [
+      "Liens",
+      237
+     ],
+     [
+      "Titles",
+      103
+     ],
+     [
+      "Taxes",
+      73
+     ]
+    ]
+   },
+   {
+    "anchor": "No Waivers",
+    "threshold": 0.765,
+    "joined": 2542,
+    "precision": 0.149,
+    "recall": 0.864,
+    "top3": [
+     [
+      "Waivers",
+      582
+     ],
+     [
+      "Waiver Of Jury Trials",
+      493
+     ],
+     [
+      "No Waivers",
+      380
+     ]
+    ]
+   },
+   {
+    "anchor": "Notices",
+    "threshold": 0.651,
+    "joined": 2905,
+    "precision": 0.765,
+    "recall": 0.893,
+    "top3": [
+     [
+      "Notices",
+      2223
+     ],
+     [
+      "Counterparts",
+      107
+     ],
+     [
+      "Amendments",
+      84
+     ]
+    ]
+   },
+   {
+    "anchor": "Payments",
+    "threshold": 0.677,
+    "joined": 5856,
+    "precision": 0.116,
+    "recall": 0.796,
+    "top3": [
+     [
+      "Expenses",
+      809
+     ],
+     [
+      "Payments",
+      677
+     ],
+     [
+      "Fees",
+      526
+     ]
+    ]
+   },
+   {
+    "anchor": "Positions",
+    "threshold": 0.795,
+    "joined": 268,
+    "precision": 0.351,
+    "recall": 0.508,
+    "top3": [
+     [
+      "Positions",
+      94
+     ],
+     [
+      "Employment",
+      65
+     ],
+     [
+      "Duties",
+      57
+     ]
+    ]
+   },
+   {
+    "anchor": "Qualifications",
+    "threshold": 0.621,
+    "joined": 2061,
+    "precision": 0.013,
+    "recall": 0.643,
+    "top3": [
+     [
+      "Governing Laws",
+      221
+     ],
+     [
+      "Organizations",
+      214
+     ],
+     [
+      "Taxes",
+      143
+     ]
+    ]
+   },
+   {
+    "anchor": "Remedies",
+    "threshold": 0.769,
+    "joined": 3777,
+    "precision": 0.14,
+    "recall": 0.804,
+    "top3": [
+     [
+      "Remedies",
+      530
+     ],
+     [
+      "No Conflicts",
+      281
+     ],
+     [
+      "Indemnifications",
+      261
+     ]
+    ]
+   },
+   {
+    "anchor": "Subsidiaries",
+    "threshold": 0.834,
+    "joined": 290,
+    "precision": 0.924,
+    "recall": 0.48,
+    "top3": [
+     [
+      "Subsidiaries",
+      268
+     ],
+     [
+      "Organizations",
+      9
+     ],
+     [
+      "Transactions With Affiliates",
+      7
+     ]
+    ]
+   },
+   {
+    "anchor": "Survival",
+    "threshold": 0.737,
+    "joined": 1786,
+    "precision": 0.646,
+    "recall": 0.788,
+    "top3": [
+     [
+      "Survival",
+      1154
+     ],
+     [
+      "Terminations",
+      171
+     ],
+     [
+      "Death",
+      88
+     ]
+    ]
+   },
+   {
+    "anchor": "Terms",
+    "threshold": 0.656,
+    "joined": 2766,
+    "precision": 0.339,
+    "recall": 0.807,
+    "top3": [
+     [
+      "Terms",
+      937
+     ],
+     [
+      "Terminations",
+      365
+     ],
+     [
+      "Effective Dates",
+      273
+     ]
+    ]
+   }
+  ],
+  "median_precision": 0.2535,
+  "median_recall": 0.8055000000000001,
+  "collateral_frac": 0.65
+ },
+ "gates_B": {
+  "A1_precision": "FAIL",
+  "A2_recall": "PASS",
+  "A5_collateral": "FAIL"
+ },
+ "gates": {
+  "A1_precision": "FAIL",
+  "A2_recall": "FAIL",
+  "A3_offdomain": "PASS",
+  "A3b_legalish": "PASS",
+  "A4_discovery": "FAIL",
+  "A5_collateral": "FAIL"
+ },
+ "seconds": 54
+}

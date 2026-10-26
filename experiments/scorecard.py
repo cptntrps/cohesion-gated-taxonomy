@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Retrieval productivity scorecard (AI-Productivity claim, measured).
+"""Retrieval productivity scorecard (measured).
 
 For a concept, compare three ways to FIND all its clauses in 60k:
   1. taxonomy  -- NAVIGATE: rank leaves by centroid cosine to the concept, review

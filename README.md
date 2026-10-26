@@ -4,7 +4,7 @@ Cluster a corpus, let an LLM name only the clusters, and use a **label-free geom
 confidence score to decide where to spend per-item LLM calls**. Measured on legal
 clauses, news posts and e-commerce products.
 
-📄 [PRD](docs/PRD.md) · 🏗 [Architecture](docs/ARCHITECTURE.md) · 📊 [Results](docs/RESULTS.md) · 🔬 [Methods / reproduce](docs/METHODS.md) · 🗺 [Next steps](docs/NEXT_STEPS.md)
+📄 [PRD](docs/PRD.md) · 🧱 [Engineering spec](docs/ENGINEERING_SPEC.md) · 🏗 [Architecture](docs/ARCHITECTURE.md) · 📊 [Results](docs/RESULTS.md) · 🔬 [Methods / reproduce](docs/METHODS.md) · 🗺 [Next steps](docs/NEXT_STEPS.md)
 
 **Prior art, named up front.** Embed → cluster → LLM-names-each-cluster is
 [BERTopic](https://arxiv.org/abs/2203.05794) (2022),
@@ -36,10 +36,18 @@ inference and which get one cluster-level extraction propagated to members. We s
 | **cohesion-gated hybrid** | **96.2%** | **80** |
 
 Paired bootstrap (n=400, 4000 resamples): hybrid − read-everything = **−0.2 points,
-95% CI [−2.5, +2.0] — not significant**. The honest claim is **"matches
-read-everything at 5× fewer calls"**, never "beats it". An earlier frontier that
-appeared to beat exhaustive was an artifact of assuming read items correct; the
-`hybrid_paired_test.py` measurement retired that claim.
+95% CI [−2.5, +2.0] — not significant**. An earlier frontier that appeared to beat
+exhaustive was an artifact of assuming read items correct; `hybrid_paired_test.py`
+retired that claim.
+
+**The honest operating point (W1 audit, commit 615f092, `experiments/w1_w2_w6_results.json`):**
+the 5× saving is **unproven** at n=400 (reading 20% of items: CI [−2.8, +1.8] against a
+−2 point non-inferiority margin, FAIL). Non-inferiority **passes at a 40% read** (206 calls
+for 400 items, 97.8% vs 97.0% read-everything, CI [−1.0, +2.8]), so the supported claim is
+**"non-inferior at about 2× fewer calls"** on LEDGAR. On 20 Newsgroups and Amazon products
+(B2, `experiments/b2_results.json`) the gate beats random routing at every budget but reaches
+**no parity below reading 100%**: the parity budget is a property of the corpus, not of the
+method. Never cite "5× fewer calls" from this repository.
 
 **Gold-free confidence.** Cluster cohesion predicts gold purity at Spearman **+0.74**
 across 83 leaves (multivariate R² 0.61). High-cohesion clusters are 98.0% accurate vs

@@ -1,530 +1,136 @@
-# Product Requirements Document — Cohesion-Gated Taxonomy
+# Corpus Organizer PRD — Cohesion-Gated Taxonomy
 
-Status: research prototype moving toward product validation.
+As of 2026-10-26. Owner: Gui. Review copy with diagrams: https://claude.ai/artifact/X9wYxRSP7CigJbw8i7FkCY
+(the engineering spec that preceded this PRD is `docs/ENGINEERING_SPEC.md`).
 
-This consolidated PRD follows the repository documentation templates for scope, architecture, workflows, data, operations, internals, and discovery. It adds explicit KPI and falsification contracts. Experimental evidence lives in [Results](docs/RESULTS.md); reproduction instructions live in [Methods](docs/METHODS.md).
+## Problem
 
-## 1. Scope and purpose
+A corpus owner with tens of thousands of items and no labels has two bad options: label by hand, or pay a model to read every item. Both spend effort that scales with the corpus, and most of that effort goes to material that is repetitive and internally consistent.
 
-### What it is
+- Hand labeling 60,000 contract clauses into 100 types takes weeks and a playbook that does not exist yet. The structure has to be discovered before anyone can label against it.
+- Reading every item with a model costs one call per item, every time the question changes. On the measured legal corpus that is 60,000 calls per field extracted, with no signal about which answers to trust.
+- Clustering tools (BERTopic, TopicGPT, Clio, Nomic Atlas) produce groups and names but give no confidence per group and no cheap way to correct the structure in the owner's own words.
 
-Cohesion-Gated Taxonomy turns an unlabeled document corpus into a navigable hierarchy, lets a domain expert correct that hierarchy structurally, and selectively spends deep-model inference where corpus geometry indicates uncertainty.
+The gap is a product that discovers the organization first, tells the owner which parts of it can be trusted without reading, and lets a correction re-organize the whole corpus.
 
-It supports two jobs with different loss functions:
+## Product promise
 
-| mode | user question | primary error |
-|---|---|---|
-| MAP | “Where does each item belong in a taxonomy I already have?” | incorrect assignment |
-| EMERGE | “What coherent concepts exist without a supplied taxonomy?” | false merge of distinct concepts |
+Point it at a corpus; get an organization you can correct. The product embeds every item locally, clusters them top-down, has a model name only the clusters, and reports a confidence score per group computed before any item is read. The owner renames a group, adds a concept, or seeds one from an item that fits nowhere, and the whole corpus re-organizes around that correction.
 
-The system has two geometric layers. Semantic embeddings organize source material and measure local cohesion. A constructed hyperbolic representation stores and navigates the resulting branching hierarchy with geometry matched to exponential tree growth. These layers are complementary; one geometry need not solve every problem.
+One sentence of scope: an unlabeled corpus of text items goes in; a named, navigable hierarchy with per-group confidence, per-item assignments, and optional extracted fields comes out, under the owner's own vocabulary.
 
-### Why it exists
+What the owner pays for stays flat as the corpus grows: naming a few dozen groups and adjudicating the flagged ones. What the machine pays for scales with the corpus and costs nothing per item. What the model pays for is spent only where the confidence score says a group cannot be trusted.
 
-Conventional taxonomy creation requires a human or language model to interpret every item. Most linear effort is spent on repetitive, internally consistent material. The product instead performs exhaustive shallow computation locally, summarizes coherent regions once, and concentrates expensive interpretation and human review on uncertain regions.
+## Who it is for
 
-The intended outcome is not merely lower inference cost. It is a defensible way to discover structure before a playbook exists, expose uncertainty, and preserve the hierarchy as a first-class mathematical object.
+The operator is one person who owns a corpus and answers for its organization, not a data team. They know the domain, not clustering. They want to see the structure, correct it in their own words, and know which parts to trust.
 
-### Users
+| User | Need | Surface |
+| --- | --- | --- |
+| Corpus owner | Discover, inspect, rename and deepen the organization | Web UI: Discover, Correct, Find, Extract tabs |
+| Reviewer | Adjudicate the flagged groups and the items that fit nowhere | Review queue with sample items and the confidence score |
+| Downstream consumer | Read assignments, extracted fields, confidence and lineage | Versioned export, HTTP API |
+| Researcher | Reproduce every number, challenge a claim | Experiment scripts and pre-registrations |
 
-| user | need | surface |
-|---|---|---|
-| operator or analyst | discover, inspect, rename, and deepen a taxonomy | local web interface |
-| domain reviewer | adjudicate uncertain clusters and items | review queue and evidence samples |
-| taxonomy steward | approve structural changes and canonical concepts | anchor and version controls |
-| downstream consumer | query assignments, extracted values, confidence, and lineage | versioned export or API |
-| researcher | reproduce measurements and challenge hypotheses | experiment scripts and artifacts |
+Three corpus kinds are in scope because they are the three the product has been measured on: legal clauses (LEDGAR, 60,000 items, 100 types), news posts (20 Newsgroups, 6,000 items, 20 groups), and product listings (Amazon, 2,500 items, 5 categories). Any corpus of short text items with a dominant topic per item fits the same path. Items whose attribute of interest is mentioned in passing (periodicity in a clause) do not: cluster-first extraction scored 33.9% against an 80.1% majority baseline there.
 
-### In scope
+## How it works
 
-- Category-blind corpus clustering.
-- MAP against a supplied taxonomy and EMERGE without one.
-- Canonical naming from representative items.
-- Label-free cohesion and multimodality measurements.
-- Cohesion-gated routing between cluster propagation and per-item inference.
-- Human anchors that cause structural reassignment.
-- Novelty and unfitted-item review.
-- Concept-to-attribute-to-value decomposition.
-- Constructed hyperbolic representation and navigation.
-- Versioned exports with source, model, prompt, geometry, and decision provenance.
-- Benchmark instrumentation separated from production outputs.
+| Stage | Who pays | Scales with |
+| --- | --- | --- |
+| 1 Embed and cluster | machine, $0, local | every item |
+| 2 Name the groups | model, one call per group | number of groups |
+| 3 Gate by cohesion | machine ranks groups; the model reads only the low-cohesion ones | the uncertain share |
+| 4 Correct | owner: rename, add, seed a concept; a few dozen decisions | number of groups |
 
-### Out of scope
+A correction in stage 4 re-clusters the whole corpus (back to stage 1). On the legal corpus that is 60,000 clauses, 64 groups, 64 naming calls, and reads on the low-cohesion groups only.
 
-- Autonomous publication of a high-stakes taxonomy without human approval.
-- General document management, legal advice, or contract-risk decisions.
-- Continuous numeric extraction through clustering; amounts and dates require per-item extraction.
-- A claim that clustering itself is state of the art.
-- A claim that every attribute is recoverable from the dominant semantic direction.
-- Gradient-trained Poincaré embeddings as a default until they pass a known positive control.
-- Multi-tenant hosting and enterprise authorization in the local prototype.
+## Requirements
 
-### Boundaries
+Every requirement below is a sentence the acceptance test can falsify.
 
-- **Owns:** discovery, mapping, cohesion scoring, escalation, structural correction, hierarchy representation, and evidence-bearing export.
-- **Does not own:** source-system retention, authoritative business labels, legal conclusions, or downstream workflow execution.
-- **Escalates to the owner:** taxonomy publication, destructive node removal, low-confidence acceptance, provider changes, and claim promotion.
-- **Accountable steward:** repository owner; a named steward is required before external publication.
+Input
+1. Accept a corpus as a folder of text files, a CSV or JSONL column, or a Postgres table and column. No labels required.
+2. Accept an optional vocabulary (a list of concept names) to map against instead of discovering from scratch.
+3. Embed locally by default (nomic-embed-text on Ollama). No item leaves the host unless the owner names an external endpoint.
 
-## 2. Product principles
+Organization
+4. Produce a hierarchy where every item is in exactly one leaf, or is listed as unfitted. Coverage is 100% and reported.
+5. Name every group with one model call per group, or show the naming failure. Never backfill a name silently.
+6. Report per group: size, cohesion, seam evidence (is it two concepts stuck together), representative items, ancestry.
+7. Stop splitting where the geometry says a group is coherent, however coarse (emerge mode); split to depth when a vocabulary is supplied (map mode).
 
-1. **Exhaustive shallow, selective deep.** Local computation may scale with corpus size; human and frontier-model attention is uncertainty-routed and budget-bounded.
-2. **Geometry is layered.** Semantic geometry organizes meaning; hyperbolic geometry represents branching hierarchy. Claims are made per layer.
-3. **Uncertainty is visible.** Unfitted items, naming failures, weak cohesion, multimodal leaves, and unresolved values remain explicit.
-4. **Corrections are structural.** A rename or anchor can change membership and descendants and creates a taxonomy version.
-5. **MAP and EMERGE differ.** MAP optimizes assignment; EMERGE minimizes false merges while allowing coherent coarse concepts.
-6. **Gold is evaluation-only.** Reference labels may score frozen outputs but never create predictions or influence clustering, naming, routing, or stopping.
-7. **Positive controls precede geometry claims.** A hyperbolic implementation must reproduce a known hierarchy benchmark before comparison.
-8. **Every claim has a falsifier.** Metrics, baselines, exclusions, and stopping rules are declared before promotion.
+Confidence and spend
+8. Compute cohesion for every group before any item-level model call and rank groups by it.
+9. Spend per-item model calls only on the lowest-cohesion groups, up to a budget the owner sets as a read fraction.
+10. Report the spend: calls made, calls avoided, and the measured quality of the propagated answers against a held-out read.
 
-## 3. User flows
+Correction
+11. A rename, a new concept, or a seed item re-clusters the whole corpus; the owner sees what moved before it is published.
+12. Every correction is a versioned, reversible publication with a diff.
 
-### Emerge a taxonomy
+Extraction
+13. For a categorical field, extract once per sub-group and propagate; validate every propagated value with a deterministic check before it is asserted. Items that fail the check are escalated or left unresolved, never asserted.
+14. For continuous or incidental attributes, route to per-item extraction and say so.
 
-The operator imports an unlabeled corpus. The system embeds every item, discovers coherent regions, names them from representative examples, and presents hierarchy, cohesion, seam, size, and sample evidence. The operator can accept, rename, split, merge, or leave a node unresolved.
+Interfaces and operations
+15. Web UI on the host; HTTP API for tree, assignments, corrections, scorecard, health.
+16. GET /healthz asserts what the server produced: corpus loaded, served tree covers it, naming configured.
+17. Benchmark labels never influence organization, naming or routing; they only score.
+18. Deterministic stages reproduce under fixed inputs, versions and seeds. A hermetic test suite gates every push.
 
-Success means useful coherent concepts appear without a pre-authored playbook. A coarse but coherent node is acceptable; a leaf concealing distinct concepts is not.
+## Quality bar
 
-### Map into an existing taxonomy
+The product ships a release only when it holds the numbers it has already measured, on a held-out corpus, with the test pre-registered. The bars below are the measured state as of 2026-10-26, from the experiments in this repository.
 
-The operator supplies canonical names and optional descriptions or exemplars. The system embeds these anchors, assigns compatible items, preserves an unfitted pool, and organizes residual material. Review prioritizes low-confidence assignments.
+| Metric | Measured | Bar for release | State |
+| --- | --- | --- | --- |
+| Confidence predicts quality (cohesion vs gold purity, Spearman) | +0.71 LEDGAR, +0.52 news, +0.74 products, 5 seeds each | >= +0.5 on an untouched corpus | holds, 3 corpora |
+| High vs low confidence groups (extraction accuracy) | 98.0% vs 79.2% | the split survives a size control | holds |
+| Gated extraction vs read-everything, legal (paired, -2 pt margin) | non-inferior at 40% read: 97.8% vs 97.0%, CI [-1.0, +2.8]; FAIL at 20% read, CI [-2.8, +1.8] | non-inferior at the budget the product advertises | holds at 2x fewer calls; 5x unproven |
+| Gate vs random routing at equal budget | beats random on all 3 corpora at every budget | beats random | holds |
+| Parity budget on news and products | no parity below 100% read | report the budget per corpus, never assume one | holds as a disclosure |
+| End-to-end on tool-found concepts (legal) | routing recall 0.882, precision 0.752; 97.9% on found items; 86.4% net coverage | >= 85% coverage with a deterministic validator on propagated values | holds; validator required |
+| False assertions on intruders without the validator | 88.9% of intruders get a value | 0% asserted without validation | open (requirement 13) |
+| Human effort to organize 6,000 items | 20 names, 57.3% purity, about 300x fewer decisions than labeling | >= 100x at accepted quality | holds |
+| Anchor validity (does a correction pull the right items) | median validity precision 0.989, CI [0.914, 1.0]; recall 0.419 | precision >= 0.90 per anchor; recall reported | precision holds; recall open |
+| Anchor plus picks at zero calls vs a model reading everything | precision 0.936 vs 0.840; recall 0.47 to 0.63 vs 0.93; judge reliability bar missed by 2.5 points | the judge bar passes before the claim is made | not established |
+| Seed stability of the operating point | 2.5 to 2.8 point spread across 5 seeds | spread reported with every number | holds |
 
-Success means accurate assignment with complete coverage accounting. Unfitted is valid and must not silently become nearest-node assignment.
+The metrics that decide ship or no-ship for a release: coverage 100% accounted, non-inferiority at the advertised budget on a held-out sample, zero values asserted without the deterministic validator, and the pre-push suite green.
 
-### Run cohesion-gated extraction
+## Non-goals and known limits
 
-The operator selects a concept and field. The system makes a real cluster-level extraction and propagates it within trusted clusters. Clusters outside the calibrated policy are subdivided or routed to per-item inference.
+The product does not promise a fixed saving. The call saving is a property of the corpus: large on legal clauses, absent on news posts and product listings below a full read. It reports the budget it needed instead of claiming one.
 
-Success means the configured quality target is met with fewer deep reads than exhaustive inference, measured on identical frozen items using actual model outputs.
+Not in scope:
+- Multi-tenant hosting, enterprise authentication, or unattended high-stakes publication. The UI is loopback-only until an authorization layer exists.
+- Attributes mentioned in passing. Cluster-first extraction works only when the attribute is the dominant signal of the text.
+- Document-level conclusions from item-level results. A clause taxonomy does not prove contract performance.
+- A universal confidence calibration. Cohesion ranks risk within a corpus and embedding model; it is calibrated per corpus family.
 
-### Correct and grow
+Published negative results that bound the design:
+- Hyperbolic clustering lost to Euclidean six times, but every run used a gradient optimizer that later failed its positive control. Sarkar's construction passes on WordNet (tree distance +0.864 in two dimensions). The product clusters in Euclidean space and treats hyperbolic storage as a representation option, not a quality lever.
+- Hyperbolic anomaly scoring was falsified against cosine (AUC 0.763 vs 0.814). Novelty uses Euclidean distance to the nearest leaf.
+- A crystallization loop (feeding the tree back into the embedding) degrades monotonically (leaf NMI 0.522 to 0.172). The product never re-embeds on its own output.
+- Name-only anchors pull in neighbours (0.37 precision); anchors are structural suggestions until a human picks the members.
+- Blind whitening destroys the signal; mean-centering is the only normalization applied.
 
-The operator reviews uncertain or novel items, proposes a canonical concept, and previews structural impact. On approval, the system rebuilds affected assignments and writes a version with a complete diff.
+## Milestones
 
-### Deepen concepts
+Each phase is defined by the test it must pass, not by a date. No date is set until the owner picks the first corpus for M1.
 
-The operator confirms internal structure. Categorical values may become subclusters, continuous values use per-item extraction, and additional provisions become multi-label tags.
+| Phase | Content | Gate |
+| --- | --- | --- |
+| M0 Today | LEDGAR demo on aurora; 64 groups over 60k clauses; the 2x operating point | /healthz ok, suite green (passed 2026-10-26) |
+| M1 Any corpus in | folder, CSV/JSONL and Postgres doors; one household corpus; coverage 100% reported | a second corpus organized end to end |
+| M2 Trusted extraction | deterministic validator; escalate, never assert; held-out non-inferiority | 0 false assertions at the advertised budget |
+| M3 Correction loop | preview the diff; versioned publish and rollback; anchor precision measured | anchor precision >= 0.90 on a held-out corpus |
 
-### Retrieve and export
+## Open decisions
 
-The user searches by concept, text, or example and filters by confidence or review state. Results include source item, taxonomy path, extracted fields, confidence, and provenance. Production exports exclude benchmark-only gold fields.
-
-## 4. Workflows
-
-### Workflow: corpus discovery
-
-**Trigger:** an operator starts a build with a corpus and configuration.
-
-1. Validate source identity, item identifiers, text field, and policy.
-2. Chunk documents through the source adapter.
-3. Create or load normalized local semantic embeddings.
-4. Discover a partition and recursively evaluate candidate seams.
-5. Compute label-free evidence for every node.
-6. Select representatives and request canonical names.
-7. Construct the explicit tree and, when enabled, its hyperbolic representation.
-8. Persist an immutable candidate run for review.
-
-**Output:** candidate taxonomy, memberships, evidence, coordinates, and provenance.
-
-**Failure behavior:** the run stays incomplete with the failed stage recorded. Naming failure creates an unnamed node and never discards a cluster.
-
-### Workflow: cohesion-gated inference
-
-**Trigger:** an extraction task runs against a frozen taxonomy version.
-
-1. Produce a real cluster prediction for each eligible cluster.
-2. Evaluate the cluster through the calibrated routing policy.
-3. Propagate when the policy trusts the cluster.
-4. Subdivide or read individual items when it escalates.
-5. Preserve unresolved values and combine actual predictions.
-6. Write item-level provenance and full cost accounting.
-
-**Failure behavior:** failed deep reads become unresolved after bounded retries and never silently fall back to propagation.
-
-### Workflow: structural correction
-
-**Trigger:** a steward proposes a rename, anchor, split, merge, or removal.
-
-1. Record actor, operation, concept, and rationale.
-2. Embed the anchor or apply the structural constraint.
-3. Recompute affected assignments and descendants.
-4. Show membership, confidence, novelty, and cost diffs.
-5. Require approval before publication.
-6. Persist a child version and rollback pointer.
-
-**Failure behavior:** the prior published version remains active.
-
-### Workflow: experimental validation
-
-**Trigger:** a claim, algorithm, threshold, or model is proposed for promotion.
-
-1. Declare hypothesis, success boundary, falsifier, baselines, and exclusions.
-2. Establish positive and negative controls.
-3. Freeze calibration and evaluation partitions.
-4. Run without gold leakage.
-5. Produce machine-readable results and uncertainty.
-6. Classify the claim as validated, provisional, falsified, or apparatus-invalid.
-7. Update documentation without erasing negative history.
-
-**Failure behavior:** a failed control invalidates the apparatus, not the theory.
-
-## 5. System architecture
-
-```mermaid
-graph LR
-    A[(source corpus)] --> B[corpus adapter]
-    B --> C[local embedder]
-    C --> D[semantic partitioner]
-    D --> E[cohesion router]
-    D --> F[concept namer]
-    E --> G[selective extractor]
-    F --> H[taxonomy builder]
-    G --> H
-    H --> I[hyperbolic constructor]
-    H --> J[(versioned taxonomy store)]
-    I --> J
-    J --> K[review interface]
-    J --> L[export interface]
-```
-
-### Components
-
-| component | responsibility | current implementation |
-|---|---|---|
-| corpus adapter | ingest text, identifiers, metadata, and evaluation labels when allowed | dataset loaders |
-| local embedder | generate normalized semantic vectors locally | Ollama `nomic-embed-text` |
-| semantic partitioner | discover or map clusters, recurse, refine, and anchor | `cluster.py` |
-| cohesion router | choose propagation, subdivision, or item reads | `cohesion()` and gate experiments |
-| concept namer | generate canonical names from representatives and ancestry | `naming.py` |
-| selective extractor | create cluster and item predictions with provenance | `extraction*.py` |
-| taxonomy builder | assemble nodes, edges, memberships, and evidence | `build_tree.py`, `cluster.py` |
-| hyperbolic constructor | represent an explicit tree through deterministic Möbius placement | `sarkar_construction.py`; integration pending |
-| review interface | inspect hierarchy and propose corrections | `server.py`, `index.html` |
-| versioned store | preserve immutable runs, diffs, approvals, and rollback | target; prototype rewrites JSON |
-| evaluation harness | enforce paired tests, controls, baselines, intervals, and evidence states | experiments; consolidation pending |
-
-### Geometry contract
-
-| layer | represented object | geometry | status |
-|---|---|---|---|
-| semantic representation | meanings in source text | normalized dense embeddings | operational |
-| local partitioning | semantic neighborhoods | cosine or Euclidean baseline; constructed-hyperbolic alternative needs a fair test | baseline operational |
-| confidence routing | agreement and candidate seams | cohesion and multimodality | experimental |
-| taxonomy representation | explicit branching tree | constructed hyperbolic space | positive control passed; integration pending |
-| hierarchy navigation | ancestor, descendant, and neighborhood relations | graph authority plus hyperbolic distance | target |
-
-Hyperbolic hierarchy construction is first-class scope because hyperbolic exponential volume matches tree growth. The admissible implementation is Sarkar-style combinatorial construction. Gradient-trained Poincaré results show that falling loss is not a sufficient health signal; they are not evidence against the geometry.
-
-## 6. Data architecture
-
-### Core entities
-
-| entity | required fields | purpose |
-|---|---|---|
-| corpus | `corpus_id`, source revision, adapter version, policy | immutable input identity |
-| item | `item_id`, source locator, text hash, metadata | stable processing unit |
-| embedding | item, model revision, dimension, normalization, hash | semantic representation |
-| taxonomy version | ID, parent, mode, configuration, status, steward | immutable snapshot |
-| concept node | ID, parent, name, depth, state, human-name flag | explicit concept |
-| membership | taxonomy, node, item, evidence | assignment lineage |
-| node evidence | cohesion, multimodality, size, representatives, diagnostics | routing and review |
-| hierarchy coordinate | taxonomy, node, geometry, dimension, construction revision | tree representation |
-| extraction task | field, concept, prompt revision, routing policy | task identity |
-| prediction | item, value, route, model call, confidence, unresolved reason | inference evidence |
-| correction | actor, operation, rationale, versions, approval | auditable intervention |
-| evaluation run | hypothesis, split, controls, metrics, artifacts, verdict | falsification record |
-
-### Separation and lineage
-
-Production records must not contain benchmark-derived `gold_dominant`, `purity`, `gold_top3`, or oracle labels. Evaluation joins gold only after predictions and taxonomy outputs freeze. The prototype currently mixes these fields in `tree.json`; separation is a release requirement.
-
-Semantic embeddings attach to items and model revisions. Hyperbolic coordinates attach to concept nodes and taxonomy versions and regenerate when the hierarchy changes.
-
-```text
-source revision
-  -> chunking configuration
-  -> embedding model and cache
-  -> partition configuration and seed
-  -> naming model and prompt
-  -> taxonomy version
-  -> geometry construction and diagnostics
-  -> extraction policy and model calls
-  -> exported result
-```
-
-Published versions are immutable. A correction creates a child version and explicit diff before promotion.
-
-### Privacy and retention
-
-Source text and embeddings remain local by default. Only minimum approved snippets needed for naming or extraction may reach a configured provider. Retention, deletion, and provider data-use policy must be set before confidential data is admitted.
-
-## 7. Data and integrations
-
-### Data owned
-
-| name | kind | current location | purpose |
-|---|---|---|---|
-| taxonomy snapshot | file | `tree.json` | nodes, edges, evidence, anchors, anomalies |
-| membership map | file | `members.json` | node-to-item membership |
-| embedding cache | file | `LEDGAR_EMB` or corpus path | avoid repeated embedding |
-| experiment output | JSON or console artifact | script-specific | measurements and diagnostics |
-
-The target is an immutable run directory or database. Direct JSON replacement is prototype-only behavior.
-
-### Data read
-
-| source | access | data |
-|---|---|---|
-| LEDGAR | Hugging Face | clauses and benchmark labels |
-| 20 Newsgroups | scikit-learn | posts and benchmark hierarchy |
-| Amazon products | Hugging Face | descriptions, categories, attributes |
-| WordNet nouns | NLTK | positive-control hierarchy |
-| user corpus | local adapter | text, stable IDs, approved metadata |
-
-### Access and integrations
-
-| key or system | direction | purpose |
-|---|---|---|
-| `DEEPSEEK_API_KEY` | environment | hosted naming or extraction authentication |
-| `LEDGAR_EMB` | environment | embedding-cache location |
-| `PORT` | environment | local review port |
-| Ollama | local HTTP | text in, vectors out |
-| OpenAI-compatible endpoint | outbound HTTPS | approved snippets in, names or values out |
-| Hugging Face | inbound and cache | public benchmarks |
-| NLTK WordNet | local corpus | geometry positive control |
-
-Secrets are environment-injected and never persisted in artifacts, prompts, logs, or committed configuration. Current consumers are the bundled UI and experiment scripts; target consumers include analytical tables, retrieval apps, review queues, and extraction pipelines.
-
-## 8. Quality and operations
-
-### Behavioral contracts
-
-- **No gold leakage:** production decisions cannot read evaluation labels.
-- **No silent omission:** every item ends assigned, unfitted, unresolved, or failed.
-- **No silent fallback:** a failed deep read cannot become an unmarked propagated answer.
-- **No partial publication:** failed rebuilds leave the prior version active.
-- **No unqualified comparison:** failed positive control means apparatus-invalid.
-- **No orphaned claim:** KPI results link to code, configuration, input, and artifact.
-- **Reversible correction:** published structural changes retain a parent and diff.
-- **Privacy by default:** embedding is local and external transmission explicit.
-
-### Health
-
-| signal | healthy meaning |
-|---|---|
-| corpus readiness | source, embeddings, and hashes agree |
-| model readiness | configured endpoints pass bounded probes |
-| taxonomy readiness | published version is complete and consistent |
-| queue state | unresolved and failed items are counted |
-| geometry health | coordinates are finite and diagnostics pass |
-| evidence health | promoted claims resolve to artifacts and controls |
-
-Quiet means no queued work. Failure means an input, dependency, artifact, invariant, or publication stage is unhealthy; they must not be conflated.
-
-### Tests
-
-- Unit tests for cohesion, multimodality, anchors, diffs, and geometry invariants.
-- Property tests proving every item has one terminal state.
-- Leakage tests forbidding gold access during production stages.
-- Golden deterministic-structure tests.
-- Hyperbolic positive-control tests.
-- Paired evaluations using actual predictions from every route.
-- Failure injection for timeout, malformed model output, corrupt cache, and interrupted rebuild.
-
-### Reproducibility and operation
-
-Each promoted result requires a dependency lock, dataset revision, model ID, prompt hash, configuration, seed, raw response cache, item-level result, summary, and exact command. Hosted output remains provider-version dependent even at temperature zero.
-
-The prototype runs through `build_tree.py` and `server.py`. Broader use requires immutable storage, authentication, structured logs, health, bounded retries, backup and restore, and atomic publication. The server remains loopback-bound until authorization exists.
-
-## 9. Internals
-
-### Decision semantics
-
-| decision | inputs | output | mechanism |
-|---|---|---|---|
-| MAP split | size, depth, configuration | stop or subdivide | fixed depth and minimum size |
-| EMERGE split | vectors and seam score | stop or subdivide | two-means cosine silhouette |
-| anchor assignment | item and anchor vectors | anchor or discovery pool | cosine threshold |
-| propagation trust | cluster evidence and policy | propagate, subdivide, or read | ranking prototype; calibration pending |
-| concept naming | representatives and ancestors | short name or failure | chat model |
-| novelty | fit and anomaly evidence | review candidate | hyperbolic misfit path requires revalidation |
-| hierarchy placement | explicit graph and settings | coordinates and diagnostics | Sarkar construction |
-| claim promotion | controls, results, uncertainty, exclusions | evidence state | manual today; harness required |
-
-### Constants that matter
-
-Prototype values, not universal defaults:
-
-| name | value | consequence |
-|---|---|---|
-| semantic dimension | 768 | current embedding size |
-| MAP maximum depth | 3 | recursion bound |
-| root branching | 8 | initial partition |
-| child branching | 5 | recursive partition |
-| MAP minimum split | 1,200 | small-node stopping |
-| EMERGE minimum split | 60 | deeper coherence splitting |
-| EMERGE maximum depth | 6 | recursion bound |
-| EMERGE seam threshold | 0.10 | candidate split boundary |
-| anchor cosine threshold | 0.60 | weaker matches enter discovery |
-| naming representatives | 10 | evidence per name |
-| random seed | 13 | experiment stability |
-| naming workers | 8 | request concurrency |
-| default review port | 8799 | loopback UI |
-| Sarkar control step | 3.0 | best reported WordNet setting; recalibration required |
-
-Thresholds become versioned policies only after calibration and holdout evaluation.
-
-## 10. Discovery
-
-### Provenance and prior art
-
-The prototype began with category-blind LEDGAR experiments on 2026-08-25 and expanded across legal clauses, 20 Newsgroups, Amazon products, and WordNet through 2026-08-27. Git history is the experiment ledger; corrected claims remain visible.
-
-| foundation | adaptation |
-|---|---|
-| BERTopic, TopicGPT, TnT-LLM, and Clio | embed, cluster, and name representative groups |
-| silhouette and internal validation | label-free cohesion and seam evidence |
-| constrained and anchored clustering | human concepts as structural attractors |
-| FrugalGPT-style cascades | selective escalation |
-| TypiClust and ProbCover | geometry-informed budget allocation |
-| Poincaré embeddings and Sarkar/Sala construction | dimension-efficient hierarchy representation |
-
-The scoped contribution is using whole-cluster cohesion, computed before item-level language-model calls, to allocate deep inference between propagation and exhaustive reads. Novelty wording remains “not found in reviewed literature,” not “first.”
-
-### Paid-for lessons
-
-- **2026-08-26:** random tree-pair sampling misled because target distances were nearly constant.
-- **2026-08-26:** the Euclidean-wins replacement was withdrawn when the hyperbolic arm failed WordNet.
-- **2026-08-27:** Sarkar construction passed the control; gradient optimization, not hyperbolic geometry, caused prior failure.
-- **2026-08-27:** the paired hybrid test still uses gold-majority cluster predictions, so product parity is provisional.
-- **2026-08-27:** crystallization, blind whitening, annealed refinement, compound-name resolution, and incidental-attribute propagation failed their tests.
-
-## 11. KPIs
-
-### Product outcomes
-
-| KPI | definition | validation target | current state |
-|---|---|---|---|
-| gated extraction quality | paired difference from exhaustive inference | lower confidence bound within declared non-inferiority margin | provisional; oracle cluster arm |
-| deep-call reduction | gated calls divided by exhaustive calls at target quality | at least 5× fewer | oracle-assisted support |
-| escalation calibration | propagated error versus predicted trust | declared holdout tolerance | unmeasured |
-| coverage | accounted terminal states divided by imports | 100% | requirement |
-| review leverage | items divided by human structural decisions | at least 100× at accepted quality | provisional |
-| false-merge rate | independently judged items in leaves merging distinct concepts | material reduction versus MAP | provisional; current score shares split signal |
-| taxonomy stability | unchanged assignments under equivalent rerun or local correction | use-case threshold | unmeasured |
-| hierarchy fidelity | graph preservation and hierarchy retrieval | beat matched Euclidean baselines after controls | WordNet control passed; integration pending |
-| time to usable taxonomy | import to first reviewable version | set through discovery | unmeasured |
-
-### Evidence quality
-
-| KPI | target |
-|---|---|
-| gold-leakage incidents | zero |
-| silently dropped items | zero |
-| promoted claims without machine artifacts | zero |
-| geometry comparisons without passing control | zero |
-| published changes without provenance and rollback | zero |
-| unresolved model failures surfaced | 100% |
-
-The measured cohesion-to-purity Spearman correlation of `+0.74` across 83 LEDGAR leaves supports risk ranking, not a universal calibration curve. The Sarkar WordNet result—radius-to-depth `+0.774` and tree-distance Spearman `+0.864` in two dimensions—supports constructed hyperbolic hierarchy representation, not automatically semantic clustering or novelty detection.
-
-## 12. Falsification plan
-
-### Core hypotheses
-
-| hypothesis | test | falsifier | consequence |
-|---|---|---|---|
-| cohesion identifies unsafe propagation | calibrate once, test untouched corpora | no advantage over random or cheaper signals | remove it as primary router |
-| gating preserves quality with fewer calls | paired actual cluster and item predictions | non-inferiority fails or savings vanish | narrow tasks or reject claim |
-| EMERGE reduces false merges | blind independent review | no material reduction | redesign stopping or retire claim |
-| anchors improve structure | compare accepted corrections with frozen prior output | cosmetic gain or damaging collateral movement | separate rename from reassignment |
-| hyperbolic space represents taxonomy efficiently | controls and product trees versus matched Euclidean baselines | controls fail, saturation dominates, or hierarchy tasks do not improve | retain graph or change representation |
-| hyperbolic structure improves novelty or navigation | equal-cost semantic and graph baselines | no holdout gain | use it for representation only |
-| local-first operation is a product wedge | customer and deployment tests | users do not value privacy, emergence, or auditability enough to switch | reposition or stop |
-
-### Required controls
-
-- Random and item-margin routing at equal deep-call budget.
-- Exhaustive inference using the same model and frozen items.
-- Cluster-first inference using cached real predictions.
-- Majority, keyword or regex, and supervised baselines when appropriate.
-- WordNet or another known hierarchy before hyperbolic comparisons.
-- Degenerate inputs for cluster size, target distance, anchors, and unresolved fields.
-- Multiple seeds, samples, and an untouched domain for generality claims.
-
-### Evidence states
-
-| state | meaning |
-|---|---|
-| validated | controls passed, frozen test met its boundary, artifacts reproduce |
-| provisional | evidence exists but an independent metric, control, or holdout is missing |
-| falsified | valid apparatus crossed the failure boundary |
-| apparatus-invalid | implementation or measurement failed a control; no theory verdict |
-| superseded | a later valid experiment replaced the operational conclusion |
-
-## 13. Requirements
-
-### Functional
-
-- F1. Import a corpus without taxonomy labels.
-- F2. Produce MAP and EMERGE runs with distinct policies.
-- F3. Name every node or expose naming failure.
-- F4. Display size, cohesion, seam evidence, representatives, ancestry, and review state.
-- F5. Preview correction impact before publication.
-- F6. Account for every item as assigned, unfitted, unresolved, or failed.
-- F7. Execute categorical cluster extraction and selective escalation.
-- F8. Route continuous values to per-item extraction and extra provisions to multi-label classification.
-- F9. Build and validate constructed hyperbolic representation when enabled.
-- F10. Search and export by concept, item, confidence, review state, and version.
-- F11. Keep benchmark labels outside production.
-- F12. Record model calls, propagation, corrections, configuration, and lineage.
-- F13. Support immutable publication, diff, and rollback.
-
-### Non-functional
-
-- N1. Embeddings run locally by default.
-- N2. External calls are budget-capped, attributable, and approved.
-- N3. If uncertainty approaches corpus size, report the cost instead of claiming sublinearity.
-- N4. Deterministic stages reproduce under fixed inputs, versions, and seeds.
-- N5. Accuracy comparisons are paired with uncertainty and declared margins.
-- N6. Purity, NMI, AMI, coverage, false merges, and hierarchy fidelity stay distinct.
-- N7. Publication is atomic.
-- N8. UI remains loopback-only until authorization exists.
-- N9. Corpus work supports progress, cancellation, bounded concurrency, and resume.
-- N10. Product behavior never depends on benchmark gold.
-
-## 14. Release scope
-
-### Prototype exit
-
-- Replace oracle-majority cluster predictions with cached real predictions.
-- Add independent false-merge evaluation.
-- Split benchmark instrumentation from production artifacts.
-- Integrate Sarkar construction behind a geometry interface while graph edges remain authoritative.
-- Add immutable runs, provenance, tests, dependency locking, and machine-readable results.
-- Calibrate routing on training data and evaluate untouched holdout performance.
-
-### First usable release
-
-- Local single-user import, discovery, mapping, review, correction preview, publication, rollback, retrieval, and export.
-- One supported local embedding model and one configurable OpenAI-compatible endpoint.
-- Versioned evidence and cost reports.
-- No multi-tenant service, enterprise authentication, or unattended high-stakes publication.
-
-## 15. Risks and open questions
-
-| risk or question | response |
-|---|---|
-| dominant wording hides incidental attributes | separate projection or per-item extraction |
-| EMERGE lacks accepted gold-free evaluation | independent adjudication and agreement measurement |
-| cohesion varies across domains | calibrate per embedding model and corpus family |
-| hyperbolic coordinates approach the boundary | sweep scale, record saturation, use adequate precision, retain graph authority |
-| anchors cause broad movement | preview diffs and require approval |
-| hosted models drift | pin where possible and cache request-response provenance |
-| filters inflate accuracy | report coverage and exclusions beside accuracy |
-| privacy limits hosted inference | support local compatible models and corpus policy |
-| call savings commoditize | measure emergence, privacy, auditability, and correction value separately |
-| clauses do not prove document performance | validate rollup before contract-level claims |
-
-The next product decision is evidence-gated: complete prototype-exit experiments, then choose whether to optimize review, expand constructed hyperbolic hierarchy capability, or stop. No roadmap claim should outrun those results.
+- [ ] Product name. The repository, unit and register say Cohesion-Gated Taxonomy; the mechanism notes say Nomen. One name, everywhere.
+- [ ] License for the public repository (owner decision cohesion-gated-taxonomy/license). Apache-2.0 carries a patent grant; MIT does not; FSL-1.1-ALv2 converts after two years.
+- [ ] First corpus beyond the three measured ones. Candidates in the household data: WhatsApp messages, voice-note transcripts, Paperless documents, reel captions.
+- [ ] Input doors for M1: folder, CSV/JSONL, Postgres table. Which one first follows the first corpus.
+- [ ] Whether the Sarkar hyperbolic representation ships at all, or stays a research option. It passed its control but has no measured product gain.

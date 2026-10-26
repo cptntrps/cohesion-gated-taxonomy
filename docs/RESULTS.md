@@ -22,7 +22,7 @@ Script: `hybrid_paired_test.py`.
 | **cohesion-gated hybrid (20% read)** | **96.2%** | **80** | −0.2 | [−2.5, +2.0] | **no** |
 | cohesion-gated hybrid (50% read) | 97.2% | 202 | +0.8 | [−1.0, +2.5] | **no** |
 
-**Claim: matches read-everything at 5× fewer calls.** Not "beats" — the difference is
+**Claim as of 2026-08-26: matches read-everything at 5× fewer calls.** SUPERSEDED 2026-09-01 by the W1 audit (commit 615f092, `experiments/w1_w2_w6_results.json`): at a 20% read the paired CI [−2.8, +1.8] fails the −2 point margin, so 5× is unproven; non-inferiority passes at a 40% read (about 2× fewer calls). B2 (`experiments/b2_results.json`) found no parity below a full read on 20 Newsgroups or Amazon. The current supported claim is in README.md. Not "beats" — the difference is
 not statistically distinguishable from zero. An earlier frontier appeared to beat
 exhaustive; that was an artifact of *assuming* read items correct rather than measuring
 them, and is retired.

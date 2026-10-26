@@ -33,6 +33,7 @@ healthy() {
 
 TARGET="$(git rev-parse HEAD)"
 echo "deploy: restarting $UNIT @ $(git rev-parse --short HEAD)"
+systemctl --user daemon-reload   # the unit file lives in this repo
 systemctl --user restart "$UNIT"
 if healthy; then
     printf '%s\n' "$TARGET" > "$LAST_GOOD_FILE"

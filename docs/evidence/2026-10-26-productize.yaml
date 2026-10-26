@@ -1,0 +1,80 @@
+operation: lifecycle-repository (primary) + lifecycle-service + lifecycle-secrets at their boundaries
+target: Cohesion-Gated Taxonomy, productized from ~/projects/ledgar-taxonomy-mvp
+status: complete
+owner: double_gui (product steward, neutral-development rule)
+executed-by: double_gui
+executed-at: 2026-10-26T15:10:00-04:00
+work-item: WORK-1425
+owner-request: "Productize Cohesion Gated Taxonomy." (Gui, 2026-10-26)
+
+intake-findings:
+  - no registry.product row, no service probe, no homepage tile, no runtime declaration
+  - user unit ledgar-taxonomy.service crash-looped 44,363 times since 2026-10-22 (restart every 5 s, ~6 s CPU each loading 60k clauses) because photo-albums-review.service holds 127.0.0.1:8799 (claimed 2026-10-07; the taxonomy unit dated 2026-10-18)
+  - the unit decrypted services/litellm.enc.env with the operator master key (credential borrow)
+  - runtime state (tree.json, members.json, extraction*.json) and 760 MB of embedding caches lived in the repo tree, gitignored
+  - no tests, no CI, no dependency pin, no VERSION, 60 research scripts and 100 result files at the repo root
+  - a temporary UFW allow (rule 124, laptop 192.168.50.136 -> 8799, 2026-08-28) outlived its socat forwarder and pointed at a loopback-only port
+
+canonical:
+  repo: /home/gui/src/products/cohesion-gated-taxonomy   (history preserved, moved with mv; branch productize merged ff into main)
+  remote: https://github.com/cptntrps/cohesion-gated-taxonomy (public, unchanged)
+  head: 348e6e0 feat: productize as cohesion-gated-taxonomy (package, data dir, tests, CI, unit on :8580)
+  version: 0.1.0 (VERSION file + pyproject + cohesion_taxonomy.__version__)
+  layout: cohesion_taxonomy/ (product) · web/ (UI) · experiments/ (one committed experiment per script, results beside it) · tests/ · docs/ · paper/
+  data: /home/gui/data/cohesion-gated-taxonomy (ledgar_emb.npz 171 MB, tree.json, members.json, extraction*.json, experiments/ caches 609 MB, var/ logs)
+
+service:
+  unit: cohesion-gated-taxonomy.service (user, symlink from the repo's systemd/ file)
+  bind: 127.0.0.1:8580 (loopback only; no LAN exposure change)
+  health: GET /healthz -> {"ok": true, "provisions": 60000, "leaves": 64, "clauses_in_a_leaf": 60000, "naming": true, "version": "0.1.0"}
+  deploy: ./deploy.sh (refuses non-main, dirty or diverged checkouts; daemon-reload + restart; gates on /healthz ok; rolls back to .deploy-last-good) — run once, healthy after 3 s
+  old-unit: ledgar-taxonomy.service stopped, disabled, file removed from ~/.config/systemd/user (NRestarts reset to 0)
+  secrets: sops principal cohesion-gated-taxonomy (~/.keys/cohesion-gated-taxonomy.age, pubkey age164wym5zta87pmc4m52jjwsg2q7w8v3c64y5weye2fdxer465j45qewgazm); store services/cohesion-gated-taxonomy.enc.env with NAMING_API_BASE / NAMING_API_KEY / NAMING_MODEL / NAMING_FALLBACK_MODEL; infrastructure-secrets commit 0b5f990d; decrypted at ExecStartPre into %t/cohesion-gated-taxonomy/secrets.env (0600)
+  llm-door: livingos-api :8510 openai schema, model dg-chat (neutral DeepSeek flash lane, no persona), scoped key cohesion-gated-taxonomy id 695ff3ab-925e-4ebd-b3e3-386e67eb8dfe (schema openai, scope platform-ops, 60 rpm); naming proven live (name_cluster -> ('Notices', True)); api.usage rows for the key show served deepseek-v4-flash with cost_usd recorded
+
+registers:
+  registry.product: slug cohesion-gated-taxonomy, steward double_gui, lifecycle in-production, repo cohesion-gated-taxonomy, correctness/health refs not-applicable with reasons
+  registry.capabilities + registry.product_capability: cap.cohesion-gated-taxonomy (capability.yaml at the repo top feeds the nightly index)
+  registry.dataset: data-cohesion-gated-taxonomy, class live, tier T1, owner double_gui, regenerate_cmd recorded; inside Backrest plans aurora-data, aurora-data-offsite, aurora-data-gdrive (/home/gui/data, no matching exclude)
+  ops.service_probe: id 178 (cohesion-gated-taxonomy / healthz, owner double_gui)
+  infra.service: runtime declaration 4:unit6:aurora4:user31:cohesion-gated-taxonomy.service (active, owner double_gui, product cohesion-gated-taxonomy, source hash of systemd/cohesion-gated-taxonomy.service)
+  hosts.yaml: aurora hosts_services += cohesion-gated-taxonomy (infrastructure 643e1f6)
+  homepage: products.surfaces.yaml entry, config rendered, tile "Cohesion-Gated Taxonomy" served (homepage a24fb80)
+  memory: remember() row describing the new home, doors and registers
+  consumers repointed: app-films ledgar scripts (cd28518), epistemic-gate corpus inventory (d40d899)
+
+gates:
+  - command: .venv/bin/python -m pytest -q
+    result: PASS; 16 passed (hermetic: no model, no corpus, no network)
+  - command: git push origin main (pre-push hook through gate_capture)
+    result: PASS; receipt id 1787
+  - command: GitHub Actions tests.yml on 348e6e0
+    result: PASS; https://github.com/cptntrps/cohesion-gated-taxonomy/actions/runs/40384129392
+  - command: gitleaks git (new history) + gitleaks dir (working tree)
+    result: PASS; no leaks found
+  - command: curl http://127.0.0.1:8580/healthz
+    result: PASS; ok true, 60000/60000 clauses in a leaf
+  - command: GET /api/score?q=Governing Law
+    result: PASS; semantic 7,798 clauses to 90% recall vs keyword 60,000 (7.7x)
+  - command: naming through the gateway with the service's own key
+    result: PASS; ('Notices', True); 3 api.usage rows, backend proxy:dg-chat
+  - command: ufw --force delete allow from 192.168.50.136 to 192.168.50.2 port 8799 proto tcp
+    result: PASS; rule deleted, no 8799 rule remains (the port is photo-albums-review's loopback page)
+
+decisions-recorded-here (reversal in parentheses; none meets the owner-decision bar):
+  - port 8580 for the taxonomy; photo-albums-review keeps 8799 (reverse: swap PORT in the unit and the probe row)
+  - lifecycle in-production: the unit is enabled, expected live and probed (reverse: UPDATE registry.product SET lifecycle='building')
+  - merge gate = receipted local pre-push suite + CI on main; no GitHub branch protection, because a required check on main would reject every direct push and force a PR flow on agent sessions (reverse: gh api PUT branches/main/protection with required check pytest)
+  - naming routed through the gateway's dg-chat lane instead of a vendor key, so spend lands in api.usage (reverse: NAMING_API_BASE=https://api.deepseek.com/v1 and a DeepSeek key in the store)
+  - the research scripts keep direct-endpoint env (EXTRACT_API, DEEPSEEK_API_KEY) for reproduction outside aurora
+
+evidence-ceiling: >-
+  The full taxonomy rebuild (POST /rerun, ~100 naming calls over 60k clauses) was not run
+  against the live service, so the current tree.json keeps the 2026-10-21 names; the
+  naming path was proven with one live call through the same code and the suite exercises
+  the rebuild on a synthetic corpus. A LAN client path does not exist by design (loopback).
+
+left-as-is:
+  - ~/projects/hyperbolic-experiments/crossover/ledgar_emb.npz (171 MB) stays in that repo; the product uses its own copy
+  - the 2026-08-28 LAN-exposure evidence file in ~/src/agents keeps the old path as a historical record
+  - no LICENSE file in the public repo (owner decision opened: cohesion-gated-taxonomy/license)

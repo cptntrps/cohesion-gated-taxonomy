@@ -1,3 +1,0 @@
-[console_scripts]
-cohesion-taxonomy-build = cohesion_taxonomy.build_tree:main
-cohesion-taxonomy-serve = cohesion_taxonomy.server:main

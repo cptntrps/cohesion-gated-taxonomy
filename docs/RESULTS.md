@@ -442,3 +442,33 @@ unclear = invalid; they were told not to open the key.
 - Standing: with an anchor plus 20 human picks per concept, about 9 in 10 of the clauses Nomen files under a
   company's term are valid uses of that term (median, 16/20 concepts above 70%). The label-agreement scores of
   conditions A-E understate validity because LEDGAR gives each clause one heading-derived type.
+
+## Anchor validity v2: pre-registered out-of-sample replication (2026-10-25, `docs/PREREG_anchor_validity_v2.md`, `anchor_validity_v2.py`, `anchor_validity_v2_results.json`)
+
+Protocol committed before any data (1abd6d8, deviations log f94bad0). 20 anchors drawn at random from the 80 types
+not used in v1; treatment E = anchor + 20 simulated human picks; baseline A = anchor name only; 842 blind shuffled
+items, every item judged by two independent judges (J1 Claude Opus, J2 Claude Sonnet); primary verdict = both valid.
+
+| hypothesis | measure | result | verdict |
+|---|---|---|---|
+| H3 judges reliable | J1 accepts gold / rejects random; J2 same; kappa | 94.7% / 100%; 96.5% / 95.0%; 0.757 | PASS |
+| H1 E is valid | median validity precision, bootstrap 95% CI | **0.989 [0.914, 1.000]** (label precision 0.608) | PASS |
+| H2 human picks matter | E vs A, Wilcoxon one-sided, 17 paired anchors | E 0.989 vs A 0.735, p = 0.002 | PASS |
+| H4 E finds most valid clauses | median validity recall | 0.419 | FAIL |
+
+Diagnostics: hard decoys (the nearest other clause type shown under the anchor) accepted by J1 15%, J2 28% (both:
+at most 15%), so the judges are somewhat lenient on near misses; far-band non-members judged valid 0% / 7.5%.
+
+- Where name-only anchors fail and picks rescue them: Litigations A 0.07 -> E 0.99, Enforceability 0.16 -> 0.96,
+  Capitalization 0.17 -> 0.99, Releases 0.27 -> 0.77.
+- Failures: Miscellaneous 0.14 (no coherent function), Construction 0.47 (29 members), Assigns (E produced no
+  members: no model fit a positive above 0.5).
+- Limitation found by reading members: "Titles" scores 1.00 valid but every disputed member is a Headings clause
+  ("headings are for convenience only"); LEDGAR's Titles means title to property, which the simulated human ticked.
+  The model drifted to the other sense of the word and the judges, who see only the name, accepted it. Validity by
+  name cannot see a drift to another legitimate sense. Scoring Titles at its label precision (0.05) leaves the median
+  at 0.98.
+- Standing (replicated out of sample): with a company term plus about 20 human picks, the clauses Nomen files under
+  the term are valid uses of it at a median of about 99% (95% CI lower bound 91%), significantly better than the
+  term alone (74%). It finds about 42% of the valid clauses (median); recall, not precision, is the open problem.
+  Not tested: a real person instead of the label oracle; uncertainty sampling for recall; other corpora.

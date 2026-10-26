@@ -1,0 +1,254 @@
+{
+ "judge": "gemma3:12b",
+ "n_judge": 15,
+ "accept": 0.7,
+ "tau": 0.6,
+ "anchors": [
+  {
+   "anchor": "Amendments",
+   "joined": 3301,
+   "true_precision": 0.158,
+   "family_precision": 0.17,
+   "recall": 0.357,
+   "judged_yes": 0.867,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Arbitration",
+   "joined": 742,
+   "true_precision": 0.503,
+   "family_precision": 0.503,
+   "recall": 0.969,
+   "judged_yes": 0.667,
+   "judged_n": 15,
+   "accepted": false
+  },
+  {
+   "anchor": "Authority",
+   "joined": 501,
+   "true_precision": 0.208,
+   "family_precision": 0.208,
+   "recall": 0.189,
+   "judged_yes": 0.933,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Books",
+   "joined": 5,
+   "true_precision": 0.2,
+   "family_precision": 0.2,
+   "recall": 0.043,
+   "judged_yes": 1.0,
+   "judged_n": 5,
+   "accepted": true
+  },
+  {
+   "anchor": "Change In Control",
+   "joined": 208,
+   "true_precision": 0.832,
+   "family_precision": 0.832,
+   "recall": 0.496,
+   "judged_yes": 1.0,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Definitions",
+   "joined": 24,
+   "true_precision": 0.375,
+   "family_precision": 0.458,
+   "recall": 0.016,
+   "judged_yes": 1.0,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Disclosures",
+   "joined": 2205,
+   "true_precision": 0.15,
+   "family_precision": 0.15,
+   "recall": 0.561,
+   "judged_yes": 0.667,
+   "judged_n": 15,
+   "accepted": false
+  },
+  {
+   "anchor": "Duties",
+   "joined": 680,
+   "true_precision": 0.366,
+   "family_precision": 0.366,
+   "recall": 0.703,
+   "judged_yes": 0.933,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Existence",
+   "joined": 2,
+   "true_precision": 0.5,
+   "family_precision": 0.5,
+   "recall": 0.004,
+   "judged_yes": 1.0,
+   "judged_n": 2,
+   "accepted": true
+  },
+  {
+   "anchor": "Intellectual Property",
+   "joined": 408,
+   "true_precision": 0.824,
+   "family_precision": 0.824,
+   "recall": 0.71,
+   "judged_yes": 1.0,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Liens",
+   "joined": 149,
+   "true_precision": 0.711,
+   "family_precision": 0.711,
+   "recall": 0.339,
+   "judged_yes": 1.0,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "No Waivers",
+   "joined": 94,
+   "true_precision": 0.255,
+   "family_precision": 0.926,
+   "recall": 0.054,
+   "judged_yes": 1.0,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Notices",
+   "joined": 1259,
+   "true_precision": 0.977,
+   "family_precision": 0.977,
+   "recall": 0.493,
+   "judged_yes": 1.0,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Payments",
+   "joined": 2398,
+   "true_precision": 0.206,
+   "family_precision": 0.206,
+   "recall": 0.578,
+   "judged_yes": 0.933,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Positions",
+   "joined": 8,
+   "true_precision": 0.375,
+   "family_precision": 0.375,
+   "recall": 0.016,
+   "judged_yes": 1.0,
+   "judged_n": 8,
+   "accepted": true
+  },
+  {
+   "anchor": "Qualifications",
+   "joined": 21,
+   "true_precision": 0.238,
+   "family_precision": 0.238,
+   "recall": 0.106,
+   "judged_yes": 1.0,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Remedies",
+   "joined": 19,
+   "true_precision": 0.684,
+   "family_precision": 0.684,
+   "recall": 0.02,
+   "judged_yes": 1.0,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Subsidiaries",
+   "joined": 1560,
+   "true_precision": 0.297,
+   "family_precision": 0.297,
+   "recall": 0.824,
+   "judged_yes": 1.0,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "anchor": "Survival",
+   "joined": 6,
+   "true_precision": 1.0,
+   "family_precision": 1.0,
+   "recall": 0.004,
+   "judged_yes": 1.0,
+   "judged_n": 6,
+   "accepted": true
+  },
+  {
+   "anchor": "Terms",
+   "joined": 2252,
+   "true_precision": 0.231,
+   "family_precision": 0.238,
+   "recall": 0.447,
+   "judged_yes": 1.0,
+   "judged_n": 15,
+   "accepted": true
+  }
+ ],
+ "placebos": [
+  {
+   "placebo": "patent prosecution",
+   "joined": 79,
+   "judged_yes": 0.8666666666666667,
+   "judged_n": 15,
+   "accepted": true
+  },
+  {
+   "placebo": "crop insurance",
+   "joined": 130,
+   "judged_yes": 0.06666666666666667,
+   "judged_n": 15,
+   "accepted": false
+  }
+ ],
+ "accepted": [
+  "Amendments",
+  "Authority",
+  "Books",
+  "Change In Control",
+  "Definitions",
+  "Duties",
+  "Existence",
+  "Intellectual Property",
+  "Liens",
+  "No Waivers",
+  "Notices",
+  "Payments",
+  "Positions",
+  "Qualifications",
+  "Remedies",
+  "Subsidiaries",
+  "Survival",
+  "Terms"
+ ],
+ "median_true_precision_accepted": 0.3705,
+ "agreement": 0.35,
+ "collateral_frac": 0.1597,
+ "gates": {
+  "C1_precision": "FAIL",
+  "C2_agreement": "FAIL",
+  "C3_placebos": "FAIL",
+  "C4_collateral": "FAIL",
+  "C5_coverage": "PASS"
+ }
+}

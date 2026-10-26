@@ -340,3 +340,28 @@ random (seed 2026); the hidden labels score them. Production path: `embed_names`
   distinctive concepts and fails for broad or overlapping ones, with up to a fifth of the corpus moved as collateral.
   Not tried (would be a new pre-registration): a per-anchor precision check by a blind judge before an anchor is
   accepted, and competitive assignment that leaves contested clauses in discovery.
+
+### Condition C: blind-judge acceptance gate (2026-10-25, `anchor_judge_test.py`, `anchor_judge_results.json`)
+
+Pre-registered after A and B failed. Name anchors as in A; an anchor is kept only if a blind local judge says yes to
+>= 70% of 15 random members ("Is this clause a '<name>' clause? yes/no, unsure = no"). Judge gemma3:12b (amended from
+27b before any judgment: the GPU was busy with a holo-splat job and the 27b model timed out).
+
+| gate | result | pass |
+|---|---|---|
+| C1 median true precision of accepted anchors | 0.37 | >= 0.70 FAIL |
+| C2 judge decision agrees with truth | 35% | >= 80% FAIL |
+| C3 capturing placebos rejected | 1 of 2 ("patent prosecution" accepted at 0.87) | 2 of 2 FAIL |
+| C4 other-type clauses in accepted anchors | 16% | <= 5% FAIL |
+| C5 anchors accepted | 18 of 20 | >= 5 PASS |
+
+- The judge is not a rubber stamp: on deliberately wrong pairs (Notices on governing-law clauses, Survival on
+  base-salary clauses, 5 pairs x 5 clauses) it said yes 0 of 25 times. It fails on the near cases.
+- The failure mode, read off the members: anchors attach to what a clause MENTIONS, not what it DOES. "Amendments"
+  captures the governing-law and counterparts clauses of amendment documents ("This Amendment shall be governed by
+  ..."); "patent prosecution" captures the counterparts clause of a Patent Security Agreement (and, rightly, real
+  patent-filing cooperation clauses: this placebo was not empty-domain). A yes/no question naming one category
+  shares the same confusion. Same lesson as 2026-06-10 ("nomic embeds content, not register").
+- Standing: anchors as implemented (name or name + exemplars, with or without a yes/no judge) do not give a precise
+  taxonomy in the company's own words on LEDGAR. Next hypothesis, not yet run: a forced-choice judge that assigns
+  each clause's FUNCTION among all anchors plus "other", instead of a leading yes/no per anchor.

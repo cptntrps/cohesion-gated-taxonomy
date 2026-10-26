@@ -365,3 +365,28 @@ Pre-registered after A and B failed. Name anchors as in A; an anchor is kept onl
 - Standing: anchors as implemented (name or name + exemplars, with or without a yes/no judge) do not give a precise
   taxonomy in the company's own words on LEDGAR. Next hypothesis, not yet run: a forced-choice judge that assigns
   each clause's FUNCTION among all anchors plus "other", instead of a leading yes/no per anchor.
+
+### Condition D: forced-choice function judge (2026-10-25, `anchor_forced_test.py`, `anchor_forced_results.json`)
+
+Pre-registered after C. One change: the judge picks which ONE of the 20 anchors (plus "Other", shuffled) describes
+what a sampled clause DOES; an anchor is kept if >= 70% of its 15 sampled members come back to it.
+
+| gate | C (yes/no) | D (forced choice) | pass |
+|---|---|---|---|
+| C1 median true precision of accepted anchors | 0.37 | 0.44 FAIL | >= 0.70 |
+| C2 judge decision agrees with truth | 35% | 55% FAIL | >= 80% |
+| C3 capturing placebos rejected | 1 of 2 | 2 of 2 PASS | 2 of 2 |
+| C4 other-type clauses in accepted anchors | 16% | 2.3% PASS | <= 5% |
+| C5 anchors accepted | 18 | 8 PASS | >= 5 |
+
+- The forced choice fixes safety: both capturing placebos rejected (their members went to Duties, IP, Disclosures),
+  collateral down from 16% to 2.3%, the vacuuming anchors rejected (Amendments 0.27, Disclosures 0.27, Payments 0.60,
+  Subsidiaries 0.20, Terms 0.47).
+- It does not fix selection: it rejects two of the best anchors (Intellectual Property, true 0.82, judged 0.33;
+  Change In Control, true 0.83, judged 0.67) and accepts weak ones (Authority, true 0.21, judged 0.80; Duties 0.37).
+  The 12B judge over-uses "Duties" (11 of 15 "crop insurance" members). Part of the C1 miss is LEDGAR's overlapping
+  types: No Waivers is 0.26 exact but 0.93 by family.
+- Line closed, as pre-registered: four conditions (A name, B name + exemplars, C yes/no judge, D forced-choice
+  judge), none meets precision. Standing: anchors are safe to SUGGEST vocabulary and to find where a playbook term
+  lands (D rejects fakes and keeps collateral at 2%), but they do not yet give a precise taxonomy in the company's
+  own words. Untested knob, recorded not run: a stronger judge (27B or frontier) with a larger sample per anchor.

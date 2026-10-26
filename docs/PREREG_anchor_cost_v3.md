@@ -48,3 +48,7 @@ Written below with reason and time, before scores are computed.
 - 2026-10-26, after the judgments, before scoring: judge J1 batch 1 reported that a parallel judge overwrote its
   scratch file, so it saw pair text (clause + term only, from the blind pairs file; no labels, no keys, no verdicts)
   for p0654-p0686, which it did not judge, and re-printed its own range before judging. Blinding is unaffected.
+- 2026-10-26, after the first scoring: an analysis bug, not a design change. The bootstrap counted a resampled
+  clause's hits once per draw but its valid pairs only once, so recall intervals were wrong (the U80 point estimate,
+  -29.7 points, fell outside its own interval). Fixed to count both per draw and re-scored; point estimates and
+  precision intervals are unchanged. Both scorings are in the git history (d1acd2a and the next commit).

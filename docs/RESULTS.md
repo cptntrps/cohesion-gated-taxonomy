@@ -483,7 +483,7 @@ call per clause; 785 blind pooled pairs judged by two Opus judges; valid = both.
 |---|---|---|
 | H7 judges reliable | J1 accepts 90.0% of label positives, rejects 100% of negatives; J2 87.5% / 97.5%; kappa 0.81 | FAIL (J2 accepted 35 of 40 positives; 36 needed) |
 | H5 Nomen precision not worse at 0 calls | (would pass: R20 - LLM = +9.6 points, 95% CI [+5.8, +13.5]) | NOT ESTABLISHED (H7) |
-| H6 some budget <= 80 picks matches LLM recall | (would fail: best is U80, recall 0.631 vs 0.928, difference CI [-53.6, -39.8] points) | NOT ESTABLISHED (H7) |
+| H6 some budget <= 80 picks matches LLM recall | (would fail: best is U80, recall 0.631 vs 0.928, difference -29.7 points, CI [-33.9, -25.5]) | NOT ESTABLISHED (H7) |
 
 | system | LLM calls / 60k | human picks | validity precision | pooled validity recall |
 |---|---|---|---|---|

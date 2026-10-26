@@ -147,9 +147,12 @@ def score():
     pool_ids = [p for p, v in key.items() if v["kind"] == "pool"]
     kap = kappa([ok["J1"][p] for p in pool_ids], [ok["J2"][p] for p in pool_ids])
 
+    from collections import Counter
+
     def metrics(sample):
         out = {}
-        tot_valid = sum(valid[(k, t)] for (k, t) in valid if k in sample)
+        per_clause = Counter(k for (k, t), v in valid.items() if v)
+        tot_valid = sum(per_clause[k] for k in sample)  # counts a resampled clause each time it is drawn
         for s, pred in systems.items():
             prop = [(k, pred[k]) for k in sample if pred[k]]
             hit = sum(valid.get(p, False) for p in prop)

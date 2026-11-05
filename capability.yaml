@@ -35,6 +35,6 @@ entries:
       mcp_servers: []
       env: [COHESION_TAXONOMY_DATA, NAMING_API_BASE, NAMING_API_KEY, NAMING_MODEL, PORT]
       live_deps: [ollama, livingos-api]
-      model_tier: cheap
+      model_tier: any
       hardware: none
     dependencies: []

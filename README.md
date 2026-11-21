@@ -114,18 +114,53 @@ directory (`COHESION_TAXONOMY_DATA`, default `./data`, gitignored) for the embed
 built tree and the extraction result. `GET /healthz` reports what the server loaded and
 whether the served tree covers the corpus; it is the deploy gate (`deploy.sh`).
 
-On aurora the app runs as the user unit `cohesion-gated-taxonomy.service` (loopback :8580,
-data in `~/data/cohesion-gated-taxonomy`, naming through the livingos-api gateway's
-neutral DeepSeek lane with its own scoped key from the sops store
-`services/cohesion-gated-taxonomy.enc.env`): `systemctl --user status cohesion-gated-taxonomy`.
-Product register: `registry.product` slug `cohesion-gated-taxonomy`, steward double_gui.
-
 The UI (2026-10-18) follows [DISCOVERY_FLOW.md](docs/DISCOVERY_FLOW.md): **1 Discover** (the named tree with a
 coherence meter per concept, benchmark labels hidden behind a toggle), **2 Correct** (name a concept, rename a
 group, seed one from a clause that fits nowhere; every change re-clusters the corpus), **3 Find** (type a concept,
 get the clauses ranked by meaning and the live scorecard: clauses to read to reach 90% recall by meaning vs by
 keyword, `GET /api/score?q=...`), **4 Extract** (the field-extraction demo). A **How it works** tab explains the mechanism in plain language for a non-technical reader, with its numbers read live from `tree.json` and `extraction.json`; `#how` (or `#discover`, `#correct`, `#find`) opens a tab directly. The previous research console is
 kept as `web/index_v1.html`.
+
+## Operate
+
+Steward: double_gui (`registry.product` slug `cohesion-gated-taxonomy`).
+
+| Item | Value |
+|---|---|
+| Host | aurora |
+| Unit | user unit `cohesion-gated-taxonomy.service`, a symlink to `systemd/cohesion-gated-taxonomy.service` in this checkout |
+| Port | `127.0.0.1:8580`, loopback only |
+| Data | `~/data/cohesion-gated-taxonomy` (embeddings, `tree.json`, `members.json`, extraction results, `var/` logs) |
+| Database | none |
+| Secrets | sops store `~/src/infrastructure-secrets/services/cohesion-gated-taxonomy.enc.env`, age key `~/.keys/cohesion-gated-taxonomy.age`. The unit decrypts the store into its runtime directory at start. |
+| Dependencies | the livingos-api gateway (neutral lane `dg-chat`) for naming, Ollama `nomic-embed-text` on `localhost:11434` for query and anchor embeddings, the LEDGAR corpus in the Hugging Face cache (the unit sets `HF_DATASETS_OFFLINE=1`) |
+| Probe | `ops.service_probe`, service `cohesion-gated-taxonomy`, reads `/healthz` |
+
+```bash
+curl -s http://127.0.0.1:8580/healthz                           # health: "ok": true
+systemctl --user status cohesion-gated-taxonomy                 # state
+systemctl --user restart cohesion-gated-taxonomy                # also: start, stop
+journalctl --user -u cohesion-gated-taxonomy -n 100 --no-pager  # logs
+```
+
+| Symptom | Cause | Remedy |
+|---|---|---|
+| `"ok": false` | The served tree does not cover the loaded corpus. | Set `COHESION_TAXONOMY_DATA=~/data/cohesion-gated-taxonomy` and the naming variables. Run the tree build from `## Run`. Then restart the unit. |
+| The unit fails at start | The `sops -d` step fails, the store has no `NAMING_API_KEY` (`no naming key`), or the data directory has no `tree.json`. | Read the journal. Check the age key and the sops store, or run the tree build. |
+| No answer on :8580 | The unit is down or its start limit is hit (5 starts in 600 s). | Read the journal. Run `systemctl --user reset-failed cohesion-gated-taxonomy`. Then start the unit. |
+
+**Backup.** The Backrest plans `aurora-data` (NAS) and `aurora-data-offsite` hold `~/data`. To restore, restore
+`~/data/cohesion-gated-taxonomy`, then start the unit. A tree build from `ledgar_emb.npz` also recreates `tree.json`
+and `members.json`.
+
+**Deploy.** The unit runs this checkout. Merge the change to `main` and push it. The pre-push hook
+(`.githooks/pre-push`) runs the test suite. Then run `./deploy.sh`. The script refuses a dirty tree and a `HEAD`
+that is not `origin/main`. It restarts the unit and waits for `/healthz` to report `"ok": true`. On failure it
+checks out the commit in `.deploy-last-good` and restarts the unit.
+
+**What needs Gui** (`owner_decision:governance/decision-bar-20261019`): a bind address other than loopback, a
+change to a published claim in this public repository, and the removal of the data directory. The steward decides
+all other operations.
 
 ## Layout
 

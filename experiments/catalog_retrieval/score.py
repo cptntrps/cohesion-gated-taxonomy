@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """WORK-2283 scoring (fixed before the test run).
 
-  python3 score.py <data_dir> <split> --arms-file arms_dim128_beam6.jsonl [--results-out results.json] [--mlflow]
+  python3 score.py <data_dir> <split> --arms-file arms_<configuration>.jsonl [--results-out results.json] [--mlflow]
 
 Primary (the study record): one task per session, the one with the smallest sha256("work-2283-unit:" + tid);
 field hit10 = the first gold item is in the arm's top 10. Raw counts of sessions go to results.json in the
@@ -28,6 +28,7 @@ TREAT, BASE = "hyp_tree", "flat"
 CONTROLS = ("bm25", "llm_catalog", "popularity")
 SECONDARY = (("H5", TREAT, "tree_cos"), ("H6", "flat_pca", "flat"), ("H7", TREAT, "flat_pca"))
 SIMPLE = ("flat", "bm25", "llm_catalog")
+BEST_SIMPLE = "bm25"      # the best simple method on dev, key v3 (design.md amendment v2); never chosen on test
 EMBED_MS = 338.5          # shared bge-m3 query embedding (premise_embeddings.md), paid by every embedding arm
 EMBED_ARMS = ("flat", "flat_pca", "hyp_tree", "tree_cos")
 NONINFERIOR = 0.05
@@ -91,12 +92,20 @@ def paired(rows, a, b, tids, sess=None):
 
 
 def reading(key, rows, units, cost):
-    """The preregistered descriptive call (design.md). Controlling set: the primary units. POSITIVE: hyp_tree minus
-    each of flat, bm25 and llm_catalog has a 95% lower bound above 0 on the units AND on all tasks, and no
-    contrast has a negative point estimate in a task type with >= MIN_TYPE_UNITS units. NEGATIVE: the upper bound
-    is below 0 against any one of them on the units. Else INCONCLUSIVE, which means: keep the simpler method.
-    CHEAPER: hyp_tree is non-inferior to llm_catalog (lower bound above -NONINFERIOR on the units) at a lower
-    cost per query (USD and latency)."""
+    """The preregistered descriptive call (design.md, amendment v2), computed here and nowhere else.
+
+    The paired hit10 differences of hyp_tree minus each simple method (flat, bm25, llm_catalog) are read on two
+    sets: every task (session-cluster bootstrap, the set of design v1) and the primary units (one task per
+    session). Both sets must agree; a call that one set or one task type drives is INCONCLUSIVE.
+      POSITIVE      on both sets the 95% lower bound is above 0 against each of the three; in no task type with
+                    >= MIN_TYPE_UNITS units is a point estimate negative; and the marginal USD per 1000 queries of
+                    hyp_tree is not above that of BEST_SIMPLE.
+      NEGATIVE      on both sets the 95% upper bound of hyp_tree minus BEST_SIMPLE is below 0, and in no task type
+                    with >= MIN_TYPE_UNITS units is that point estimate positive.
+      INCONCLUSIVE  anything else. The action is the same as NEGATIVE: keep the simpler method.
+    BEST_SIMPLE is fixed from dev before the test run (never from test estimates).
+    CHEAPER (a separate flag, not the call): hyp_tree is non-inferior to llm_catalog (lower bound above
+    -NONINFERIOR on the units) at a lower cost per query (USD and end-to-end latency)."""
     if TREAT not in rows or any(a not in rows for a in SIMPLE):
         return {"call": "not_run", "why": "an arm is missing"}
     ut = sorted(units)
@@ -109,16 +118,20 @@ def reading(key, rows, units, cost):
         tt = [t["tid"] for t in key if t["tid"] in units and task_type(t) == ty]
         if len(tt) >= MIN_TYPE_UNITS:
             types[ty] = {a: paired(rows, TREAT, a, tt) for a in SIMPLE}
-    pos = (all(on_units[a]["ci95"][0] > 0 for a in SIMPLE) and all(on_all[a]["ci95"][0] > 0 for a in SIMPLE)
-           and all(v[a]["est"] >= 0 for v in types.values() for a in SIMPLE))
-    neg = any(on_units[a]["ci95"][1] < 0 for a in SIMPLE)
+    sets = (on_units, on_all)
+    pos = (all(s[a]["ci95"][0] > 0 for s in sets for a in SIMPLE)
+           and all(v[a]["est"] >= 0 for v in types.values() for a in SIMPLE)
+           and cost[TREAT]["usd_per_1000"] <= cost[BEST_SIMPLE]["usd_per_1000"])
+    neg = (all(s[BEST_SIMPLE]["ci95"][1] < 0 for s in sets)
+           and all(v[BEST_SIMPLE]["est"] <= 0 for v in types.values()))
     call = "POSITIVE" if pos else "NEGATIVE" if neg else "INCONCLUSIVE"
     cheaper = (on_units["llm_catalog"]["ci95"][0] > -NONINFERIOR
                and cost[TREAT]["usd_per_1000"] < cost["llm_catalog"]["usd_per_1000"]
                and cost[TREAT]["ms_per_query"] < cost["llm_catalog"]["ms_per_query"])
-    return {"call": call, "action": {"POSITIVE": "build the hyperbolic index",
-                                     "NEGATIVE": "keep the simpler method; do not build",
-                                     "INCONCLUSIVE": "keep the simpler method"}[call],
+    return {"call": call, "best_simple": BEST_SIMPLE,
+            "action": {"POSITIVE": "build the hyperbolic index",
+                       "NEGATIVE": "keep the simpler method; do not build",
+                       "INCONCLUSIVE": "keep the simpler method"}[call],
             "cheaper_than_llm_at_noninferior_quality": bool(cheaper),
             "units": on_units, "all_tasks": on_all, "by_type_units": types}
 
@@ -184,6 +197,9 @@ def main():
     ap.add_argument("--mlflow", action="store_true")
     a = ap.parse_args()
     d = Path(a.data_dir)
+    if a.split == "test":
+        import run_arms
+        run_arms.check_frozen_key(d)
     key, rows = load_rows(d, a.split, a.arms_file)
     counts, status, n_units = primary_counts(key, rows)
     cost = {}

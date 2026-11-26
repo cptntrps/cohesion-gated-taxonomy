@@ -3,12 +3,15 @@
 
   python3 llm_arm.py <data_dir> <split> [--workers 4]
 
-The catalog is the system prompt (a file, cached by the provider across calls); the task is the user message.
+The catalog is the system prompt (a file, cached by the provider across calls), one numbered line per item; the
+model answers row numbers, mapped back to catalog ids (long ids were altered by the model in the v2 pilot). The task
+is the user message. Every raw reply is stored. A reply with 0 valid picks is a failed row.
 Each call runs `claude -p` with no tools, no settings and no session persistence. The accepted vocabulary is the
 catalog ids in the prompt, never the gold. A call that fails twice is a failed row (counted, never a miss).
 A usage-limit reply is fatal: the run stops loudly.
 """
 import argparse
+import collections
 import json
 import re
 import subprocess
@@ -22,16 +25,16 @@ import run_arms as A
 MODEL = "claude-haiku-5-5"
 INSTR = """You choose which catalog items an agent must read before it does a task.
 The catalog lists skills (procedures an agent can load) and owner decisions (rules and decisions the agent must follow).
-Each line is: <id> | <name and description>.
-Read the task, then return the 10 most relevant item ids, most relevant first, as JSON only: {"ids": ["...", ...]}.
-Use only ids that appear in the catalog. Do not explain.
+Each line is: <number> | <name and description>.
+Read the task, then return the numbers of the 10 most relevant items, most relevant first, as JSON only:
+{"ids": [<number>, ...]}. Use only numbers that appear in the catalog. Do not explain.
 
 CATALOG
 """
 
 
 def catalog_prompt(cat):
-    return INSTR + "\n".join(f"{c['id']} | {A.item_text(c)}" for c in cat) + "\n"
+    return INSTR + "\n".join(f"{i} | {A.item_text(c)}" for i, c in enumerate(cat)) + "\n"
 
 
 def call(sys_file, text, timeout=240):
@@ -50,18 +53,24 @@ def call(sys_file, text, timeout=240):
     return res, d.get("usage", {}), float(d.get("total_cost_usd") or 0.0)
 
 
-def parse(res, ids):
+def parse(res, n_items):
+    """Catalog row numbers from the reply, in order, unique, in range; the vocabulary is the prompt's numbering."""
     m = re.search(r"\{.*\}", res, re.S)
     got = []
     try:
         got = json.loads(m.group(0)).get("ids", []) if m else []
     except ValueError:
-        got = re.findall(r"(?:skill|decision):[A-Za-z0-9/_.-]+", res)
+        got = []
+    if not got:
+        got = re.findall(r"\b\d{1,4}\b", res)
     out = []
     for g in got:
-        g = str(g).strip()
-        if g in ids and g not in out:
-            out.append(g)
+        try:
+            i = int(str(g).strip().lstrip("#"))
+        except ValueError:
+            continue
+        if 0 <= i < n_items and i not in out:
+            out.append(i)
     return out[:10]
 
 
@@ -77,7 +86,7 @@ def main():
     pos = {c["id"]: i for i, c in enumerate(cat)}
     sys_file = d / "llm_catalog_prompt.txt"
     sys_file.write_text(catalog_prompt(cat))
-    out = d / "results" / a.split / "llm_catalog.jsonl"
+    out = d / "results" / a.split / "llm_catalog_v3.jsonl"
     out.parent.mkdir(parents=True, exist_ok=True)
     done = {json.loads(l)["tid"] for l in open(out)} if out.exists() else set()
 
@@ -87,16 +96,13 @@ def main():
             t0 = time.perf_counter()
             try:
                 res, usage, cost = call(sys_file, t["text"])
-                picks = parse(res, pos)
+                picks = parse(res, len(cat))
                 ms = (time.perf_counter() - t0) * 1000
-                ranking = [pos[p] for p in picks] + [i for i in range(len(cat)) if cat[i]["id"] not in picks]
-                row = A.score_row(t, "llm_catalog", ranking, [pos[g] for g in t["gold"]], ms)
-                # only the 10 picks are a ranking: positions past 10 are not retrieved
-                if row["first_rank"] and row["first_rank"] > len(picks):
-                    row.update(first_rank=None, rr=0.0)
-                row["recall10"] = sum(g in picks for g in t["gold"]) / len(t["gold"])
-                row["recall5"] = sum(g in picks[:5] for g in t["gold"]) / len(t["gold"])
-                row.update(n_picks=len(picks), usage=usage, cost_usd=cost, failed=False)
+                if not picks:
+                    raise ValueError(f"0 valid picks in the reply: {res[:200]!r}")
+                # the ranking is the picks only (no padding): an item the model did not pick is not retrieved
+                row = A.score_row(t, "llm_catalog", picks, [pos[g] for g in t["gold"]], ms)
+                row.update(n_picks=len(picks), usage=usage, cost_usd=cost, failed=False, raw=res)
                 return row
             except (RuntimeError, ValueError, subprocess.TimeoutExpired, IndexError) as e:
                 err = str(e)[:300]
@@ -114,7 +120,8 @@ def main():
                 print(i, row.get("hit10"), row.get("failed"), flush=True)
     rows = [json.loads(l) for l in open(out)]
     ok = [r for r in rows if not r["failed"]]
-    print(json.dumps({"n": len(rows), "failed": len(rows) - len(ok),
+    picks = sorted(collections.Counter(r.get("n_picks", 0) for r in rows).items())
+    print(json.dumps({"n": len(rows), "failed": len(rows) - len(ok), "n_picks": picks,
                       "hit10": sum(r["hit10"] for r in rows) / len(rows),
                       "cost_usd": sum(r.get("cost_usd", 0) for r in ok),
                       "median_ms": sorted(r["ms"] for r in ok)[len(ok) // 2] if ok else None}, indent=1))

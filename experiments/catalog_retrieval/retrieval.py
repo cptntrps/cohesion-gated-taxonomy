@@ -4,11 +4,11 @@ Arms (each returns a full ranking of catalog indices for one query):
   bm25        Okapi BM25 over the item text (name + description head).
   flat        cosine on the full embedding.
   flat_pca    cosine on the PCA-reduced embedding (isolates the dimension reduction).
-  hyp_tree    the treatment: a catalog tree, embedded in the Poincare disk by Sarkar's construction (no gradient
-              training: the optimizer failure of RESULTS.md §12-13), descended by beam search on PCA-reduced node
-              descriptors, then ranked ring by ring by Poincare distance from the landing nodes (the "jumps"),
-              ties broken by reduced cosine.
-  tree_cos    the same tree and descent, ranked by explicit tree hop distance instead of Poincare distance
+  hyp_tree    the treatment: the catalog tree in a d-dim Poincare ball (Sarkar-style construction with Mobius
+              addition, semantic child directions, no gradient training: RESULTS.md sections 12-13); the query
+              descends by beam search, is inserted as a child of its landing node, and items are ranked by
+              unrounded Poincare distance to it, so the geometry decides every rank.
+  tree_cos    the same tree, descent and landing node, ranked by explicit tree hop distance instead of Poincare distance
               (isolates the hyperbolic geometry from the tree).
   popularity  items by gold frequency in the dev split.
   random      a seeded permutation.
@@ -147,62 +147,79 @@ def build_tree(kinds, groups, V, skill_clusters=14, max_group=24, per_sub=12, se
 
 # ------------------------------------------------------------------ Sarkar's construction in the Poincare disk
 
-def sarkar(tree, tau, order=None):
-    """Complex positions in the Poincare disk. Root at 0; each node's children evenly spaced around it at
-    hyperbolic distance tau, the first opposite the parent (Sala et al., ICML 2018, combinatorial construction).
-    order: {node: children in angular order}; default is the tree's insertion order (arbitrary angles)."""
-    pos = np.zeros(len(tree), dtype=np.complex128)
+def mobius_add(x, y):
+    """Mobius addition x (+) y in the Poincare ball (curvature -1); x (d,) or (n, d), y (n, d) or (d,).
+    The same operation as pg_hyperbolic hyp_mobius_add."""
+    x, y = np.atleast_2d(x).astype(np.float64), np.atleast_2d(y).astype(np.float64)
+    xy = np.sum(x * y, -1, keepdims=True)
+    x2 = np.sum(x * x, -1, keepdims=True)
+    y2 = np.sum(y * y, -1, keepdims=True)
+    num = (1 + 2 * xy + y2) * x + (1 - x2) * y
+    return num / (1 + 2 * xy + x2 * y2)
+
+
+def poincare(a, b):
+    """Poincare-ball distance between real points (last axis = coordinates, broadcasts); pg_hyperbolic
+    poincare_distance: arcosh(1 + 2|a-b|^2 / ((1-|a|^2)(1-|b|^2)))."""
+    a, b = np.asarray(a, dtype=np.float64), np.asarray(b, dtype=np.float64)
+    num = 2 * np.sum((a - b) ** 2, -1)
+    den = np.clip((1 - np.sum(a * a, -1)) * (1 - np.sum(b * b, -1)), 1e-300, None)
+    return np.arccosh(1 + num / den)
+
+
+def child_direction(offset, toward_parent, away=0.5):
+    """Unit direction for a child: its semantic offset with the component toward the parent removed, pushed away
+    from the parent by `away` (so children sit on the far side, as in Sarkar's construction)."""
+    o = np.asarray(offset, dtype=np.float64)
+    if toward_parent is not None:
+        e = toward_parent / max(np.linalg.norm(toward_parent), 1e-12)
+        o = o - (o @ e) * e
+        n = np.linalg.norm(o)
+        o = (o / n if n > 1e-12 else np.zeros_like(o)) - away * e
+    n = np.linalg.norm(o)
+    if n < 1e-12:
+        o = np.zeros_like(o)
+        o[0] = 1.0
+        n = 1.0
+    return o / n
+
+
+def build_ball(tree, low, tau, away=0.5):
+    """Positions of every tree node in the d-dim Poincare ball (d = low.shape[1]). Root at 0; each child at
+    hyperbolic distance tau from its parent: x_c = x_u (+) tanh(tau/2) v_c, with v_c the child's semantic
+    direction (descriptor offset from the parent's, pointed away from the grandparent). No optimisation."""
+    pos = np.zeros((len(tree), low.shape[1]))
     r = math.tanh(tau / 2.0)
     q = deque([0])
     while q:
         u = q.popleft()
-        kids = (order or {}).get(u, tree.children[u])
-        if not kids:
+        if not tree.children[u]:
             continue
-        x = pos[u]
-        if tree.parent[u] < 0:
-            start = 0.0
-        else:
-            p0 = (pos[tree.parent[u]] - x) / (1 - np.conj(x) * pos[tree.parent[u]])
-            start = float(np.angle(p0))
-        n = len(kids) + (0 if tree.parent[u] < 0 else 1)
-        for j, c in enumerate(kids):
-            ang = start + 2 * math.pi * (j + (0 if tree.parent[u] < 0 else 1)) / n
-            z = r * np.exp(1j * ang)
-            pos[c] = (z + x) / (1 + np.conj(x) * z)
+        toward = None
+        if tree.parent[u] >= 0:
+            toward = mobius_add(-pos[u], pos[tree.parent[u]])[0]
+        for c in tree.children[u]:
+            v = child_direction(low[c] - low[u], toward, away)
+            pos[c] = mobius_add(pos[u], r * v)[0]
             q.append(c)
     return pos
 
 
-def poincare(a, b):
-    """Poincare distance between complex points (broadcasts)."""
-    a, b = np.asarray(a), np.asarray(b)
-    num = 2 * np.abs(a - b) ** 2
-    den = np.clip((1 - np.abs(a) ** 2) * (1 - np.abs(b) ** 2), 1e-300, None)
-    return np.arccosh(1 + num / den)
-
-
-# ------------------------------------------------------------------ the hierarchical index
-
-def seriation(tree, desc):
-    """Children of each node in the order of their projection on the first principal axis of their descriptors,
-    so neighbouring angles in the disk hold similar content."""
-    order = {}
-    for v, kids in enumerate(tree.children):
-        if len(kids) >= 3:
-            X = desc[kids] - desc[kids].mean(0)
-            axis = np.linalg.svd(X, full_matrices=False)[2][0]
-            order[v] = [kids[i] for i in np.argsort(X @ axis, kind="stable")]
-    return order
-
-
 class HypIndex:
-    """round_dp: Poincare distances are rounded to this many decimals. Near the disk boundary float64 leaves
-    ~1e-4 noise in distances that are exactly equal in theory (all children of one node), and rings are several
-    units apart, so rounding restores the exact ties without merging rings."""
+    """The treatment. dim: PCA dimension of the descriptors used for the descent; ball_dim: dimension of the
+    Poincare ball; tau: hyperbolic step parent -> child; tau_q: the step at which the query is inserted.
 
-    def __init__(self, tree, V, dim=32, tau=1.5, beam=2, seed=13, seriate=True, round_dp=2):
-        self.tree, self.beam, self.round_dp = tree, beam, round_dp
+    rank(): the query descends the tree (beam search on descriptor cosine), is inserted into the ball as a new
+    child of the best landing node by the same rule as the items, and every item is ranked by its unrounded
+    Poincare distance to that point. metric='hops' is the tree_cos arm: the same landing node, items ranked by
+    tree hop distance from it, ties by descriptor cosine (no geometry). land_all: use every final beam node (the
+    query inserted under each; the minimum distance or hop count wins) instead of the best one only."""
+
+    def __init__(self, tree, V, dim=128, ball_dim=32, tau=2.5, tau_q=None, beam=6, seed=13, away=0.5,
+                 land_all=False):
+        self.tree, self.beam, self.tau, self.land_all = tree, beam, tau, land_all
+        self.tau_q = tau if tau_q is None else tau_q
+        self.away = away
         V = unit(V)
         self.pca = PCA(n_components=min(dim, V.shape[1], V.shape[0]), random_state=seed).fit(V)
         self.Xd = unit(self.pca.transform(V))
@@ -215,7 +232,10 @@ class HypIndex:
             else:
                 desc[v] = sum((desc[c] for c in tree.children[v]), np.zeros(self.Xd.shape[1]))
         self.desc = unit(desc)
-        self.pos = sarkar(tree, tau, seriation(tree, self.desc) if seriate else None)
+        k = min(ball_dim, self.desc.shape[1])
+        self.ball_pca = PCA(n_components=k, random_state=seed).fit(self.desc)
+        self.low = self.ball_pca.transform(self.desc)
+        self.pos = build_ball(tree, self.low, tau, away)
         self.leaf_parent = [bool(tree.children[v]) and all(tree.leaf_item[c] >= 0 for c in tree.children[v])
                             for v in range(len(tree))]
 
@@ -230,18 +250,23 @@ class HypIndex:
                 cand += [v] if self.leaf_parent[v] else [c for c in self.tree.children[v] if self.tree.leaf_item[c] < 0]
             cand = sorted(set(cand), key=lambda v: (-float(self.desc[v] @ qd), v))
             beam = cand[: self.beam]
-        return beam
+        return sorted(beam, key=lambda v: (-float(self.desc[v] @ qd), v))
+
+    def query_point(self, qd, b):
+        toward = mobius_add(-self.pos[b], self.pos[self.tree.parent[b]])[0] if self.tree.parent[b] >= 0 else None
+        ql = self.ball_pca.transform(qd[None, :])[0]
+        v = child_direction(ql - self.low[b], toward, self.away)
+        return mobius_add(self.pos[b], math.tanh(self.tau_q / 2.0) * v)[0]
 
     def rank(self, qv, metric="poincare"):
         qd = self.reduce(qv)
         land = self.descend(qd)
+        nodes = land if self.land_all else land[:1]
         if metric == "poincare":
-            d = np.min([poincare(self.pos[b], self.pos[self.item_nodes]) for b in land], axis=0)
-            d = np.round(d, self.round_dp)
-        else:
-            hops = [np.array(self.tree.hops_from(b))[self.item_nodes] for b in land]
-            d = np.min(hops, axis=0).astype(float)
-        return rank_by(-d, self.Xd @ qd), land
+            d = np.min([poincare(self.query_point(qd, b)[None, :], self.pos[self.item_nodes]) for b in nodes], axis=0)
+            return rank_by(-d), land
+        hops = np.min([np.array(self.tree.hops_from(b))[self.item_nodes] for b in nodes], axis=0).astype(float)
+        return rank_by(-hops, self.Xd @ qd), land
 
 
 def sala_tau(tree, eps=1.0):

@@ -15,7 +15,7 @@ from pathlib import Path
 import psycopg2
 from psycopg2.extras import Json, execute_values
 
-DATASET = "catalog-retrieval-work2283-v2"
+DATASET = "catalog-retrieval-work2283-v3"
 
 
 def main(study):
@@ -36,7 +36,7 @@ def main(study):
                        description, fetched_at, recorded_at) VALUES (%s, %s, %s, %s, %s, %s, now(), now())""",
                     (DATASET, f"file://{key}", "private owner data (not for publication)", sha,
                      "rule-based real outcome: the skill an agent invoked, or the owner decisions a brief cited",
-                     "WORK-2283 catalog retrieval key v2: agent task texts (redacted, gold names masked) with the "
+                     "WORK-2283 catalog retrieval key v3: agent task texts (redacted, gold names masked) with the "
                      "catalog items an agent should read; catalog sha256 "
                      + hashlib.sha256((d / "catalog.jsonl").read_bytes()).hexdigest()
                      + "; caveats in cohesion-gated-taxonomy experiments/catalog_retrieval/DATASET.yaml"))

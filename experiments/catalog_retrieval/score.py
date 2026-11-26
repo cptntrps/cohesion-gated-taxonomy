@@ -26,7 +26,12 @@ from ngc_eval import stats  # noqa: E402
 
 TREAT, BASE = "hyp_tree", "flat"
 CONTROLS = ("bm25", "llm_catalog", "popularity")
-SECONDARY = (("H5", TREAT, "tree_cos"), ("H6", "flat_pca", "flat"))
+SECONDARY = (("H5", TREAT, "tree_cos"), ("H6", "flat_pca", "flat"), ("H7", TREAT, "flat_pca"))
+SIMPLE = ("flat", "bm25", "llm_catalog")
+EMBED_MS = 338.5          # shared bge-m3 query embedding (premise_embeddings.md), paid by every embedding arm
+EMBED_ARMS = ("flat", "flat_pca", "hyp_tree", "tree_cos")
+NONINFERIOR = 0.05
+MIN_TYPE_UNITS = 20
 METRICS = ("hit5", "hit10", "rr", "recall5", "recall10")
 MISSING_LIMIT = 0.10
 
@@ -44,7 +49,7 @@ def load_rows(d, split, arms_file):
     key = [json.loads(l) for l in open(d / "tasks.jsonl") if json.loads(l)["split"] == split]
     tids = {t["tid"] for t in key}
     rows = {}
-    for f in (d / "results" / split / arms_file, d / "results" / split / "llm_catalog.jsonl"):
+    for f in (d / "results" / split / arms_file, d / "results" / split / "llm_catalog_v3.jsonl"):
         if not f.exists():
             continue
         for l in open(f):
@@ -78,6 +83,44 @@ def record_results(counts):
         else:
             res[hid] = {"kind": "difference", "a": counts[a], "b": counts[b]}
     return res
+
+
+def paired(rows, a, b, tids, sess=None):
+    v = [float(rows[a][t]["hit10"]) - float(rows[b][t]["hit10"]) for t in tids]
+    return {"est": float(np.mean(v)), "ci95": stats.cluster_bootstrap_ci(v, sess), "n": len(v)}
+
+
+def reading(key, rows, units, cost):
+    """The preregistered descriptive call (design.md). Controlling set: the primary units. POSITIVE: hyp_tree minus
+    each of flat, bm25 and llm_catalog has a 95% lower bound above 0 on the units AND on all tasks, and no
+    contrast has a negative point estimate in a task type with >= MIN_TYPE_UNITS units. NEGATIVE: the upper bound
+    is below 0 against any one of them on the units. Else INCONCLUSIVE, which means: keep the simpler method.
+    CHEAPER: hyp_tree is non-inferior to llm_catalog (lower bound above -NONINFERIOR on the units) at a lower
+    cost per query (USD and latency)."""
+    if TREAT not in rows or any(a not in rows for a in SIMPLE):
+        return {"call": "not_run", "why": "an arm is missing"}
+    ut = sorted(units)
+    allt = [t["tid"] for t in key]
+    sess = [t["session"] for t in key]
+    on_units = {a: paired(rows, TREAT, a, ut) for a in SIMPLE}
+    on_all = {a: paired(rows, TREAT, a, allt, sess) for a in SIMPLE}
+    types = {}
+    for ty in ("skill_call", "security_review", "decision_brief"):
+        tt = [t["tid"] for t in key if t["tid"] in units and task_type(t) == ty]
+        if len(tt) >= MIN_TYPE_UNITS:
+            types[ty] = {a: paired(rows, TREAT, a, tt) for a in SIMPLE}
+    pos = (all(on_units[a]["ci95"][0] > 0 for a in SIMPLE) and all(on_all[a]["ci95"][0] > 0 for a in SIMPLE)
+           and all(v[a]["est"] >= 0 for v in types.values() for a in SIMPLE))
+    neg = any(on_units[a]["ci95"][1] < 0 for a in SIMPLE)
+    call = "POSITIVE" if pos else "NEGATIVE" if neg else "INCONCLUSIVE"
+    cheaper = (on_units["llm_catalog"]["ci95"][0] > -NONINFERIOR
+               and cost[TREAT]["usd_per_1000"] < cost["llm_catalog"]["usd_per_1000"]
+               and cost[TREAT]["ms_per_query"] < cost["llm_catalog"]["ms_per_query"])
+    return {"call": call, "action": {"POSITIVE": "build the hyperbolic index",
+                                     "NEGATIVE": "keep the simpler method; do not build",
+                                     "INCONCLUSIVE": "keep the simpler method"}[call],
+            "cheaper_than_llm_at_noninferior_quality": bool(cheaper),
+            "units": on_units, "all_tasks": on_all, "by_type_units": types}
 
 
 def task_type(t):
@@ -136,14 +179,25 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("data_dir")
     ap.add_argument("split", choices=("dev", "test"))
-    ap.add_argument("--arms-file", default="arms_dim128_beam6.jsonl")
+    ap.add_argument("--arms-file", required=True)
     ap.add_argument("--results-out")
     ap.add_argument("--mlflow", action="store_true")
     a = ap.parse_args()
     d = Path(a.data_dir)
     key, rows = load_rows(d, a.split, a.arms_file)
     counts, status, n_units = primary_counts(key, rows)
+    cost = {}
+    for arm, by in rows.items():
+        ok = [r for r in by.values() if not r.get("failed")]
+        ms = float(np.median([r["ms"] for r in ok])) if ok else float("nan")
+        cost[arm] = {"usd_per_1000": 1000 * float(np.mean([r.get("cost_usd", 0.0) for r in ok])) if ok else 0.0,
+                     "ranking_ms": ms, "ms_per_query": ms + (EMBED_MS if arm in EMBED_ARMS else 0.0),
+                     "needs_gpu_embedding": arm in EMBED_ARMS}
+    units = unit_task(key)
     summary = {"split": a.split, "n_units": n_units, "primary_counts": counts, "arm_status": status,
+               "cost": cost, "reading": reading(key, rows, units, cost),
+               "fragment_stratum": {"with_gold_fragment": secondary([t for t in key if t.get("gold_fragment")], rows),
+                                    "without": secondary([t for t in key if not t.get("gold_fragment")], rows)},
                "all": secondary(key, rows), "by_kind": {k: secondary(key, rows, k) for k in ("skill", "decision")},
                "by_type": {k: secondary(key, rows, ttype=k) for k in ("skill_call", "security_review", "decision_brief")}}
     out = d / "results" / a.split / "summary.json"
@@ -153,7 +207,8 @@ def main():
     if a.mlflow:
         meta = json.load(open(d / "results" / a.split / a.arms_file.replace(".jsonl", ".meta.json")))
         log_mlflow(a.split, summary, meta)
-    print(f"units={n_units}")
+    print(f"units={n_units} reading={summary['reading']['call']} "
+          f"cheaper={summary['reading'].get('cheaper_than_llm_at_noninferior_quality')}")
     for arm, m in summary["all"]["arms"].items():
         c = counts.get(arm)
         print(f"{arm:11s} primary={c} hit10={m['hit10']['est']:.3f} {np.round(m['hit10']['ci95'], 3)} "

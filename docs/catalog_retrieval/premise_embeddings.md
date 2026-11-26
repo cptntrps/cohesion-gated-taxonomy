@@ -17,4 +17,14 @@ Checks (2026-11-25, data, not assumption):
 - One query embedding (warm, single text): median 338.5 ms, p95 391.7 ms (20 dev queries). This cost is the same for
   every embedding arm and is reported separately from the ranking latency.
 
+## Amendment v2 checks (2026-11-25, before any test-split run; review finding F11)
+
+- Model identity: Ollama tag bge-m3:latest has digest
+  7907646426070047a77226ac3e684fbbe8410524f7b4a74d02837e43f2146bab. run_arms.py writes this digest to the meta
+  file of every run.
+- The cached item vectors come from this digest: a fresh embedding of all 987 item texts equals emb_items.npz
+  (largest absolute difference 0.0, smallest row cosine 1.0). The cache key is the sha256 of the item texts.
+- Query embedding latency measured again on 20 dev texts of key v3: median 394 ms, p95 637 ms (the GPU was shared).
+  score.py keeps the first value (338.5 ms) as the shared embedding cost of every embedding arm; BM25 pays none.
+
 PREMISE: supported

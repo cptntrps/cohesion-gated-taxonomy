@@ -531,3 +531,103 @@ call per clause; 785 blind pooled pairs judged by two Opus judges; valid = both.
 - The only verdict word is the descriptive reading of `score.py reading()`: POSITIVE, NEGATIVE or INCONCLUSIVE.
 - Hierarchy gate (preregistered in `docs/catalog_retrieval/hierarchy_gate.md`): FAIL before this run, so hyp_tree is
   evidence about an imposed hierarchy only.
+
+### Result (test split run once, 2026-11-26 02:02 to 02:08 UTC; scored once, `ngc.record_register` seq 519)
+
+**Call (the preregistered descriptive reading): NEGATIVE. Action: keep the simpler method; do not build this index.**
+The CHEAPER flag is false. H1 to H7 are `estimate_only` (exploratory study, no gate PASS or FAIL).
+
+Primary outcome, hit@10 of the first gold item on the 144 test sessions (Wilson 95%), and the same on all 309 test
+tasks (session-cluster bootstrap 95%, secondary):
+
+| arm | role | hits / 144 | hit@10, units | hit@10, all tasks | MRR, all tasks | recall@10, all tasks |
+|---|---|---|---|---|---|---|
+| flat_pca (256-d) | secondary | 95 | 0.660 [0.579, 0.732] | 0.706 [0.634, 0.768] | 0.517 | 0.675 |
+| flat (1024-d) | baseline | 92 | 0.639 [0.558, 0.713] | 0.699 [0.625, 0.767] | 0.515 | 0.667 |
+| bm25 | control | 92 | 0.639 [0.558, 0.713] | 0.683 [0.602, 0.754] | 0.536 | 0.661 |
+| llm_catalog | control | 60 | 0.417 [0.339, 0.498] | 0.466 [0.399, 0.532] | 0.289 | 0.461 |
+| tree_cos | secondary | 58 | 0.403 [0.326, 0.484] | 0.440 [0.373, 0.507] | 0.339 | 0.433 |
+| hyp_tree | treatment | 56 | 0.389 [0.313, 0.470] | 0.408 [0.344, 0.476] | 0.327 | 0.406 |
+| popularity | control | 3 | 0.021 [0.007, 0.059] | 0.010 [0.000, 0.025] | 0.006 | 0.013 |
+| random | secondary | 3 | 0.021 [0.007, 0.059] | 0.013 [0.003, 0.027] | 0.007 | 0.012 |
+
+Paired hit@10 differences that the reading rule reads (hyp_tree minus the arm, bootstrap 95%):
+
+| minus | 144 units | 309 tasks |
+|---|---|---|
+| bm25 (BEST_SIMPLE, fixed on dev) | -0.250 [-0.333, -0.167] | -0.275 [-0.332, -0.207] |
+| flat | -0.250 [-0.340, -0.167] | -0.291 [-0.354, -0.216] |
+| llm_catalog | -0.028 [-0.139, 0.083] | -0.058 [-0.125, 0.012] |
+
+Per task type on the units, hyp_tree minus bm25: skill_call (25 units) -0.120, security_review (64) -0.391,
+decision_brief (55) -0.145. No type has a positive estimate, both upper bounds against bm25 are below 0, so the
+rule gives NEGATIVE. hyp_tree minus llm_catalog by type: skill_call -0.360, security_review -0.016,
+decision_brief +0.109 (interval [-0.091, 0.309]).
+
+Hypotheses (unit counts, Newcombe 95%, from `score-record`):
+
+| id | contrast | estimate | reading |
+|---|---|---|---|
+| H1 | hyp_tree minus flat | -0.250 [-0.356, -0.135] | the predicted gain is contradicted |
+| H2 | hyp_tree minus bm25 | -0.250 [-0.356, -0.135] | the predicted gain is contradicted |
+| H3 | hyp_tree minus llm_catalog | -0.028 [-0.139, 0.085] | no difference shown |
+| H4 | hyp_tree minus popularity | +0.368 [0.283, 0.451] | hyp_tree is above the popularity control |
+| H5 | hyp_tree minus tree_cos | -0.014 [-0.125, 0.098] | no gain from the ball ranking over hops with cosine ties |
+| H6 | flat_pca minus flat | +0.021 [-0.089, 0.130] | the predicted loss from 1024 to 256 dimensions does not appear |
+| H7 | hyp_tree minus flat_pca | -0.271 [-0.376, -0.156] | the tree commit loses against cosine in the same space |
+
+What the result means, in the words the second review requires:
+
+- hyp_tree is, in its top ranks, a commit to one of 88 leaf clusters of an imposed tree. On dev, 8.9 of its 10 top
+  items came from the landing cluster and the gold item was in that cluster in 46 of 115 tasks. The loss is the cost
+  of this commit: tree_cos minus flat_pca on the units is -0.257 [-0.362, -0.142], and flat_pca in the same 256-d
+  space has no loss against flat.
+- H5 compares two ranking rules (distance in the ball against hops with cosine ties). It does not isolate the
+  curvature. On dev a Euclidean copy of the construction gave the same hits (48 against 49). On all test tasks
+  hyp_tree minus tree_cos is -0.032 [-0.048, -0.017] on hit@10 and -0.012 [-0.025, 0.002] on MRR. The study gives
+  no evidence for or against the hyperbolic metric itself.
+- The hierarchy gate failed on coverage: real edges reach 230 of 987 items (0.23, bar 0.50) in 68 small
+  components, too few for a real-edge tree. The tree-likeness test was uninformative: the largest component (31
+  nodes) has delta 0.0, the floor, and so have 8 of the 20 shuffles (the design text says 9: erratum). So the result
+  is about an imposed hierarchy only.
+- Gui's parent-disambiguation arm is UNTESTED, not falsified: no item has two or more real parents of one kind
+  (0 of 214 skill headers declare a Rule F folder). Type discovery ran on dev only, with the v1 descent, and gave one
+  candidate type that passed its blind judge; it is a proposal, not a result of this test.
+- skill_call (44 tasks, 25 units) is the nearest proxy for "the agent needs X and does not know it". There
+  llm_catalog 0.477 and flat 0.409 lead, bm25 has 0.250, and hyp_tree has 0.068 (3 of 44). The intervals are wide.
+- Cost: every arm but llm_catalog costs 0 USD. llm_catalog cost 1.59 USD per 1000 queries (0.489 USD for 309
+  calls) at a median of 1.9 s. Ranking latency: bm25 13.0 ms, flat 0.2 ms, flat_pca 0.7 ms, hyp_tree 1.8 ms. Every
+  embedding arm also pays the bge-m3 query embedding (about 0.34 s, GPU); BM25 pays none. hyp_tree cannot be cheaper
+  than bm25, and the CHEAPER flag (against llm_catalog only) is false: non-inferiority within 0.05 is not shown.
+- Scope: one training-free construction, one corpus of 987 items, one owner, labels from citations and skill calls.
+  The study does not test a trained hyperbolic embedding, a real-edge hierarchy or a larger catalog.
+
+Deviations and limits of the run:
+
+- Commit: the test ran at `b8ca8ad`, which adds only the preregistration entry above to `008909a`; the diff of
+  `experiments/` and `tests/` between the two commits is empty. The tree was clean.
+- Embedder check before the test embedding: smallest cosine to the item cache 0.99999 (bar 0.9999); digest
+  `79076464...`.
+- llm_catalog: 2 failed rows of 309 (0 valid picks; both are units, 1.4%, below the 10% limit). 4 more replies were
+  not a JSON list of numbers (the model tried to do the task); the parser kept digits from them as picks, and all 4
+  are misses. Failed rows count as misses of llm_catalog, which favours hyp_tree in H3.
+- Gold-fragment stratum (54 tasks with a fragment before masking, 255 without): the order of the arms is the same
+  in both; hyp_tree minus bm25 is -0.370 with and -0.255 without.
+- Residual cues in key v3 found by the second review: the slug base of the gold inside a longer token in 6 test
+  tasks; the ISO date of the gold in 107 test tasks (the item texts do not hold it). For 30 of the 144 units the
+  citation of the gold is after the 2000-character cut, which adds label noise for every arm.
+- The popularity arm counts dev gold, so its dev pilot value (0.209) was in-sample; on test it has 3 hits.
+- The Question in the design keeps v1 words (Poincare disk, rings); treatment v2 uses a ball and one distance.
+- Type discovery was not run again at the frozen configuration (no GPU room for the judge model).
+
+Evidence: `<data>/catalog_retrieval/results/test/summary.json` (sha256 `a0cae8ae...`), the arm rows
+`arms_b0.75_ball_dim256_beam24_dim256_k12.5_land_all0_tau1.5.jsonl` and `llm_catalog_v3.jsonl`, the unit counts
+`study/results.json` (sha256 `65eeafda...`), `study/atlas_seed.json`, the reviews `study/design_review_v1.md` and
+`study/design_review_v2.md`, MLflow experiment `work-2283-catalog-retrieval` (8 test runs).
+
+Plain summary: on real agent tasks, the hyperbolic tree index found the right rule, decision or skill in its top 10
+for 39% of sessions. Plain embedding search and keyword search (BM25) both found it for 64%. The index loses
+because it bets on one small cluster of an invented hierarchy, and this catalog has too few real links to give it
+a real one. The result does not say that hyperbolic distance is bad; it says that this index does not pay here.
+The idea of choosing between several real parents could not be tested, because no item has several real parents
+yet.

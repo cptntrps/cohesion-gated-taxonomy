@@ -1,4 +1,4 @@
-dataset_id: catalog-retrieval-work2283-v2
+dataset_id: catalog-retrieval-work2283-v3
 owner: double_gui
 work: WORK-2283
 purpose: >-
@@ -7,26 +7,34 @@ purpose: >-
 storage:
   table: ngc.gold_dataset / ngc.gold_item (dataset_id above; dev is split calib)
   file: ~/data/cohesion-gated-taxonomy/catalog_retrieval/study/tasks.jsonl
-  sha256: ea343798e6615bb995a54da8a19b6cab9d7be4e66b7d098d003f482107cd8422
+  sha256: 71f49d73231d8194f99085167812d4bf2f33b306ef1d7354f5ad08e19308fc6b
+  previous: catalog-retrieval-work2283-v2 (sha256 ea343798e6615bb995a54da8a19b6cab9d7be4e66b7d098d003f482107cd8422), never scored on test
   catalog_sha256: 43a7c61cb34423e57ab2613c1fdd67931d915c719bbb805f8db626bb72acc4b7
   privacy: private owner data. Never commit the texts or the catalog to this public repository.
 key_columns: [tid]
 label_columns: [gold, gold_first]
+stratum_columns: [gold_fragment]
 labels:
   source: rule-based real outcomes, no model labels
   skill: the skill of a real Skill tool call after the task text (82 of 125 also in governance.skill_invocation)
   decision: the owner_decision subjects that the brief's author cited, if in the catalog
-  masking: gold skill names and decision subjects removed from the text (leak scan 0 of 432)
+  masking: >-
+    gold skill names and decision subjects removed from the text; key v3 also masks the distinctive slug fragments of
+    every catalog decision subject and every 8-digit date token in every task (leak scan on 424 tasks: 0 names, 0
+    subjects, 0 slug fragments; 7 tasks keep the gold's date inside a longer token)
+  gold_fragment: true when the text held a fragment or the date of its own gold before the v3 masking (84 of 424)
 split:
   rule: sha256 of "work-2283-v1:" + session, below 0.25 is dev
-  dev: {tasks: 115, sessions: 59}
-  test: {tasks: 317, sessions: 146}
+  dev: {tasks: 115, sessions: 60}
+  test: {tasks: 309, sessions: 144}
   test_is_touched_once: true
 caveats:
-  - n is small; one task per session gives 146 test units (noise floor about 4 points per arm at p 0.5).
+  - n is small; one task per session gives 144 test units (noise floor about 4 points per arm at p 0.5).
   - Gold holds only what agents used or cited; relevant unused items count as misses for every arm.
   - Transcripts before about 2026-08 are gone, so 333 of 479 skill_invocation rows have no text.
   - 44% of test units are automated security-review prompts over a diff that cites a decision in code.
+  - The labels are what an author cited or an agent invoked; the texts paraphrase their gold (a reverse lookup).
+  - The v3 masking also removes generic phrases that equal another decision's slug (seen in 3 of 20 hand-checked tasks).
   - Hand checks found about 5% weak labels (a follow-up message before a skill call).
-  - Class balance is a long tail (111 distinct first-gold items in 146 test units); do not publish per-item tables.
-  - Templates (job repair, security review) were deduplicated by a normalised prefix; residual similarity remains.
+  - Class balance is a long tail (111 distinct first-gold items in 144 test units); do not publish per-item tables.
+  - Templates (job repair, security review) were deduplicated by a normalised prefix and by token Jaccard >= 0.75.

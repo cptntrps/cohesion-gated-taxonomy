@@ -3,7 +3,7 @@
 
   python3 type_discovery.py <data_dir>
 
-1. Each dev task descends the imposed tree (hyp_tree, dim 128, beam 6). Landing distance = 1 - cosine between the
+1. Each dev task descends the imposed tree (hyp_tree at the frozen configuration). Landing distance = 1 - cosine between the
    reduced query and the best landing node's descriptor. Uncovered = above the 90th percentile of dev landings.
 2. Uncovered task vectors are Ward-clustered (distance threshold fixed below); a cluster of >= 3 tasks is a candidate
    type: its sector (members) and a name proposed by Claude Haiku 5.5 from member snippets.
@@ -77,7 +77,9 @@ def main(d):
     Vi = R.unit(np.load(d / "emb_items.npz")["V"])
     Vq = R.unit(np.load(d / "emb_tasks_dev.npz")["V"])
     tree = R.build_tree([c["kind"] for c in cat], [c["group"] for c in cat], Vi)
-    idx = R.HypIndex(tree, Vi, dim=128, tau=R.sala_tau(tree), beam=6)
+    c = A.FROZEN
+    idx = R.HypIndex(tree, Vi, dim=c["dim"], ball_dim=c["ball_dim"], tau=c["tau"], beam=c["beam"],
+                     land_all=bool(c["land_all"]))
     land = []
     for qv in Vq:
         qd = idx.reduce(qv)

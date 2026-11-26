@@ -81,6 +81,8 @@ def main():
     ap.add_argument("--workers", type=int, default=4)
     a = ap.parse_args()
     d = Path(a.data_dir)
+    if a.split == "test":
+        A.check_frozen_key(d)
     cat, tasks = A.load(d)
     tasks = [t for t in tasks if t["split"] == a.split]
     pos = {c["id"]: i for i, c in enumerate(cat)}

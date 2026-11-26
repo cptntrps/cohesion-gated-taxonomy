@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """WORK-2283: run the retrieval arms on one split and write per-task results.
 
-  python3 run_arms.py <data_dir> <split> [--dim D --beam B] [--arms a,b,...] [--tune]
+  python3 run_arms.py <data_dir> dev --tune                 the dev grid and the selection rule (choose)
+  python3 run_arms.py <data_dir> <split> --frozen           the frozen configuration (the only one for test)
+  python3 run_arms.py <data_dir> dev [--dim D --ball_dim K --tau T --beam B --land_all 0|1 --k1 X --b Y]
 
 Item text (every arm sees the same): "<name>: <first ITEM_WORDS words of the description>".
 Task text: the key's text (already redacted and truncated). Embeddings: bge-m3 via the local Ollama.
@@ -50,10 +52,33 @@ def embed(texts, cache):
     return V
 
 
+def check_embedder(d, texts, n=16):
+    """The live embedding model must be the one that made the item cache: embed n item texts again and compare."""
+    cached = R.unit(np.load(d / "emb_items.npz")["V"][:n])
+    req = urllib.request.Request(OLLAMA, data=json.dumps({"model": EMBED_MODEL, "input": texts[:n]}).encode(),
+                                 headers={"Content-Type": "application/json"})
+    fresh = R.unit(np.array(json.load(urllib.request.urlopen(req, timeout=300))["embeddings"], dtype=np.float32))
+    worst = float(np.min(np.sum(cached * fresh, axis=1)))
+    if worst < 0.9999:
+        raise SystemExit(f"the live embedding model does not reproduce the item cache (smallest cosine {worst:.6f})")
+    return worst
+
+
 def load(d):
     cat = [json.loads(l) for l in open(d / "catalog.jsonl")]
     tasks = [json.loads(l) for l in open(d / "tasks.jsonl")]
     return cat, tasks
+
+
+def check_frozen_key(d):
+    """A test-split step reads <data_dir>/tasks.jsonl and catalog.jsonl: they must be the frozen copies that the
+    registered study record names (study/record.json answer_key)."""
+    rec = json.load(open(d / "study" / "record.json"))
+    for name, want in (("tasks.jsonl", rec["answer_key"]["sha256"]),
+                       ("catalog.jsonl", hashlib.sha256((d / "study" / "catalog.jsonl").read_bytes()).hexdigest())):
+        got = hashlib.sha256((d / name).read_bytes()).hexdigest()
+        if got != want or want not in json.dumps(rec["answer_key"]):
+            raise SystemExit(f"{name} is not the frozen key of the study record ({got[:12]} != {want[:12]})")
 
 
 def popularity_scores(cat, tasks, d):
@@ -73,6 +98,33 @@ def score_row(t, arm, ranking, gidx, ms):
 
 
 DEFAULT = {"dim": 128, "ball_dim": 32, "tau": 2.5, "beam": 6, "land_all": 0, "k1": 1.5, "b": 0.75}
+# The configuration of the test run: the output of choose() on results/dev_tuning_grid_v4.json (dev split, key v3),
+# fixed before the design review of amendment v2. A test run takes no other configuration.
+FROZEN = {"dim": 256, "ball_dim": 256, "tau": 1.5, "beam": 24, "land_all": 0, "k1": 2.5, "b": 0.75}
+
+
+def tree_cells():
+    """(dim, ball_dim, tau) of the dev grid. The base grid, plus the cells past its best region: the best base
+    cells have ball_dim = dim, the largest dim and the smallest tau, so the grid goes on to dim 256 and tau 1.0
+    with ball_dim = dim."""
+    base = [(dim, ball, tau) for dim in (64, 128) for ball in (16, 32, 64, 128) if ball <= dim
+            for tau in (1.5, 2.5, 3.5)]
+    past = [(64, 64, 1.0), (128, 128, 1.0)] + [(256, 256, tau) for tau in (1.0, 1.5, 2.5, 3.5)]
+    return base + past
+
+
+def choose(grid):
+    """The dev-only selection rule. hyp_tree: the cell with the highest dev hit@10 whose ball fits float32; ties go
+    to the higher dev MRR, then the smaller beam, ball_dim and dim (the cheaper index), then tau nearest 2.5,
+    then land_all 0. BM25: the highest dev hit@10; ties to the higher MRR, then the cell nearest (1.5, 0.75)."""
+    cells = [v for v in grid["tree"].values() if v["fits_float32_ball"]]
+    t = min(cells, key=lambda v: (-v["hyp_tree"]["hit10"], -v["hyp_tree"]["mrr"], v["cfg"]["beam"],
+                                  v["cfg"]["ball_dim"], v["cfg"]["dim"], abs(v["cfg"]["tau"] - 2.5),
+                                  v["cfg"]["land_all"]))
+    bm = min(grid["bm25"].values(), key=lambda v: (-v["hit10"], -v["mrr"],
+                                                   abs(v["cfg"]["k1"] - 1.5) + abs(v["cfg"]["b"] - 0.75)))
+    return {**{k: t["cfg"][k] for k in ("dim", "ball_dim", "tau", "beam", "land_all")},
+            "k1": bm["cfg"]["k1"], "b": bm["cfg"]["b"]}
 
 
 def cfg_name(cfg):
@@ -154,45 +206,49 @@ def main():
         ap.add_argument(f"--{k}", type=type(v), default=v)
     ap.add_argument("--arms", default=",".join(ARMS))
     ap.add_argument("--tune", action="store_true", help="dev only: grid for hyp_tree, tree_cos, flat_pca and bm25")
-    ap.add_argument("--tune-land-all", action="store_true", help="dev only: the land_all=1 half of the tree grid")
+    ap.add_argument("--frozen", action="store_true", help="use the frozen configuration (FROZEN)")
     a = ap.parse_args()
     d = Path(a.data_dir)
     digest = model_digest()
-    cfg = {k: getattr(a, k) for k in DEFAULT}
-    if a.tune_land_all:
-        grid = {"digest": digest, "tree": {}}
-        for ball_dim in (16, 32):
-            for tau in (1.5, 2.5, 3.5):
-                for beam in (2, 4, 6, 8, 12, 16, 24, 32):
-                    c = dict(DEFAULT, dim=128, ball_dim=ball_dim, tau=tau, beam=beam, land_all=1)
-                    rows, meta = run(d, "dev", c, ["hyp_tree", "tree_cos"], write=False, digest=digest)
-                    s = summary(rows)
-                    grid["tree"][cfg_name(c)] = {**{k: v["hit10"] for k, v in s.items()},
-                                                 "fits_float32_ball": meta["fits_float32_ball"]}
-                    print(cfg_name(c), {k: round(v["hit10"], 3) for k, v in s.items()}, flush=True)
-        json.dump(grid, open(d / "results" / "dev_tuning_grid_v3_land_all.json", "w"), indent=1)
-        return
+    cfg = dict(FROZEN) if a.frozen else {k: getattr(a, k) for k in DEFAULT}
     if a.tune:
         if a.split != "dev":
             raise SystemExit("tuning runs on dev only")
-        grid = {"digest": digest, "tree": {}, "bm25": {}}
-        for dim in (64, 128):
-            for ball_dim in (16, 32):
-                for tau in (1.5, 2.5, 3.5):
-                    for beam in (1, 2, 4, 6, 8, 12, 16, 24, 32):
-                        c = dict(DEFAULT, dim=dim, ball_dim=ball_dim, tau=tau, beam=beam)
-                        rows, meta = run(d, "dev", c, ["hyp_tree", "tree_cos", "flat_pca"], write=False, digest=digest)
-                        s = summary(rows)
-                        grid["tree"][cfg_name(c)] = {**{k: v["hit10"] for k, v in s.items()},
-                                                     "fits_float32_ball": meta["fits_float32_ball"]}
-                        print(cfg_name(c), {k: round(v["hit10"], 3) for k, v in s.items()}, flush=True)
-        for k1 in (0.9, 1.2, 1.5, 2.0):
-            for b in (0.3, 0.5, 0.75, 0.9):
+        out = d / "results" / "dev_tuning_grid_v4.json"
+        grid = json.load(open(out)) if out.exists() else {"digest": digest, "tree": {}, "bm25": {}}
+        if grid["digest"] != digest:
+            raise SystemExit("the grid file comes from another embedding model digest: move it away and run again")
+        for dim, ball_dim, tau in tree_cells():
+            for land_all in (0, 1):
+                for beam in (1, 2, 4, 6, 8, 12, 16, 24, 32):
+                    c = dict(DEFAULT, dim=dim, ball_dim=ball_dim, tau=tau, beam=beam, land_all=land_all)
+                    if cfg_name(c) in grid["tree"]:        # a finished cell of an earlier pass of this grid
+                        continue
+                    rows, meta = run(d, "dev", c, ["hyp_tree", "tree_cos", "flat_pca"], write=False, digest=digest)
+                    s = summary(rows)
+                    grid["tree"][cfg_name(c)] = {"cfg": c, "fits_float32_ball": meta["fits_float32_ball"],
+                                                 **{k: {"hit10": float(v["hit10"]), "mrr": float(v["mrr"])}
+                                                    for k, v in s.items()}}
+                    print(cfg_name(c), {k: round(float(v["hit10"]), 3) for k, v in s.items()}, flush=True)
+        for k1 in (0.9, 1.2, 1.5, 2.0, 2.5, 3.0):
+            for b in (0.3, 0.5, 0.75, 0.9, 1.0):
+                if f"k1{k1}_b{b}" in grid["bm25"]:
+                    continue
                 c = dict(DEFAULT, k1=k1, b=b)
                 rows, _ = run(d, "dev", c, ["bm25"], write=False, digest=digest)
-                grid["bm25"][f"k1{k1}_b{b}"] = summary(rows)["bm25"]["hit10"]
-        json.dump(grid, open(d / "results" / "dev_tuning_grid_v3.json", "w"), indent=1)
+                s = summary(rows)["bm25"]
+                grid["bm25"][f"k1{k1}_b{b}"] = {"cfg": c, "hit10": float(s["hit10"]), "mrr": float(s["mrr"])}
+        grid["chosen"] = choose(grid)
+        json.dump(grid, open(out, "w"), indent=1)
+        print(json.dumps(grid["chosen"], indent=1))
         return
+    if a.split == "test":
+        check_frozen_key(d)
+        if cfg != FROZEN:
+            raise SystemExit(f"the test split runs only with the frozen configuration {FROZEN}")
+        if (d / "results" / "test" / f"arms_{cfg_name(cfg)}.jsonl").exists():
+            raise SystemExit("the test split has been run: it is scored once, and its result file is kept")
+        print("embedder check, smallest cosine to the item cache:", check_embedder(d, [item_text(c) for c in load(d)[0]]))
     rows, meta = run(d, a.split, cfg, a.arms.split(","), digest=digest)
     print(json.dumps(meta, indent=1))
     for arm, s in summary(rows).items():

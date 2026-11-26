@@ -135,3 +135,76 @@ def test_llm_parse_maps_numbers_and_drops_out_of_range():
     assert llm_arm.parse('{"ids": [3, "7", 3, 999, "#2"]}', 10) == [3, 7, 2]
     assert llm_arm.parse("I pick 4 then 1", 10) == [4, 1]
     assert llm_arm.parse("no answer", 10) == []
+
+
+def _reading(hyp, flat, bm25, llm, usd_llm=2.0):
+    """Rows for 60 sessions of 2 tasks each; every arm's hit10 pattern is given as a function of the task number.
+    score.py takes its intervals from ngc-eval (a sibling checkout): without it the test skips."""
+    import pytest
+    score = pytest.importorskip("score")
+    key, rows = [], {a: {} for a in ("hyp_tree", "flat", "bm25", "llm_catalog")}
+    for i in range(120):
+        kind = "skill" if i % 3 == 0 else "decision"
+        text = "Review this change for security" if i % 3 == 1 else "do the task"
+        tid = f"t{i:03d}"
+        key.append({"tid": tid, "session": f"s{i // 2}", "kind": kind, "text": text})
+        for arm, f in (("hyp_tree", hyp), ("flat", flat), ("bm25", bm25), ("llm_catalog", llm)):
+            rows[arm][tid] = {"hit10": int(f(i)), "ms": 1.0, "cost_usd": usd_llm / 1000 if arm == "llm_catalog" else 0.0}
+    cost = {a: {"usd_per_1000": usd_llm if a == "llm_catalog" else 0.0, "ms_per_query": 2000.0 if a == "llm_catalog" else 340.0}
+            for a in rows}
+    return score.reading(key, rows, score.unit_task(key), cost)
+
+
+def test_reading_rule_calls():
+    always, never = (lambda i: 1), (lambda i: 0)
+    half = lambda i: (i // 6) % 2          # noqa: E731  the same share in every task type and session pair
+    assert _reading(always, half, half, half)["call"] == "POSITIVE"
+    assert _reading(half, half, always, half)["call"] == "NEGATIVE"
+    assert _reading(half, half, half, half)["call"] == "INCONCLUSIVE"
+    # worse than flat only: BEST_SIMPLE (bm25) decides NEGATIVE, so this stays INCONCLUSIVE
+    assert _reading(half, always, half, half)["call"] == "INCONCLUSIVE"
+    # better overall but worse in one task type (skill_call, i % 3 == 0): not a general POSITIVE
+    r = _reading(lambda i: i % 3 != 0, never, never, lambda i: i % 3 == 0 and (i // 6) % 2)
+    assert r["call"] == "INCONCLUSIVE" and r["by_type_units"]["skill_call"]["llm_catalog"]["est"] < 0
+    # worse than bm25 overall but better in one task type: not a general NEGATIVE
+    assert _reading(lambda i: i % 3 == 0, never, lambda i: i % 3 != 0, never)["call"] == "INCONCLUSIVE"
+    assert _reading(half, half, half, half)["cheaper_than_llm_at_noninferior_quality"] is True
+
+
+def test_dev_selection_rule_breaks_ties_by_mrr_then_cheaper_index():
+    import run_arms
+    def cell(hit, mrr, beam, fits=True, ball=16, dim=64, tau=2.5, land=0):
+        return {"cfg": {"dim": dim, "ball_dim": ball, "tau": tau, "beam": beam, "land_all": land},
+                "fits_float32_ball": fits, "hyp_tree": {"hit10": hit, "mrr": mrr}}
+    grid = {"tree": {"a": cell(0.4, 0.20, 8), "b": cell(0.4, 0.25, 12), "c": cell(0.4, 0.25, 6, ball=32),
+                     "d": cell(0.9, 0.9, 1, fits=False), "e": cell(0.4, 0.25, 6)},
+            "bm25": {"x": {"cfg": {"k1": 1.5, "b": 0.75}, "hit10": 0.7, "mrr": 0.5},
+                     "y": {"cfg": {"k1": 2.0, "b": 0.9}, "hit10": 0.7, "mrr": 0.5},
+                     "z": {"cfg": {"k1": 0.9, "b": 0.3}, "hit10": 0.6, "mrr": 0.9}}}
+    assert run_arms.choose(grid) == {"dim": 64, "ball_dim": 16, "tau": 2.5, "beam": 6, "land_all": 0, "k1": 1.5, "b": 0.75}
+
+
+def test_test_split_steps_refuse_a_key_that_is_not_the_frozen_one(tmp_path):
+    import hashlib
+    import json
+    import pytest
+    import run_arms
+    (tmp_path / "study").mkdir()
+    for name in ("tasks.jsonl", "catalog.jsonl"):
+        (tmp_path / name).write_text(f"{name} v3\n")
+        (tmp_path / "study" / name).write_text(f"{name} v3\n")
+    sha = lambda n: hashlib.sha256((tmp_path / n).read_bytes()).hexdigest()   # noqa: E731
+    rec = {"answer_key": {"path": "tasks.jsonl", "sha256": sha("tasks.jsonl"),
+                          "version": f"key v3; catalog.jsonl sha256 {sha('catalog.jsonl')}"}}
+    (tmp_path / "study" / "record.json").write_text(json.dumps(rec))
+    run_arms.check_frozen_key(tmp_path)
+    (tmp_path / "tasks.jsonl").write_text("edited\n")
+    with pytest.raises(SystemExit):
+        run_arms.check_frozen_key(tmp_path)
+
+
+def test_frozen_configuration_is_a_cell_of_the_dev_grid():
+    import run_arms
+    f = run_arms.FROZEN
+    assert set(f) == set(run_arms.DEFAULT)
+    assert (f["dim"], f["ball_dim"], f["tau"]) in run_arms.tree_cells()

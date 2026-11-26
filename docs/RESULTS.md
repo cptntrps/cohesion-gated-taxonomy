@@ -505,3 +505,29 @@ call per clause; 785 blind pooled pairs judged by two Opus judges; valid = both.
   zero calls and the LLM reads only the rest.
 - Limits: pooled recall assumes unproposed pairs are invalid; judges and baseline are both Claude models; simulated
   human = label oracle.
+
+## Catalog retrieval with a hyperbolic index over rules, decisions and skills (2026-11-25, `docs/catalog_retrieval/design.md`, `experiments/catalog_retrieval/`)
+
+### Preregistration (before any test-split run)
+
+- Study `catalog-retrieval-hyperbolic-01` (Plane WORK-2283), exploratory, study record schema
+  `ngc-eval/study-record/v1`.
+- Question: does a hyperbolic hierarchical index of rules, decisions and skills put the gold item of a real agent
+  task in its top 10 more often than flat bge-m3 cosine?
+- Design: `docs/catalog_retrieval/design.md` with amendment v2 (sha256 `7c99d0dc...`) at commit `008909a`. Design
+  hash `af01e79944ea...`. Reviews: v1 FIX-FIRST (13 findings), v2 MERGE (2 MEDIUM and 7 LOW findings that bind the
+  wording of this report).
+- Record: `<data>/catalog_retrieval/study/record.json`, sha256
+  `a63882d6fddba1bf13ab0c7ef66098233e43140a7ced110dcda1e3a8c420d01a`, registered in `ngc.record_register` as seq 518
+  at 2026-11-25 21:02:06 -05:00, before any test-split output existed. The registration proves that the design
+  existed before scoring, not before the data: the unit counts are self-reported.
+- Answer key v3: `tasks.jsonl` sha256 `71f49d73...` (424 tasks; test 309 tasks in 144 sessions), persisted as
+  `ngc.gold_dataset` `catalog-retrieval-work2283-v3`. The task texts and the catalog are private and are not in this
+  repository.
+- Primary outcome: hit@10 of the first gold item on 144 test sessions (one task per session). H1 to H4: hyp_tree
+  minus flat, bm25, llm_catalog and popularity > 0. Secondary: H5 (minus tree_cos), H6 (flat_pca minus flat < 0),
+  H7 (minus flat_pca).
+- Frozen configuration (dev only): dim 256, ball_dim 256, tau 1.5, beam 24, one landing node; BM25 k1 2.5, b 0.75.
+- The only verdict word is the descriptive reading of `score.py reading()`: POSITIVE, NEGATIVE or INCONCLUSIVE.
+- Hierarchy gate (preregistered in `docs/catalog_retrieval/hierarchy_gate.md`): FAIL before this run, so hyp_tree is
+  evidence about an imposed hierarchy only.

@@ -99,8 +99,8 @@ def test_masking_removes_gold_names():
 
 
 def test_key_dedupes_templates_and_splits_by_session():
-    a = build_key.norm_key("Repair job /home/gui/data/attempts/003932-x/evidence.json now 12")
-    b = build_key.norm_key("Repair job /home/gui/data/attempts/001797-y/evidence.json now 7")
+    a = build_key.norm_key("Repair job /srv/data/attempts/003932-x/evidence.json now 12")
+    b = build_key.norm_key("Repair job /srv/data/attempts/001797-y/evidence.json now 7")
     assert a == b
     assert build_key.split_of("s1") == build_key.split_of("s1")
     tasks = [{"tid": str(i), "source": "s", "session": f"s{i}", "at": str(i), "text": f"text number {w}",

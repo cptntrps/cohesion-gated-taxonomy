@@ -149,7 +149,7 @@ journalctl --user -u cohesion-gated-taxonomy -n 100 --no-pager  # logs
 | The unit fails at start | The `sops -d` step fails, the store has no `NAMING_API_KEY` (`no naming key`), or the data directory has no `tree.json`. | Read the journal. Check the age key and the sops store, or run the tree build. |
 | No answer on :8580 | The unit is down or its start limit is hit (5 starts in 600 s). | Read the journal. Run `systemctl --user reset-failed cohesion-gated-taxonomy`. Then start the unit. |
 
-**Backup.** The Backrest plans `aurora-data` (NAS) and `aurora-data-offsite` hold `~/data`. To restore, restore
+**Backup.** The Backrest plans `aurora-data` (NAS) and `aurora-data-gdrive` (encrypted Google Drive) hold `~/data`. To restore, restore
 `~/data/cohesion-gated-taxonomy`, then start the unit. A tree build from `ledgar_emb.npz` also recreates `tree.json`
 and `members.json`.
 
